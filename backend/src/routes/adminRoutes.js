@@ -1,0 +1,13 @@
+import { Router } from 'express';
+import { getSystemStats, getAllUsers, updateUserStatus, deleteUser, addDoctorByAdmin, toggleDoctorAvailability, } from '../controllers/adminController.js';
+import { authenticateToken, requireRoles } from '../middleware/auth.js';
+const router = Router();
+router.use(authenticateToken);
+router.use(requireRoles(['admin']));
+router.get('/stats', getSystemStats);
+router.get('/users', getAllUsers);
+router.patch('/users/:id/status', updateUserStatus);
+router.delete('/users/:id', deleteUser);
+router.post('/doctors', addDoctorByAdmin);
+router.patch('/doctors/:id/availability', toggleDoctorAvailability);
+export default router;

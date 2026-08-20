@@ -1,0 +1,11 @@
+import { Router } from 'express';
+import { getMedicines, addMedicine, updateMedicine, deleteMedicine, logAdherence, } from '../controllers/medicineController.js';
+import { authenticateToken } from '../middleware/auth.js';
+const router = Router();
+router.use(authenticateToken);
+router.get('/', getMedicines);
+router.post('/', addMedicine);
+router.put('/:id', updateMedicine);
+router.delete('/:id', deleteMedicine);
+router.post('/:id/adherence', logAdherence);
+export default router;

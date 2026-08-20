@@ -1,0 +1,11 @@
+import { Router } from 'express';
+import { register, login, demoLogin, getMe, updateProfile, getDemoAccounts, } from '../controllers/authController.js';
+import { authenticateToken } from '../middleware/auth.js';
+const router = Router();
+router.post('/register', register);
+router.post('/login', login);
+router.post('/demo-login', demoLogin);
+router.get('/demo-accounts', getDemoAccounts);
+router.get('/me', authenticateToken, getMe);
+router.put('/profile', authenticateToken, updateProfile);
+export default router;

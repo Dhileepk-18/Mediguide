@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --primary: #486A5B;
+    --primary-light: #AEDCC9;
+    --bg-subtle: #F5F7F3;
+    --surface: #FFFFFF;
+    --ink-main: #060D0D;
+    --ink-muted: #6B726E;
+    --border-subtle: #E1E5E1;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: var(--bg-subtle);
+    color: var(--ink-main);
+    overflow-x: hidden;
+  }
+}
+
+/* Custom modern healthcare animations and glass effects */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(225, 229, 225, 0.8);
+}
+
+.glass-panel-dark {
+  background: rgba(14, 23, 20, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(72, 106, 91, 0.3);
+}
+
+.bg-pattern {
+  background-image: radial-gradient(rgba(72, 106, 91, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Smooth custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F5F7F3;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #C8E7DA;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #7CBFA3;
+}
+
+/* Pulse badge animation */
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.02); }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 3s ease-in-out infinite;
+}
