@@ -26,12 +26,15 @@ export const register = async (req, res) => {
         }
         const hashedPassword = await bcrypt.hash(validatedData.password, 10);
         const userId = `usr-${Date.now()}`;
+        // If no admin exists in the database, grant the first registered user Admin privileges!
+        const hasAdmin = dbStore.users.some(u => u.role === 'admin');
+        const role = hasAdmin ? 'patient' : 'admin';
         const newUser = dbStore.addUser({
             id: userId,
             name: validatedData.name,
             email: validatedData.email,
             password: hashedPassword,
-            role: 'patient', // Strictly default to patient on public registration to prevent privilege escalation
+            role,
             phone: validatedData.phone || '',
             avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(validatedData.name)}`,
             status: 'active',

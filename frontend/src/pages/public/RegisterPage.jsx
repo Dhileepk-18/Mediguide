@@ -27,12 +27,19 @@ export const RegisterPage = () => {
             bloodGroup,
         });
         if (success) {
+            const currentUser = useAuthStore.getState().user;
             addToast({
                 type: 'success',
                 title: 'Account Created 🎉',
-                message: 'Welcome to MediGuide!',
+                message: `Welcome to MediGuide, ${currentUser?.name || ''}!`,
             });
-            navigate('/dashboard');
+            if (currentUser?.role === 'admin') {
+                navigate('/admin/dashboard');
+            } else if (currentUser?.role === 'doctor') {
+                navigate('/doctor/dashboard');
+            } else {
+                navigate('/dashboard');
+            }
         }
     };
     return (<div className="min-h-[85vh] flex items-center justify-center px-4 py-12">
