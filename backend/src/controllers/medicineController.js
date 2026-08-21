@@ -14,7 +14,13 @@ export const getMedicines = async (req, res) => {
         res.status(401).json({ success: false, message: 'Authentication required' });
         return;
     }
-    const patientId = req.query.patientId && typeof req.query.patientId === 'string' ? req.query.patientId : req.user.id;
+    // Strict IDOR prevention: Patients can ONLY view their own medication tracker
+    let patientId = req.user.id;
+    if (req.user.role === 'doctor' || req.user.role === 'admin') {
+        if (req.query.patientId && typeof req.query.patientId === 'string') {
+            patientId = req.query.patientId;
+        }
+    }
     const medicines = dbStore.getMedicinesByPatientId(patientId);
     res.json({ success: true, medicines });
 };
@@ -52,7 +58,21 @@ export const addMedicine = async (req, res) => {
 };
 export const updateMedicine = async (req, res) => {
     try {
+        if (!req.user) {
+            res.status(401).json({ success: false, message: 'Authentication required' });
+            return;
+        }
         const { id } = req.params;
+        const medicine = dbStore.findMedicineById(id);
+        if (!medicine) {
+            res.status(404).json({ success: false, message: 'Medicine not found' });
+            return;
+        }
+        // Strict IDOR prevention: Only the owner patient or admin can modify
+        if (medicine.patientId !== req.user.id && req.user.role !== 'admin') {
+            res.status(403).json({ success: false, message: 'Forbidden: You do not have permission to update this medicine' });
+            return;
+        }
         const updated = dbStore.updateMedicine(id, req.body);
         if (!updated) {
             res.status(404).json({ success: false, message: 'Medicine not found' });
@@ -65,7 +85,21 @@ export const updateMedicine = async (req, res) => {
     }
 };
 export const deleteMedicine = async (req, res) => {
+    if (!req.user) {
+        res.status(401).json({ success: false, message: 'Authentication required' });
+        return;
+    }
     const { id } = req.params;
+    const medicine = dbStore.findMedicineById(id);
+    if (!medicine) {
+        res.status(404).json({ success: false, message: 'Medicine not found' });
+        return;
+    }
+    // Strict IDOR prevention: Only the owner patient or admin can delete
+    if (medicine.patientId !== req.user.id && req.user.role !== 'admin') {
+        res.status(403).json({ success: false, message: 'Forbidden: You do not have permission to delete this medicine' });
+        return;
+    }
     const deleted = dbStore.deleteMedicine(id);
     if (!deleted) {
         res.status(404).json({ success: false, message: 'Medicine not found' });
@@ -75,11 +109,20 @@ export const deleteMedicine = async (req, res) => {
 };
 export const logAdherence = async (req, res) => {
     try {
+        if (!req.user) {
+            res.status(401).json({ success: false, message: 'Authentication required' });
+            return;
+        }
         const { id } = req.params;
         const { date, timeSlot, taken } = req.body;
         const medicine = dbStore.findMedicineById(id);
         if (!medicine) {
             res.status(404).json({ success: false, message: 'Medicine not found' });
+            return;
+        }
+        // Strict IDOR prevention: Only the owner patient or admin can log adherence
+        if (medicine.patientId !== req.user.id && req.user.role !== 'admin') {
+            res.status(403).json({ success: false, message: 'Forbidden: You do not have permission to log adherence for this medicine' });
             return;
         }
         // Check if entry for this date and timeSlot exists

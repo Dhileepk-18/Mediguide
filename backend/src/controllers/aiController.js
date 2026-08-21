@@ -35,8 +35,11 @@ export const handleChat = async (req, res) => {
             }
             if (!savedHistory) {
                 const title = message.length > 35 ? message.substring(0, 32) + '...' : message;
+                const newId = (conversationId && !dbStore.findChatHistoryById(conversationId)) 
+                    ? conversationId 
+                    : `chat-${Date.now()}-${Math.random().toString(36).substring(7)}`;
                 savedHistory = dbStore.saveChatHistory({
-                    id: conversationId || `chat-${Date.now()}`,
+                    id: newId,
                     userId,
                     title,
                     messages: [userMessage, assistantMessage],

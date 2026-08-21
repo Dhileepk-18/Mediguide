@@ -6,12 +6,14 @@ import path from 'path';
 let activeApiKey = config.geminiApiKey || process.env.GEMINI_API_KEY || '';
 let genAI = activeApiKey ? new GoogleGenerativeAI(activeApiKey) : null;
 export function setApiKey(newKey) {
-    activeApiKey = newKey.trim();
-    if (activeApiKey) {
+    // Sanitize key to only allow valid alphanumeric / base64 / standard key characters
+    const sanitizedKey = typeof newKey === 'string' ? newKey.trim() : '';
+    if (sanitizedKey && /^[a-zA-Z0-9_\-\.]{10,128}$/.test(sanitizedKey)) {
+        activeApiKey = sanitizedKey;
         genAI = new GoogleGenerativeAI(activeApiKey);
         config.geminiApiKey = activeApiKey;
         process.env.GEMINI_API_KEY = activeApiKey;
-        // Persist to backend/.env if possible
+        // Persist to backend/.env if possible safely
         try {
             const envPath = path.resolve(process.cwd(), '.env');
             let envContent = fs.existsSync(envPath) ? fs.readFileSync(envPath, 'utf-8') : '';
@@ -28,9 +30,13 @@ export function setApiKey(newKey) {
         }
         return { success: true, hasKey: true };
     }
-    else {
+    else if (!sanitizedKey) {
+        activeApiKey = '';
         genAI = null;
         return { success: true, hasKey: false };
+    }
+    else {
+        throw new Error('Invalid API Key format.');
     }
 }
 export function getAiConfig() {

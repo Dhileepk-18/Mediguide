@@ -20,6 +20,20 @@ export const createAppointment = async (req, res) => {
             res.status(404).json({ success: false, message: 'Selected doctor not found' });
             return;
         }
+        // Double booking prevention: Check if doctor already has an active appointment at that time
+        const existingBooking = dbStore.getAppointments().find(a => 
+            a.doctorId === doctor.id && 
+            a.date === data.date && 
+            a.timeSlot === data.timeSlot && 
+            ['confirmed', 'pending'].includes(a.status)
+        );
+        if (existingBooking) {
+            res.status(400).json({ 
+                success: false, 
+                message: `This time slot (${data.timeSlot} on ${data.date}) is already booked with ${doctor.name}. Please select a different time slot.` 
+            });
+            return;
+        }
         const newAppointment = {
             id: `apt-${Date.now()}`,
             patientId: req.user.id,
@@ -64,9 +78,13 @@ export const getMyAppointments = async (req, res) => {
         appointments = dbStore.getAppointmentsByPatientId(req.user.id);
     }
     else if (req.user.role === 'doctor') {
-        const doc = dbStore.findDoctorById(req.user.id) || dbStore.getAllDoctors().find(d => d.userId === req.user?.id);
-        const doctorId = doc ? doc.id : 'doc-1';
-        appointments = dbStore.getAppointmentsByDoctorId(doctorId);
+        const doc = dbStore.findDoctorById(req.user.id) || 
+                    dbStore.getAllDoctors().find(d => d.userId === req.user?.id || d.email === req.user?.email);
+        if (doc) {
+            appointments = dbStore.getAppointmentsByDoctorId(doc.id);
+        } else {
+            appointments = [];
+        }
     }
     else if (req.user.role === 'admin') {
         appointments = dbStore.getAppointments();
@@ -74,16 +92,35 @@ export const getMyAppointments = async (req, res) => {
     res.json({ success: true, appointments });
 };
 export const getAppointmentById = async (req, res) => {
+    if (!req.user) {
+        res.status(401).json({ success: false, message: 'Authentication required' });
+        return;
+    }
     const { id } = req.params;
     const appointment = dbStore.findAppointmentById(id);
     if (!appointment) {
         res.status(404).json({ success: false, message: 'Appointment not found' });
         return;
     }
+    // Strict IDOR prevention
+    const isOwnerPatient = appointment.patientId === req.user.id;
+    const doctorProfile = dbStore.findDoctorById(req.user.id) || 
+                          dbStore.getAllDoctors().find(d => d.userId === req.user?.id || d.email === req.user?.email);
+    const isAssignedDoctor = doctorProfile && appointment.doctorId === doctorProfile.id;
+    const isAdmin = req.user.role === 'admin';
+
+    if (!isOwnerPatient && !isAssignedDoctor && !isAdmin) {
+        res.status(403).json({ success: false, message: 'Forbidden: You do not have permission to view this appointment' });
+        return;
+    }
     res.json({ success: true, appointment });
 };
 export const updateAppointmentStatus = async (req, res) => {
     try {
+        if (!req.user) {
+            res.status(401).json({ success: false, message: 'Authentication required' });
+            return;
+        }
         const { id } = req.params;
         const { status, notes, prescriptionId } = req.body;
         const validStatuses = ['pending', 'confirmed', 'completed', 'cancelled'];
@@ -91,6 +128,29 @@ export const updateAppointmentStatus = async (req, res) => {
             res.status(400).json({ success: false, message: 'Invalid status' });
             return;
         }
+        const appointment = dbStore.findAppointmentById(id);
+        if (!appointment) {
+            res.status(404).json({ success: false, message: 'Appointment not found' });
+            return;
+        }
+
+        const isOwnerPatient = appointment.patientId === req.user.id;
+        const doctorProfile = dbStore.findDoctorById(req.user.id) || 
+                              dbStore.getAllDoctors().find(d => d.userId === req.user?.id || d.email === req.user?.email);
+        const isAssignedDoctor = doctorProfile && appointment.doctorId === doctorProfile.id;
+        const isAdmin = req.user.role === 'admin';
+
+        // Authorization check: Patients can only cancel their own appointment
+        if (isOwnerPatient && !isAssignedDoctor && !isAdmin) {
+            if (status && status !== 'cancelled') {
+                res.status(403).json({ success: false, message: 'Patients can only cancel their own appointments' });
+                return;
+            }
+        } else if (!isAssignedDoctor && !isAdmin) {
+            res.status(403).json({ success: false, message: 'Forbidden: You do not have permission to modify this appointment' });
+            return;
+        }
+
         const updates = {};
         if (status)
             updates.status = status;

@@ -35,3 +35,16 @@ export const getDepartments = async (_req, res) => {
     }));
     res.json({ success: true, departments });
 };
+export const getMyPatients = async (req, res) => {
+    if (!req.user) {
+        res.status(401).json({ success: false, message: 'Authentication required' });
+        return;
+    }
+    const patients = dbStore.users
+        .filter(u => u.role === 'patient')
+        .map(u => {
+            const { password: _, ...clean } = u;
+            return clean;
+        });
+    res.json({ success: true, patients, users: patients });
+};

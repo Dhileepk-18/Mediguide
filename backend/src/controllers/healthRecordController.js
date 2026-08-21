@@ -18,7 +18,13 @@ export const getHealthRecords = async (req, res) => {
         res.status(401).json({ success: false, message: 'Authentication required' });
         return;
     }
-    const patientId = req.query.patientId && typeof req.query.patientId === 'string' ? req.query.patientId : req.user.id;
+    // Strict IDOR prevention: Patients can ONLY view their own records
+    let patientId = req.user.id;
+    if (req.user.role === 'doctor' || req.user.role === 'admin') {
+        if (req.query.patientId && typeof req.query.patientId === 'string') {
+            patientId = req.query.patientId;
+        }
+    }
     const records = dbStore.getHealthRecordsByPatientId(patientId);
     res.json({ success: true, records });
 };
@@ -57,7 +63,21 @@ export const addHealthRecord = async (req, res) => {
     }
 };
 export const deleteHealthRecord = async (req, res) => {
+    if (!req.user) {
+        res.status(401).json({ success: false, message: 'Authentication required' });
+        return;
+    }
     const { id } = req.params;
+    const record = dbStore.findHealthRecordById(id);
+    if (!record) {
+        res.status(404).json({ success: false, message: 'Health record not found' });
+        return;
+    }
+    // Strict IDOR prevention: Only the owning patient or an admin can delete
+    if (record.patientId !== req.user.id && req.user.role !== 'admin') {
+        res.status(403).json({ success: false, message: 'Forbidden: You do not have permission to delete this record' });
+        return;
+    }
     const deleted = dbStore.deleteHealthRecord(id);
     if (!deleted) {
         res.status(404).json({ success: false, message: 'Health record not found' });

@@ -21,7 +21,6 @@ export const RegisterPage = () => {
             name,
             email,
             password,
-            role,
             phone,
             age: Number(age),
             gender,
@@ -30,15 +29,10 @@ export const RegisterPage = () => {
         if (success) {
             addToast({
                 type: 'success',
-                title: 'Account Created',
+                title: 'Account Created 🎉',
                 message: 'Welcome to MediGuide!',
             });
-            if (role === 'patient')
-                navigate('/dashboard');
-            else if (role === 'doctor')
-                navigate('/doctor/dashboard');
-            else if (role === 'admin')
-                navigate('/admin/dashboard');
+            navigate('/dashboard');
         }
     };
     return (<div className="min-h-[85vh] flex items-center justify-center px-4 py-12">
@@ -48,8 +42,8 @@ export const RegisterPage = () => {
           <div className="inline-flex w-12 h-12 rounded-2xl bg-health-500 text-white items-center justify-center shadow-soft mb-2">
             <Activity className="w-6 h-6"/>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-ink-main">Create Your MediGuide Account</h2>
-          <p className="text-xs sm:text-sm text-ink-muted">Join patients and doctors on the AI healthcare network</p>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-ink-main">Create Your Patient Account</h2>
+          <p className="text-xs sm:text-sm text-ink-muted">Join the intelligent AI-powered digital healthcare network</p>
         </div>
 
         <div className="bg-surface p-6 sm:p-8 rounded-3xl border border-surface-border shadow-soft-lg space-y-6">
@@ -57,33 +51,17 @@ export const RegisterPage = () => {
               {error}
             </div>)}
 
+          <div className="p-3 rounded-2xl bg-health-50 border border-health-200 flex items-center justify-between text-xs text-health-800">
+            <span className="font-semibold flex items-center gap-1.5">
+              <User className="w-4 h-4 text-health-600"/>
+              Patient Registration
+            </span>
+            <span className="text-[11px] text-ink-muted">
+              (Doctors are credentialed by Admin)
+            </span>
+          </div>
+
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Role Selector Tabs */}
-            <div>
-              <label className="block text-xs font-bold text-ink-main mb-1.5">Select Account Role</label>
-              <div className="grid grid-cols-3 gap-2">
-                <button type="button" onClick={() => setRole('patient')} className={`p-2.5 rounded-xl border text-center transition-all flex flex-col items-center gap-1 ${role === 'patient'
-            ? 'bg-health-100/70 border-health-500 text-health-900 font-bold shadow-sm'
-            : 'bg-surface-muted border-surface-border text-ink-muted hover:bg-surface'}`}>
-                  <User className="w-4 h-4"/>
-                  <span className="text-xs">Patient</span>
-                </button>
-
-                <button type="button" onClick={() => setRole('doctor')} className={`p-2.5 rounded-xl border text-center transition-all flex flex-col items-center gap-1 ${role === 'doctor'
-            ? 'bg-blue-100/70 border-blue-500 text-blue-900 font-bold shadow-sm'
-            : 'bg-surface-muted border-surface-border text-ink-muted hover:bg-surface'}`}>
-                  <Stethoscope className="w-4 h-4"/>
-                  <span className="text-xs">Doctor</span>
-                </button>
-
-                <button type="button" onClick={() => setRole('admin')} className={`p-2.5 rounded-xl border text-center transition-all flex flex-col items-center gap-1 ${role === 'admin'
-            ? 'bg-purple-100/70 border-purple-500 text-purple-900 font-bold shadow-sm'
-            : 'bg-surface-muted border-surface-border text-ink-muted hover:bg-surface'}`}>
-                  <Shield className="w-4 h-4"/>
-                  <span className="text-xs">Admin</span>
-                </button>
-              </div>
-            </div>
 
             <div>
               <label className="block text-xs font-bold text-ink-main mb-1.5">Full Name</label>

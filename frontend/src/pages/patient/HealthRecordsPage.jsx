@@ -91,6 +91,40 @@ export const HealthRecordsPage = () => {
             setIsUploading(false);
         }
     };
+    const handleDownloadRecord = (record) => {
+        const content = `=====================================================
+MEDIGUIDE DIGITAL HEALTH VAULT - CLINICAL REPORT
+=====================================================
+Document Title:    ${record.title}
+Category:          ${record.category}
+Record Date:       ${record.recordDate}
+Attending Doctor:  ${record.doctorName || 'N/A'}
+Facility:          ${record.facility || 'MediGuide Digital Vault'}
+Record ID:         ${record.id}
+File Name:         ${record.fileName}
+=====================================================
+DIAGNOSTIC SUMMARY & CLINICAL NOTES:
+-----------------------------------------------------
+${record.summary || 'No summary notes provided.'}
+=====================================================
+Verified & Stored in MediGuide Encrypted Vault
+Timestamp: ${new Date().toISOString()}
+=====================================================`;
+        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${record.fileName.replace(/\.pdf$/i, '')}_Record.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        addToast({
+            type: 'success',
+            title: 'File Downloaded',
+            message: `${record.fileName} downloaded to your device.`,
+        });
+    };
     const handleDeleteRecord = async (id, recordTitle) => {
         if (!window.confirm(`Delete record: ${recordTitle}?`))
             return;
@@ -189,9 +223,9 @@ export const HealthRecordsPage = () => {
                   <Eye className="w-3.5 h-3.5"/>
                   <span>View Details</span>
                 </button>
-                <a href={record.fileUrl} target="_blank" rel="noreferrer" download={record.fileName} className="p-2 rounded-xl border border-surface-border text-ink-muted hover:text-ink-main hover:bg-surface-muted transition-colors" title="Download File">
+                <button onClick={() => handleDownloadRecord(record)} className="p-2 rounded-xl border border-surface-border text-ink-muted hover:text-health-700 hover:bg-health-50 transition-colors" title="Download Document Record">
                   <Download className="w-4 h-4"/>
-                </a>
+                </button>
                 <button onClick={() => handleDeleteRecord(record.id, record.title)} className="p-2 rounded-xl border border-surface-border text-ink-muted hover:text-status-danger hover:bg-red-50 transition-colors" title="Delete File">
                   <Trash2 className="w-4 h-4"/>
                 </button>
@@ -292,10 +326,10 @@ export const HealthRecordsPage = () => {
             </div>
 
             <div className="flex gap-2">
-              <a href={viewingRecord.fileUrl} target="_blank" rel="noreferrer" className="flex-1 py-2.5 bg-health-500 hover:bg-health-600 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors">
-                <ExternalLink className="w-4 h-4"/>
-                <span>Open Document File</span>
-              </a>
+              <button onClick={() => handleDownloadRecord(viewingRecord)} className="flex-1 py-2.5 bg-health-500 hover:bg-health-600 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors">
+                <Download className="w-4 h-4"/>
+                <span>Download Clinical File</span>
+              </button>
             </div>
           </div>
         </Modal>)}

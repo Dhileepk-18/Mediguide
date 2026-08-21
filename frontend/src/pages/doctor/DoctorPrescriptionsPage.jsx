@@ -6,6 +6,7 @@ import { FileCheck2, Plus, Trash2, } from 'lucide-react';
 export const DoctorPrescriptionsPage = () => {
     const { addToast } = useAppStore();
     const [prescriptions, setPrescriptions] = useState([]);
+    const [patients, setPatients] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     // Form State
     const [patientId, setPatientId] = useState('usr-patient-1');
@@ -22,17 +23,26 @@ export const DoctorPrescriptionsPage = () => {
     ]);
     const [isSaving, setIsSaving] = useState(false);
     useEffect(() => {
-        loadPrescriptions();
+        loadData();
     }, []);
-    const loadPrescriptions = async () => {
+    const loadData = async () => {
         try {
-            const res = await api.getMyPrescriptions();
-            if (res.success) {
-                setPrescriptions(res.prescriptions);
+            const [rxRes, patRes] = await Promise.all([
+                api.getMyPrescriptions(),
+                api.getMyPatients(),
+            ]);
+            if (rxRes.success) {
+                setPrescriptions(rxRes.prescriptions);
+            }
+            if (patRes.success && patRes.patients) {
+                setPatients(patRes.patients);
+                if (patRes.patients.length > 0) {
+                    setPatientId(patRes.patients[0].id);
+                }
             }
         }
         catch (err) {
-            console.error('Failed to load prescriptions:', err);
+            console.error('Failed to load prescription data:', err);
         }
     };
     const handleAddMedicineRow = () => {
@@ -155,8 +165,15 @@ export const DoctorPrescriptionsPage = () => {
             <div>
               <label className="block text-xs font-bold text-ink-main mb-1.5">Select Patient</label>
               <select value={patientId} onChange={(e) => setPatientId(e.target.value)} className="w-full px-3 py-2.5 text-xs bg-surface-muted rounded-xl border border-surface-border focus:outline-none focus:border-health-400">
-                <option value="usr-patient-1">Sarah Johnson (28 yrs, Female, O+)</option>
-                <option value="usr-patient-2">Michael Davis (45 yrs, Male, A+)</option>
+                {patients.length > 0 ? (
+                  patients.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name} ({p.age || 'N/A'} yrs, {p.gender || 'Patient'}, Blood: {p.bloodGroup || 'O+'})
+                    </option>
+                  ))
+                ) : (
+                  <option value="usr-patient-1">Sarah Johnson (28 yrs, Female, O+)</option>
+                )}
               </select>
             </div>
 

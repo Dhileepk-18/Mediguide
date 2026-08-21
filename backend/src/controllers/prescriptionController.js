@@ -99,20 +99,39 @@ export const getMyPrescriptions = async (req, res) => {
         prescriptions = dbStore.getPrescriptionsByPatientId(req.user.id);
     }
     else if (req.user.role === 'doctor') {
-        const doc = dbStore.findDoctorById(req.user.id) || dbStore.getAllDoctors().find(d => d.userId === req.user?.id);
-        const docId = doc ? doc.id : 'doc-1';
-        prescriptions = dbStore.getPrescriptionsByDoctorId(docId);
+        const doc = dbStore.findDoctorById(req.user.id) || 
+                    dbStore.getAllDoctors().find(d => d.userId === req.user?.id || d.email === req.user?.email);
+        if (doc) {
+            prescriptions = dbStore.getPrescriptionsByDoctorId(doc.id);
+        } else {
+            prescriptions = [];
+        }
     }
-    else {
-        prescriptions = dbStore.prescriptions;
+    else if (req.user.role === 'admin') {
+        prescriptions = [...dbStore.prescriptions];
     }
     res.json({ success: true, prescriptions });
 };
 export const getPrescriptionById = async (req, res) => {
+    if (!req.user) {
+        res.status(401).json({ success: false, message: 'Authentication required' });
+        return;
+    }
     const { id } = req.params;
     const prescription = dbStore.findPrescriptionById(id);
     if (!prescription) {
         res.status(404).json({ success: false, message: 'Prescription not found' });
+        return;
+    }
+    // Strict IDOR prevention
+    const isOwnerPatient = prescription.patientId === req.user.id;
+    const doctorProfile = dbStore.findDoctorById(req.user.id) || 
+                          dbStore.getAllDoctors().find(d => d.userId === req.user?.id || d.email === req.user?.email);
+    const isAssignedDoctor = doctorProfile && prescription.doctorId === doctorProfile.id;
+    const isAdmin = req.user.role === 'admin';
+
+    if (!isOwnerPatient && !isAssignedDoctor && !isAdmin) {
+        res.status(403).json({ success: false, message: 'Forbidden: You do not have permission to view this prescription' });
         return;
     }
     res.json({ success: true, prescription });

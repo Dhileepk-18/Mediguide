@@ -3,7 +3,7 @@ import { handleChat, handleSymptomCheck, getChatHistories, getSymptomHistories, 
 import { authenticateToken } from '../middleware/auth.js';
 const router = Router();
 router.get('/config', getAiStatus);
-router.post('/config', updateAiConfig);
+router.post('/config', authenticateToken, updateAiConfig);
 router.post('/chat', (req, res, next) => {
     const authHeader = req.headers['authorization'];
     if (authHeader) {

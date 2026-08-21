@@ -8,13 +8,13 @@ export const DoctorPatientsPage = () => {
     }, []);
     const loadPatients = async () => {
         try {
-            const res = await api.getAdminUsers('patient');
-            if (res.success) {
-                setPatients(res.users);
+            const res = await api.getMyPatients();
+            if (res.success && res.patients) {
+                setPatients(res.patients);
             }
         }
-        catch {
-            // Fallback
+        catch (err) {
+            console.error('Failed to load doctor patients:', err);
         }
     };
     return (<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">

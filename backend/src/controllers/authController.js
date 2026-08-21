@@ -7,7 +7,6 @@ const registerSchema = z.object({
     name: z.string().min(2, 'Name must be at least 2 characters'),
     email: z.string().email('Invalid email address'),
     password: z.string().min(6, 'Password must be at least 6 characters'),
-    role: z.enum(['patient', 'doctor', 'admin']).default('patient'),
     phone: z.string().optional(),
     age: z.number().optional(),
     gender: z.enum(['Male', 'Female', 'Other']).optional(),
@@ -32,7 +31,7 @@ export const register = async (req, res) => {
             name: validatedData.name,
             email: validatedData.email,
             password: hashedPassword,
-            role: validatedData.role,
+            role: 'patient', // Strictly default to patient on public registration to prevent privilege escalation
             phone: validatedData.phone || '',
             avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(validatedData.name)}`,
             status: 'active',
@@ -73,7 +72,11 @@ export const login = async (req, res) => {
             res.status(403).json({ success: false, message: 'Account has been suspended by administration' });
             return;
         }
-        const isMatch = user.password ? await bcrypt.compare(password, user.password) : true;
+        if (!user.password) {
+            res.status(401).json({ success: false, message: 'Invalid authentication credentials' });
+            return;
+        }
+        const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             res.status(401).json({ success: false, message: 'Invalid email or password' });
             return;

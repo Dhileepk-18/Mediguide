@@ -115,6 +115,12 @@ export const api = {
         const res = await fetch(`${API_BASE}/doctors/meta/departments`);
         return handleResponse(res);
     },
+    async getMyPatients() {
+        const res = await fetch(`${API_BASE}/doctors/my-patients`, {
+            headers: getAuthHeaders(),
+        });
+        return handleResponse(res);
+    },
     // Appointments API
     async bookAppointment(data) {
         const res = await fetch(`${API_BASE}/appointments`, {
