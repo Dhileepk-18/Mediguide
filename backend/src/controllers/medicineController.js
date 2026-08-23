@@ -1,14 +1,19 @@
 import { z } from 'zod';
 import { dbStore } from '../store/inMemoryStore.js';
+
 const medicineSchema = z.object({
     name: z.string().min(2, 'Medicine name is required'),
+    strength: z.string().optional(),
     dosage: z.string().min(1, 'Dosage is required'),
     frequency: z.string().min(1, 'Frequency is required'),
     timings: z.array(z.string()).min(1, 'At least one reminder time is required'),
+    mealTiming: z.string().default('After Food'),
+    slotTiming: z.string().default('Morning'),
     instructions: z.string().default('Take with water after meals'),
     startDate: z.string().optional(),
     endDate: z.string().optional(),
 });
+
 export const getMedicines = async (req, res) => {
     if (!req.user) {
         res.status(401).json({ success: false, message: 'Authentication required' });
@@ -24,6 +29,7 @@ export const getMedicines = async (req, res) => {
     const medicines = dbStore.getMedicinesByPatientId(patientId);
     res.json({ success: true, medicines });
 };
+
 export const addMedicine = async (req, res) => {
     try {
         if (!req.user) {
@@ -35,9 +41,12 @@ export const addMedicine = async (req, res) => {
             id: `med-${Date.now()}`,
             patientId: req.user.id,
             name: data.name,
+            strength: data.strength || '',
             dosage: data.dosage,
             frequency: data.frequency,
             timings: data.timings,
+            mealTiming: data.mealTiming,
+            slotTiming: data.slotTiming,
             instructions: data.instructions,
             startDate: data.startDate || new Date().toISOString().split('T')[0],
             endDate: data.endDate,
@@ -47,8 +56,7 @@ export const addMedicine = async (req, res) => {
         };
         const saved = dbStore.addMedicine(newMedicine);
         res.status(201).json({ success: true, message: 'Medicine reminder added', medicine: saved });
-    }
-    catch (error) {
+    } catch (error) {
         if (error instanceof z.ZodError) {
             res.status(400).json({ success: false, message: error.errors[0].message });
             return;
@@ -56,6 +64,7 @@ export const addMedicine = async (req, res) => {
         res.status(500).json({ success: false, message: 'Failed to add medicine' });
     }
 };
+
 export const updateMedicine = async (req, res) => {
     try {
         if (!req.user) {
@@ -68,7 +77,6 @@ export const updateMedicine = async (req, res) => {
             res.status(404).json({ success: false, message: 'Medicine not found' });
             return;
         }
-        // Strict IDOR prevention: Only the owner patient or admin can modify
         if (medicine.patientId !== req.user.id && req.user.role !== 'admin') {
             res.status(403).json({ success: false, message: 'Forbidden: You do not have permission to update this medicine' });
             return;
@@ -79,11 +87,11 @@ export const updateMedicine = async (req, res) => {
             return;
         }
         res.json({ success: true, message: 'Medicine updated', medicine: updated });
-    }
-    catch (error) {
+    } catch (error) {
         res.status(500).json({ success: false, message: 'Failed to update medicine' });
     }
 };
+
 export const deleteMedicine = async (req, res) => {
     if (!req.user) {
         res.status(401).json({ success: false, message: 'Authentication required' });
@@ -95,7 +103,6 @@ export const deleteMedicine = async (req, res) => {
         res.status(404).json({ success: false, message: 'Medicine not found' });
         return;
     }
-    // Strict IDOR prevention: Only the owner patient or admin can delete
     if (medicine.patientId !== req.user.id && req.user.role !== 'admin') {
         res.status(403).json({ success: false, message: 'Forbidden: You do not have permission to delete this medicine' });
         return;
@@ -107,6 +114,7 @@ export const deleteMedicine = async (req, res) => {
     }
     res.json({ success: true, message: 'Medicine reminder deleted' });
 };
+
 export const logAdherence = async (req, res) => {
     try {
         if (!req.user) {
@@ -120,18 +128,15 @@ export const logAdherence = async (req, res) => {
             res.status(404).json({ success: false, message: 'Medicine not found' });
             return;
         }
-        // Strict IDOR prevention: Only the owner patient or admin can log adherence
         if (medicine.patientId !== req.user.id && req.user.role !== 'admin') {
             res.status(403).json({ success: false, message: 'Forbidden: You do not have permission to log adherence for this medicine' });
             return;
         }
-        // Check if entry for this date and timeSlot exists
         const existingIndex = medicine.adherenceHistory.findIndex(a => a.date === date && a.timeSlot === timeSlot);
         if (existingIndex >= 0) {
             medicine.adherenceHistory[existingIndex].taken = taken;
             medicine.adherenceHistory[existingIndex].loggedAt = new Date().toISOString();
-        }
-        else {
+        } else {
             medicine.adherenceHistory.push({
                 date: date || new Date().toISOString().split('T')[0],
                 timeSlot: timeSlot || '08:00 AM',
@@ -139,9 +144,9 @@ export const logAdherence = async (req, res) => {
                 loggedAt: new Date().toISOString(),
             });
         }
+        dbStore.persist();
         res.json({ success: true, message: 'Adherence logged', medicine });
-    }
-    catch (error) {
+    } catch (error) {
         res.status(500).json({ success: false, message: 'Failed to log adherence' });
     }
 };

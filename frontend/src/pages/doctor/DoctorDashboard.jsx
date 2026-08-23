@@ -58,7 +58,7 @@ export const DoctorDashboard = () => {
             <span>Doctor Clinical Console</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-            Welcome, {user?.name || 'Dr. John Smith'}
+            Welcome, {user?.name || 'Doctor'}
           </h1>
           <p className="text-xs sm:text-sm text-blue-100 max-w-xl">
             You have {pendingCount} pending requests and {confirmedCount} confirmed consultations scheduled.

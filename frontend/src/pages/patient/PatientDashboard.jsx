@@ -1,20 +1,46 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore.js';
 import { useAppStore } from '../../store/appStore.js';
 import { api } from '../../services/api.js';
 import { AiDisclaimerBanner } from '../../components/common/AiDisclaimerBanner.jsx';
-import { Calendar, Pill, FileText, FileCheck2, Bot, Stethoscope, ArrowRight, Clock, CheckCircle2, Sparkles, Activity, Plus, } from 'lucide-react';
+import {
+    Calendar,
+    Pill,
+    FileText,
+    FileCheck2,
+    Bot,
+    Stethoscope,
+    ArrowRight,
+    Clock,
+    CheckCircle2,
+    Sparkles,
+    Activity,
+    Plus,
+    HeartPulse,
+    Moon,
+    Flame,
+    Send,
+    ShieldCheck,
+    ChevronRight,
+    Check,
+} from 'lucide-react';
+
 export const PatientDashboard = () => {
     const { user } = useAuthStore();
     const { addToast } = useAppStore();
+    const navigate = useNavigate();
+
     const [appointments, setAppointments] = useState([]);
     const [medicines, setMedicines] = useState([]);
     const [records, setRecords] = useState([]);
     const [prescriptions, setPrescriptions] = useState([]);
+    const [aiInput, setAiInput] = useState('');
+
     useEffect(() => {
         loadDashboardData();
     }, []);
+
     const loadDashboardData = async () => {
         try {
             const [aptRes, medRes, recRes, rxRes] = await Promise.all([
@@ -23,19 +49,15 @@ export const PatientDashboard = () => {
                 api.getHealthRecords(),
                 api.getMyPrescriptions(),
             ]);
-            if (aptRes.success)
-                setAppointments(aptRes.appointments);
-            if (medRes.success)
-                setMedicines(medRes.medicines);
-            if (recRes.success)
-                setRecords(recRes.records);
-            if (rxRes.success)
-                setPrescriptions(rxRes.prescriptions);
-        }
-        catch (err) {
+            if (aptRes.success) setAppointments(aptRes.appointments || []);
+            if (medRes.success) setMedicines(medRes.medicines || []);
+            if (recRes.success) setRecords(recRes.records || []);
+            if (rxRes.success) setPrescriptions(rxRes.prescriptions || []);
+        } catch (err) {
             console.error('Dashboard load error:', err);
         }
     };
+
     const handleToggleAdherence = async (medId, timeSlot, currentStatus) => {
         const today = new Date().toISOString().split('T')[0];
         const newStatus = !currentStatus;
@@ -49,8 +71,7 @@ export const PatientDashboard = () => {
                     message: `${res.medicine.name} (${timeSlot}) updated.`,
                 });
             }
-        }
-        catch {
+        } catch {
             addToast({
                 type: 'error',
                 title: 'Update failed',
@@ -58,245 +79,337 @@ export const PatientDashboard = () => {
             });
         }
     };
+
+    const handleAiSubmit = (e) => {
+        e.preventDefault();
+        if (!aiInput.trim()) return;
+        navigate(`/ai-assistant?query=${encodeURIComponent(aiInput.trim())}`);
+    };
+
+    const getTimeGreeting = () => {
+        const hour = new Date().getHours();
+        if (hour < 12) return 'Good morning';
+        if (hour < 17) return 'Good afternoon';
+        return 'Good evening';
+    };
+
     const upcomingAppointment = appointments.find(a => a.status === 'confirmed' || a.status === 'pending');
     const today = new Date().toISOString().split('T')[0];
-    return (<div className="space-y-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* 1. Welcome Greeting Banner */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-health-600 via-health-500 to-health-700 text-white shadow-soft-lg relative overflow-hidden">
-        <div className="absolute right-0 top-0 w-80 h-80 bg-white/10 rounded-full blur-3xl pointer-events-none"/>
+    const takenDosesCount = medicines.reduce((acc, med) => {
+        const logs = med.adherenceLogs?.[today] || {};
+        return acc + Object.values(logs).filter(Boolean).length;
+    }, 0);
 
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 text-health-100 text-xs font-semibold backdrop-blur-sm">
-              <Activity className="w-3.5 h-3.5 text-health-200"/>
-              <span>Personal Health Hub</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-              Good day, {user?.name || 'Sarah'}!
-            </h1>
-            <p className="text-xs sm:text-sm text-health-100 max-w-xl leading-relaxed">
-              Your vitals are stable. You have {medicines.length} active medications and{' '}
-              {upcomingAppointment ? '1 upcoming consultation' : 'no immediate appointments scheduled'}.
-            </p>
-          </div>
+    return (
+        <div className="space-y-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {/* 01 & 02: Editorial Hero Header */}
+            <div className="relative rounded-3xl bg-health-700 text-white p-7 sm:p-10 shadow-luxury overflow-hidden border border-health-600/60">
+                {/* Subtle luxury background elements */}
+                <div className="absolute right-0 top-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl pointer-events-none" />
+                <div className="absolute -left-20 -bottom-20 w-80 h-80 bg-skydata/10 rounded-full blur-3xl pointer-events-none" />
 
-          {/* Quick Action Shortcuts */}
-          <div className="flex flex-wrap gap-2.5">
-            <Link to="/ai-assistant" className="px-4 py-2.5 rounded-2xl bg-white text-health-900 hover:bg-health-50 text-xs font-bold shadow-sm transition-all flex items-center gap-2">
-              <Bot className="w-4 h-4 text-health-600"/>
-              <span>Ask AI Assistant</span>
-            </Link>
-            <Link to="/symptom-checker" className="px-4 py-2.5 rounded-2xl bg-health-700/80 hover:bg-health-700 text-white border border-white/20 text-xs font-bold transition-all flex items-center gap-2">
-              <Stethoscope className="w-4 h-4 text-health-200"/>
-              <span>Check Symptoms</span>
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* AI Safety Banner */}
-      <AiDisclaimerBanner compact/>
-
-      {/* 2. Top Metric Statistics Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        <div className="p-5 rounded-3xl bg-surface border border-surface-border shadow-soft flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-health-100 text-health-700 flex items-center justify-center shrink-0">
-            <Calendar className="w-6 h-6"/>
-          </div>
-          <div>
-            <div className="text-xs font-bold text-ink-muted">Appointments</div>
-            <div className="text-xl font-extrabold text-ink-main">{appointments.length}</div>
-            <div className="text-[10px] text-health-600 font-semibold">
-              {appointments.filter(a => a.status === 'confirmed').length} Confirmed
-            </div>
-          </div>
-        </div>
-
-        <div className="p-5 rounded-3xl bg-surface border border-surface-border shadow-soft flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-mint-light text-health-800 flex items-center justify-center shrink-0">
-            <Pill className="w-6 h-6 text-health-600"/>
-          </div>
-          <div>
-            <div className="text-xs font-bold text-ink-muted">Active Medicines</div>
-            <div className="text-xl font-extrabold text-ink-main">{medicines.length}</div>
-            <div className="text-[10px] text-status-success font-semibold">Daily Reminders On</div>
-          </div>
-        </div>
-
-        <div className="p-5 rounded-3xl bg-surface border border-surface-border shadow-soft flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-700 flex items-center justify-center shrink-0">
-            <FileText className="w-6 h-6"/>
-          </div>
-          <div>
-            <div className="text-xs font-bold text-ink-muted">Health Records</div>
-            <div className="text-xl font-extrabold text-ink-main">{records.length}</div>
-            <div className="text-[10px] text-blue-600 font-semibold">Reports & Scans</div>
-          </div>
-        </div>
-
-        <div className="p-5 rounded-3xl bg-surface border border-surface-border shadow-soft flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-purple-50 text-purple-700 flex items-center justify-center shrink-0">
-            <FileCheck2 className="w-6 h-6"/>
-          </div>
-          <div>
-            <div className="text-xs font-bold text-ink-muted">Prescriptions</div>
-            <div className="text-xl font-extrabold text-ink-main">{prescriptions.length}</div>
-            <div className="text-[10px] text-purple-600 font-semibold">Digitally Signed</div>
-          </div>
-        </div>
-      </div>
-
-      {/* 3. Main Dashboard Grid (Upcoming Appointment & Today's Medicines) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left Col: Upcoming Appointment & Health Summary */}
-        <div className="lg:col-span-7 space-y-6">
-          {/* Upcoming Appointment Card */}
-          <div className="p-6 rounded-3xl bg-surface border border-surface-border shadow-soft space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-health-600"/>
-                <h3 className="font-bold text-sm text-ink-main">Next Doctor Appointment</h3>
-              </div>
-              <Link to="/appointments" className="text-xs font-bold text-health-600 hover:text-health-700 flex items-center gap-1">
-                View All <ArrowRight className="w-3.5 h-3.5"/>
-              </Link>
-            </div>
-
-            {upcomingAppointment ? (<div className="p-4 rounded-2xl bg-health-50/70 border border-health-200/80 space-y-3">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
-                    <img src={upcomingAppointment.doctorAvatar || 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=100&auto=format&fit=crop&q=80'} alt={upcomingAppointment.doctorName} className="w-12 h-12 rounded-2xl object-cover ring-2 ring-health-200"/>
-                    <div>
-                      <h4 className="font-bold text-sm text-ink-main">{upcomingAppointment.doctorName}</h4>
-                      <p className="text-xs text-ink-muted">{upcomingAppointment.doctorSpecialization}</p>
-                      <span className="text-[10px] font-bold text-health-800 bg-health-200/70 px-2 py-0.5 rounded-md">
-                        {upcomingAppointment.department}
-                      </span>
-                    </div>
-                  </div>
-                  <span className={`text-[10px] font-bold uppercase px-2.5 py-1 rounded-full ${upcomingAppointment.status === 'confirmed'
-                ? 'bg-green-100 text-green-800'
-                : 'bg-amber-100 text-amber-800'}`}>
-                    {upcomingAppointment.status}
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-health-200/60 text-xs text-ink-muted">
-                  <div className="flex items-center gap-1.5 font-medium">
-                    <Clock className="w-3.5 h-3.5 text-health-600"/>
-                    <span>{upcomingAppointment.date} at {upcomingAppointment.timeSlot}</span>
-                  </div>
-                  <div className="truncate">
-                    <strong>Reason:</strong> {upcomingAppointment.reason}
-                  </div>
-                </div>
-              </div>) : (<div className="p-8 text-center bg-surface-muted rounded-2xl border border-dashed border-surface-border space-y-2">
-                <p className="text-xs text-ink-muted">No upcoming appointments scheduled.</p>
-                <Link to="/appointments" className="inline-flex items-center gap-1.5 text-xs font-bold text-health-600 hover:text-health-700">
-                  <Plus className="w-3.5 h-3.5"/> Book a Consultation
-                </Link>
-              </div>)}
-          </div>
-
-          {/* Quick AI Assistant Card */}
-          <div className="p-6 rounded-3xl bg-gradient-to-br from-surface to-health-50 border border-health-200/80 shadow-soft space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-health-600"/>
-                <h3 className="font-bold text-sm text-ink-main">Instant AI Health Assistant</h3>
-              </div>
-              <span className="text-[10px] font-bold bg-health-100 text-health-800 px-2 py-0.5 rounded-full">
-                Gemini 1.5
-              </span>
-            </div>
-            <p className="text-xs text-ink-muted leading-relaxed">
-              Have questions about your medication, symptoms, diet, or lab results? Start a real-time conversational chat with MediGuide AI.
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {[
-            'Explain high blood pressure',
-            'Cold vs Seasonal Allergy',
-            'Tips for restful sleep',
-        ].map((prompt, i) => (<Link key={i} to={`/ai-assistant?query=${encodeURIComponent(prompt)}`} className="px-3 py-1.5 rounded-xl bg-surface hover:bg-health-100 border border-surface-border text-[11px] font-semibold text-ink-main transition-colors">
-                  "{prompt}" →
-                </Link>))}
-            </div>
-            <Link to="/ai-assistant" className="inline-flex items-center gap-2 text-xs font-bold text-health-700 hover:text-health-800 pt-1">
-              <span>Open AI Conversation Console</span>
-              <ArrowRight className="w-3.5 h-3.5"/>
-            </Link>
-          </div>
-        </div>
-
-        {/* Right Col: Today's Medicine Reminders & Recent Records */}
-        <div className="lg:col-span-5 space-y-6">
-          {/* Today's Medicines Timeline */}
-          <div className="p-6 rounded-3xl bg-surface border border-surface-border shadow-soft space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Pill className="w-4 h-4 text-health-600"/>
-                <h3 className="font-bold text-sm text-ink-main">Today's Medication Tracker</h3>
-              </div>
-              <Link to="/medicines" className="text-xs font-bold text-health-600 hover:text-health-700 flex items-center gap-1">
-                Manage <ArrowRight className="w-3.5 h-3.5"/>
-              </Link>
-            </div>
-
-            {medicines.length > 0 ? (<div className="space-y-3">
-                {medicines.map((med) => {
-                const timeSlot = med.timings[0] || '08:00 AM';
-                const adherenceEntry = med.adherenceHistory.find(a => a.date === today && a.timeSlot === timeSlot);
-                const isTaken = adherenceEntry ? adherenceEntry.taken : false;
-                return (<div key={med.id} className="p-3.5 rounded-2xl bg-surface-muted/60 border border-surface-border flex items-center justify-between hover:bg-surface-muted transition-colors">
-                      <div className="flex items-center gap-3">
-                        <button onClick={() => handleToggleAdherence(med.id, timeSlot, isTaken)} className={`w-6 h-6 rounded-lg flex items-center justify-center transition-all ${isTaken
-                        ? 'bg-status-success text-white shadow-sm'
-                        : 'border-2 border-surface-border hover:border-health-400 bg-surface'}`} title={isTaken ? 'Mark as Not Taken' : 'Mark as Taken'}>
-                          {isTaken && <CheckCircle2 className="w-4 h-4"/>}
-                        </button>
-                        <div>
-                          <h4 className="text-xs font-bold text-ink-main">{med.name}</h4>
-                          <p className="text-[11px] text-ink-muted">{med.dosage} • {timeSlot}</p>
+                <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                    <div className="space-y-3 max-w-2xl">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-health-100 text-xs font-semibold backdrop-blur-md border border-white/10">
+                            <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+                            <span>{getTimeGreeting()}, {user?.name || 'Rahul'}</span>
                         </div>
-                      </div>
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${isTaken ? 'bg-green-100 text-green-800' : 'bg-amber-50 text-amber-800 border border-amber-200'}`}>
-                        {isTaken ? 'Taken ✓' : 'Due'}
-                      </span>
-                    </div>);
-            })}
-              </div>) : (<p className="text-xs text-ink-muted text-center py-4">No active medicines logged.</p>)}
-          </div>
+                        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white font-display leading-tight">
+                            Your health, clearly guided.
+                        </h1>
+                        <p className="text-xs sm:text-sm text-health-100/90 leading-relaxed font-normal">
+                            Understand what you are experiencing, keep your care organized, and know what to do next with AI-assisted clinical clarity.
+                        </p>
+                    </div>
 
-          {/* Recent Records Snippet */}
-          <div className="p-6 rounded-3xl bg-surface border border-surface-border shadow-soft space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <FileText className="w-4 h-4 text-health-600"/>
-                <h3 className="font-bold text-sm text-ink-main">Recent Health Records</h3>
-              </div>
-              <Link to="/health-records" className="text-xs font-bold text-health-600 hover:text-health-700 flex items-center gap-1">
-                Vault <ArrowRight className="w-3.5 h-3.5"/>
-              </Link>
+                    {/* Primary & AI CTAs */}
+                    <div className="flex flex-wrap items-center gap-3 shrink-0">
+                        <Link
+                            to="/symptom-checker"
+                            className="px-5 py-3 rounded-2xl bg-white text-health-800 hover:bg-health-50 text-xs font-extrabold shadow-soft transition-all flex items-center gap-2"
+                        >
+                            <Stethoscope className="w-4 h-4 text-health-700" />
+                            <span>Start a health check</span>
+                        </Link>
+                        <Link
+                            to="/ai-assistant"
+                            className="px-5 py-3 rounded-2xl bg-health-600/80 hover:bg-health-600 text-white border border-white/15 text-xs font-bold transition-all flex items-center gap-2"
+                        >
+                            <Bot className="w-4 h-4 text-accent" />
+                            <span>Ask MediGuide AI</span>
+                        </Link>
+                    </div>
+                </div>
             </div>
 
-            <div className="space-y-2.5">
-              {records.slice(0, 2).map((rec) => (<div key={rec.id} className="p-3 rounded-2xl bg-surface-muted/60 border border-surface-border flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-xl bg-health-100 text-health-700 flex items-center justify-center shrink-0">
-                      <FileText className="w-4 h-4"/>
+            {/* AI Safety Disclaimer */}
+            <AiDisclaimerBanner compact />
+
+            {/* 03: Health Snapshot (4 Metric Cards with Numerals & Trends) */}
+            <div>
+                <div className="flex items-center justify-between mb-3">
+                    <h2 className="text-xs font-bold uppercase tracking-wider text-ink-muted">Health Snapshot & Vitals</h2>
+                    <span className="text-[11px] font-semibold text-health-700">Live Clinical Vitals</span>
+                </div>
+
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+                    {/* Metric 1: Blood Pressure */}
+                    <div className="p-5 rounded-3xl bg-surface border border-surface-border shadow-soft space-y-2 hover:shadow-soft-lg transition-all">
+                        <div className="flex items-center justify-between text-xs font-bold text-ink-muted">
+                            <span>Blood Pressure</span>
+                            <HeartPulse className="w-4 h-4 text-status-success" />
+                        </div>
+                        <div className="flex items-baseline gap-1.5">
+                            <span className="text-2xl font-extrabold text-ink-main">118/78</span>
+                            <span className="text-[10px] font-medium text-ink-muted">mmHg</span>
+                        </div>
+                        <div className="flex items-center justify-between text-[11px] pt-1 border-t border-surface-border/60">
+                            <span className="px-2 py-0.5 rounded-full bg-health-50 text-status-success font-bold text-[10px]">
+                                Optimal
+                            </span>
+                            <span className="text-ink-muted text-[10px]">Normal target</span>
+                        </div>
                     </div>
-                    <div>
-                      <div className="text-xs font-bold text-ink-main truncate max-w-[170px]">{rec.title}</div>
-                      <div className="text-[10px] text-ink-muted">{rec.category} • {rec.recordDate}</div>
+
+                    {/* Metric 2: Resting Heart Rate */}
+                    <div className="p-5 rounded-3xl bg-surface border border-surface-border shadow-soft space-y-2 hover:shadow-soft-lg transition-all">
+                        <div className="flex items-center justify-between text-xs font-bold text-ink-muted">
+                            <span>Resting Heart Rate</span>
+                            <Activity className="w-4 h-4 text-health-600" />
+                        </div>
+                        <div className="flex items-baseline gap-1.5">
+                            <span className="text-2xl font-extrabold text-ink-main">72</span>
+                            <span className="text-[10px] font-medium text-ink-muted">bpm</span>
+                        </div>
+                        <div className="flex items-center justify-between text-[11px] pt-1 border-t border-surface-border/60">
+                            <span className="px-2 py-0.5 rounded-full bg-health-50 text-health-700 font-bold text-[10px]">
+                                Steady
+                            </span>
+                            <span className="text-ink-muted text-[10px]">Resting zone</span>
+                        </div>
                     </div>
-                  </div>
-                  <a href={rec.fileUrl} target="_blank" rel="noreferrer" className="text-[11px] font-bold text-health-600 hover:text-health-700 px-2 py-1 bg-surface rounded-lg border border-surface-border">
-                    View
-                  </a>
-                </div>))}
+
+                    {/* Metric 3: Sleep Architecture */}
+                    <div className="p-5 rounded-3xl bg-surface border border-surface-border shadow-soft space-y-2 hover:shadow-soft-lg transition-all">
+                        <div className="flex items-center justify-between text-xs font-bold text-ink-muted">
+                            <span>Sleep Duration</span>
+                            <Moon className="w-4 h-4 text-skydata-dark" />
+                        </div>
+                        <div className="flex items-baseline gap-1.5">
+                            <span className="text-2xl font-extrabold text-ink-main">7h 45m</span>
+                            <span className="text-[10px] font-medium text-ink-muted">rest</span>
+                        </div>
+                        <div className="flex items-center justify-between text-[11px] pt-1 border-t border-surface-border/60">
+                            <span className="px-2 py-0.5 rounded-full bg-skydata-50 text-skydata-dark font-bold text-[10px]">
+                                Restorative
+                            </span>
+                            <span className="text-ink-muted text-[10px]">Deep & REM</span>
+                        </div>
+                    </div>
+
+                    {/* Metric 4: Blood Glucose */}
+                    <div className="p-5 rounded-3xl bg-surface border border-surface-border shadow-soft space-y-2 hover:shadow-soft-lg transition-all">
+                        <div className="flex items-center justify-between text-xs font-bold text-ink-muted">
+                            <span>Blood Glucose</span>
+                            <Flame className="w-4 h-4 text-accent" />
+                        </div>
+                        <div className="flex items-baseline gap-1.5">
+                            <span className="text-2xl font-extrabold text-ink-main">94</span>
+                            <span className="text-[10px] font-medium text-ink-muted">mg/dL</span>
+                        </div>
+                        <div className="flex items-center justify-between text-[11px] pt-1 border-t border-surface-border/60">
+                            <span className="px-2 py-0.5 rounded-full bg-accent-light text-accent-dark font-bold text-[10px]">
+                                Fasting Normal
+                            </span>
+                            <span className="text-ink-muted text-[10px]">Controlled</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
+
+            {/* 04 & 05: Care Spotlight & Conversational AI Feature Panel */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                {/* Left (7 cols): Care Spotlight (Next Appointment + Today's Medicines) */}
+                <div className="lg:col-span-7 space-y-6">
+                    {/* Next Appointment Card */}
+                    <div className="p-6 rounded-3xl bg-surface border border-surface-border shadow-soft space-y-4">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <div className="w-8 h-8 rounded-xl bg-health-100 text-health-700 flex items-center justify-center">
+                                    <Calendar className="w-4 h-4" />
+                                </div>
+                                <h3 className="font-bold text-sm text-ink-main">Upcoming Care Consultation</h3>
+                            </div>
+                            <Link to="/appointments" className="text-xs font-bold text-health-700 hover:underline flex items-center gap-1">
+                                <span>All ({appointments.length})</span>
+                                <ChevronRight className="w-3.5 h-3.5" />
+                            </Link>
+                        </div>
+
+                        {upcomingAppointment ? (
+                            <div className="p-4 rounded-2xl bg-surface-muted border border-surface-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                <div className="space-y-1">
+                                    <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-health-100 text-health-800 uppercase tracking-wider">
+                                        {upcomingAppointment.type || 'In-Person Consultation'}
+                                    </span>
+                                    <h4 className="text-sm font-bold text-ink-main">{upcomingAppointment.doctorName}</h4>
+                                    <p className="text-xs text-ink-muted">{upcomingAppointment.department} &bull; {upcomingAppointment.hospital || 'Apollo Clinic'}</p>
+                                    <div className="flex items-center gap-2 text-xs font-semibold text-health-700 pt-1">
+                                        <Clock className="w-3.5 h-3.5" />
+                                        <span>{upcomingAppointment.date} at {upcomingAppointment.time}</span>
+                                    </div>
+                                </div>
+                                <Link
+                                    to={`/appointments`}
+                                    className="px-4 py-2.5 rounded-xl bg-health-700 hover:bg-health-800 text-white text-xs font-bold shadow-soft transition-all text-center shrink-0"
+                                >
+                                    Prepare Visit
+                                </Link>
+                            </div>
+                        ) : (
+                            <div className="p-6 rounded-2xl bg-surface-muted/60 text-center space-y-2">
+                                <p className="text-xs text-ink-muted">No consultations scheduled for today.</p>
+                                <Link to="/doctors" className="inline-block px-4 py-2 bg-health-700 text-white text-xs font-bold rounded-xl shadow-soft">
+                                    Find a Doctor
+                                </Link>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Today's Medicines Timeline Preview */}
+                    <div className="p-6 rounded-3xl bg-surface border border-surface-border shadow-soft space-y-4">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <div className="w-8 h-8 rounded-xl bg-accent-light text-accent-dark flex items-center justify-center">
+                                    <Pill className="w-4 h-4" />
+                                </div>
+                                <div>
+                                    <h3 className="font-bold text-sm text-ink-main">Today's Medication Schedule</h3>
+                                    <p className="text-[11px] text-ink-muted">{takenDosesCount} of {medicines.length} doses logged today</p>
+                                </div>
+                            </div>
+                            <Link to="/medicines" className="text-xs font-bold text-health-700 hover:underline flex items-center gap-1">
+                                <span>Tracker</span>
+                                <ChevronRight className="w-3.5 h-3.5" />
+                            </Link>
+                        </div>
+
+                        {medicines.length > 0 ? (
+                            <div className="space-y-2.5">
+                                {medicines.slice(0, 3).map((med) => {
+                                    const isTaken = Boolean(med.adherenceLogs?.[today]?.Morning || med.adherenceLogs?.[today]?.Evening);
+                                    return (
+                                        <div
+                                            key={med.id}
+                                            className="p-3.5 rounded-2xl bg-surface-muted border border-surface-border flex items-center justify-between gap-3"
+                                        >
+                                            <div className="space-y-0.5">
+                                                <div className="flex items-center gap-2">
+                                                    <h4 className="text-xs font-bold text-ink-main">{med.name}</h4>
+                                                    <span className="text-[10px] text-ink-muted">{med.dosage}</span>
+                                                </div>
+                                                <p className="text-[10px] text-ink-muted">{med.instructions || 'Take after breakfast with water'}</p>
+                                            </div>
+
+                                            <button
+                                                onClick={() => handleToggleAdherence(med.id, 'Morning', isTaken)}
+                                                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                                                    isTaken
+                                                        ? 'bg-status-success text-white shadow-soft'
+                                                        : 'bg-surface border border-surface-border text-ink-muted hover:bg-health-50 hover:text-health-700'
+                                                }`}
+                                            >
+                                                {isTaken ? <Check className="w-3.5 h-3.5" /> : null}
+                                                <span>{isTaken ? 'Taken' : 'Mark Taken'}</span>
+                                            </button>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        ) : (
+                            <p className="text-xs text-ink-muted text-center py-4">No active medications logged.</p>
+                        )}
+                    </div>
+                </div>
+
+                {/* Right (5 cols): MediGuide AI Large Conversational Feature Panel */}
+                <div className="lg:col-span-5 space-y-6">
+                    <div className="p-6 rounded-3xl bg-gradient-to-b from-health-800 to-health-900 text-white shadow-luxury space-y-5 relative overflow-hidden border border-health-700">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <div className="w-8 h-8 rounded-xl bg-accent text-health-900 flex items-center justify-center font-bold">
+                                    <Bot className="w-5 h-5" />
+                                </div>
+                                <div>
+                                    <h3 className="font-extrabold text-sm text-white font-display">Ask MediGuide AI</h3>
+                                    <span className="text-[10px] text-health-200">Connected to your health profile</span>
+                                </div>
+                            </div>
+                            <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-accent border border-accent/20">
+                                Live AI
+                            </span>
+                        </div>
+
+                        <p className="text-xs text-health-100/85 leading-relaxed">
+                            Need clarity on a symptom, lab test metric, or drug interaction? Type below for instant, structured medical guidance.
+                        </p>
+
+                        {/* Interactive Query Input */}
+                        <form onSubmit={handleAiSubmit} className="relative">
+                            <input
+                                type="text"
+                                value={aiInput}
+                                onChange={(e) => setAiInput(e.target.value)}
+                                placeholder="e.g., 'How to relieve morning stiffness?'"
+                                className="w-full px-4 py-3 pr-12 rounded-2xl bg-white/10 border border-white/20 text-xs text-white placeholder:text-health-200/60 focus:outline-none focus:border-accent transition-all backdrop-blur-md"
+                            />
+                            <button
+                                type="submit"
+                                className="absolute right-2 top-2 p-2 rounded-xl bg-accent hover:bg-accent-hover text-health-950 transition-all font-bold"
+                            >
+                                <Send className="w-3.5 h-3.5" />
+                            </button>
+                        </form>
+
+                        {/* Quick Prompt Chips */}
+                        <div className="space-y-1.5">
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-health-300">Suggested Questions</span>
+                            <div className="flex flex-col gap-1.5">
+                                {[
+                                    'How to manage sinus headache at home?',
+                                    'Explain high blood pressure benchmarks',
+                                    'What foods help lower cholesterol naturally?',
+                                ].map((prompt, i) => (
+                                    <button
+                                        key={i}
+                                        onClick={() => navigate(`/ai-assistant?query=${encodeURIComponent(prompt)}`)}
+                                        className="p-2.5 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 text-left text-xs font-medium text-health-100 transition-all flex items-center justify-between group"
+                                    >
+                                        <span className="truncate">{prompt}</span>
+                                        <ArrowRight className="w-3.5 h-3.5 text-accent opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Quick Access Vault Summary */}
+                    <div className="p-5 rounded-3xl bg-surface border border-surface-border shadow-soft flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-2xl bg-skydata-50 text-skydata-dark flex items-center justify-center">
+                                <FileText className="w-5 h-5" />
+                            </div>
+                            <div>
+                                <h4 className="text-xs font-bold text-ink-main">Digital Health Records</h4>
+                                <p className="text-[10px] text-ink-muted">{records.length} documents &bull; {prescriptions.length} e-prescriptions</p>
+                            </div>
+                        </div>
+                        <Link to="/health-records" className="px-3 py-1.5 rounded-xl bg-surface-muted hover:bg-health-50 text-xs font-bold text-health-700 transition-colors">
+                            Open Vault
+                        </Link>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>);
+    );
 };

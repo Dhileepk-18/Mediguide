@@ -1,4 +1,5 @@
 const API_BASE = '/api';
+
 const getAuthHeaders = () => {
     const token = localStorage.getItem('mediguide_token');
     return {
@@ -6,20 +7,29 @@ const getAuthHeaders = () => {
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
     };
 };
+
 async function handleResponse(res) {
-    const data = await res.json();
+    const data = await res.json().catch(() => ({}));
     if (!res.ok) {
+        if (res.status === 401 && (
+            data.message?.includes('User associated with token not found') ||
+            data.message?.includes('Invalid or expired token') ||
+            data.message?.includes('Access token required')
+        )) {
+            localStorage.removeItem('mediguide_token');
+        }
         throw new Error(data.message || 'API request failed');
     }
     return data;
 }
+
 export const api = {
     // Auth API
     async login(email, password) {
         const res = await fetch(`${API_BASE}/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password: password || 'password123' }),
+            body: JSON.stringify({ email, password }),
         });
         return handleResponse(res);
     },
@@ -27,10 +37,7 @@ export const api = {
         const res = await fetch(`${API_BASE}/auth/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                ...userData,
-                password: userData.password || 'password123',
-            }),
+            body: JSON.stringify(userData),
         });
         return handleResponse(res);
     },
@@ -56,15 +63,76 @@ export const api = {
         });
         return handleResponse(res);
     },
+    async forgotPassword(email) {
+        const res = await fetch(`${API_BASE}/auth/forgot-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email }),
+        });
+        return handleResponse(res);
+    },
+    async resetPassword(email, otp, newPassword) {
+        const res = await fetch(`${API_BASE}/auth/reset-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, otp, newPassword }),
+        });
+        return handleResponse(res);
+    },
+    async exportUserData() {
+        const res = await fetch(`${API_BASE}/auth/export-data`, {
+            headers: getAuthHeaders(),
+        });
+        return handleResponse(res);
+    },
+    async deleteUserAccount() {
+        const res = await fetch(`${API_BASE}/auth/delete-account`, {
+            method: 'DELETE',
+            headers: getAuthHeaders(),
+        });
+        return handleResponse(res);
+    },
+
+    // In-App Notifications (FR-15)
+    async getNotifications() {
+        const res = await fetch(`${API_BASE}/notifications`, {
+            headers: getAuthHeaders(),
+        });
+        return handleResponse(res);
+    },
+    async markNotificationRead(id) {
+        const res = await fetch(`${API_BASE}/notifications/${id}/read`, {
+            method: 'PATCH',
+            headers: getAuthHeaders(),
+        });
+        return handleResponse(res);
+    },
+    async markAllNotificationsRead() {
+        const res = await fetch(`${API_BASE}/notifications/read-all`, {
+            method: 'PATCH',
+            headers: getAuthHeaders(),
+        });
+        return handleResponse(res);
+    },
+    async deleteNotification(id) {
+        const res = await fetch(`${API_BASE}/notifications/${id}`, {
+            method: 'DELETE',
+            headers: getAuthHeaders(),
+        });
+        return handleResponse(res);
+    },
+
     // AI API
     async getAiConfig() {
-        const res = await fetch(`${API_BASE}/ai/config`);
+        const res = await fetch(`${API_BASE}/ai/config`, {
+            headers: getAuthHeaders(),
+        });
         return handleResponse(res);
     },
     async setAiApiKey(apiKey) {
         const res = await fetch(`${API_BASE}/ai/config`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: getAuthHeaders(),
             body: JSON.stringify({ apiKey }),
         });
         return handleResponse(res);
@@ -97,22 +165,23 @@ export const api = {
         });
         return handleResponse(res);
     },
-    // Doctors API
-    async getDoctors(department, search) {
+
+    // Doctors API & Discovery
+    async getDoctors(filters = {}) {
         const params = new URLSearchParams();
-        if (department && department !== 'All')
-            params.append('department', department);
-        if (search)
-            params.append('search', search);
+        if (filters.department && filters.department !== 'All') params.append('department', filters.department);
+        if (filters.city && filters.city !== 'All') params.append('city', filters.city);
+        if (filters.state && filters.state !== 'All') params.append('state', filters.state);
+        if (filters.mode && filters.mode !== 'All') params.append('mode', filters.mode);
+        if (filters.language && filters.language !== 'All') params.append('language', filters.language);
+        if (filters.maxFee) params.append('maxFee', filters.maxFee);
+        if (filters.search) params.append('search', filters.search);
+
         const res = await fetch(`${API_BASE}/doctors?${params.toString()}`);
         return handleResponse(res);
     },
     async getDoctorById(id) {
         const res = await fetch(`${API_BASE}/doctors/${id}`);
-        return handleResponse(res);
-    },
-    async getDepartments() {
-        const res = await fetch(`${API_BASE}/doctors/meta/departments`);
         return handleResponse(res);
     },
     async getMyPatients() {
@@ -121,6 +190,62 @@ export const api = {
         });
         return handleResponse(res);
     },
+    async getDoctorSchedule() {
+        const res = await fetch(`${API_BASE}/doctors/schedule/me`, {
+            headers: getAuthHeaders(),
+        });
+        return handleResponse(res);
+    },
+    async updateDoctorSchedule(scheduleData) {
+        const res = await fetch(`${API_BASE}/doctors/schedule/me`, {
+            method: 'PUT',
+            headers: getAuthHeaders(),
+            body: JSON.stringify(scheduleData),
+        });
+        return handleResponse(res);
+    },
+    async updateDoctorProfile(profileData) {
+        const res = await fetch(`${API_BASE}/doctors/profile/me`, {
+            method: 'PUT',
+            headers: getAuthHeaders(),
+            body: JSON.stringify(profileData),
+        });
+        return handleResponse(res);
+    },
+
+    // Medical Departments API
+    async getDepartments() {
+        const res = await fetch(`${API_BASE}/departments`);
+        return handleResponse(res);
+    },
+    async getDepartmentById(id) {
+        const res = await fetch(`${API_BASE}/departments/${id}`);
+        return handleResponse(res);
+    },
+    async createDepartment(data) {
+        const res = await fetch(`${API_BASE}/departments`, {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify(data),
+        });
+        return handleResponse(res);
+    },
+    async updateDepartment(id, updates) {
+        const res = await fetch(`${API_BASE}/departments/${id}`, {
+            method: 'PUT',
+            headers: getAuthHeaders(),
+            body: JSON.stringify(updates),
+        });
+        return handleResponse(res);
+    },
+    async deleteDepartment(id) {
+        const res = await fetch(`${API_BASE}/departments/${id}`, {
+            method: 'DELETE',
+            headers: getAuthHeaders(),
+        });
+        return handleResponse(res);
+    },
+
     // Appointments API
     async bookAppointment(data) {
         const res = await fetch(`${API_BASE}/appointments`, {
@@ -136,14 +261,15 @@ export const api = {
         });
         return handleResponse(res);
     },
-    async updateAppointmentStatus(id, status, notes, prescriptionId) {
+    async updateAppointmentStatus(id, status, notes, prescriptionId, date, timeSlot) {
         const res = await fetch(`${API_BASE}/appointments/${id}/status`, {
             method: 'PATCH',
             headers: getAuthHeaders(),
-            body: JSON.stringify({ status, notes, prescriptionId }),
+            body: JSON.stringify({ status, notes, prescriptionId, date, timeSlot }),
         });
         return handleResponse(res);
     },
+
     // Medicines API
     async getMedicines(patientId) {
         const url = patientId ? `${API_BASE}/medicines?patientId=${patientId}` : `${API_BASE}/medicines`;
@@ -183,6 +309,7 @@ export const api = {
         });
         return handleResponse(res);
     },
+
     // Health Records API
     async getHealthRecords(patientId) {
         const url = patientId ? `${API_BASE}/health-records?patientId=${patientId}` : `${API_BASE}/health-records`;
@@ -206,9 +333,16 @@ export const api = {
         });
         return handleResponse(res);
     },
+
     // Prescriptions API
     async getMyPrescriptions() {
         const res = await fetch(`${API_BASE}/prescriptions/my`, {
+            headers: getAuthHeaders(),
+        });
+        return handleResponse(res);
+    },
+    async getPrescriptionById(id) {
+        const res = await fetch(`${API_BASE}/prescriptions/${id}`, {
             headers: getAuthHeaders(),
         });
         return handleResponse(res);
@@ -221,6 +355,7 @@ export const api = {
         });
         return handleResponse(res);
     },
+
     // Admin API
     async getAdminStats() {
         const res = await fetch(`${API_BASE}/admin/stats`, {
@@ -230,12 +365,9 @@ export const api = {
     },
     async getAdminUsers(role, status, search) {
         const params = new URLSearchParams();
-        if (role && role !== 'all')
-            params.append('role', role);
-        if (status && status !== 'all')
-            params.append('status', status);
-        if (search)
-            params.append('search', search);
+        if (role && role !== 'all') params.append('role', role);
+        if (status && status !== 'all') params.append('status', status);
+        if (search) params.append('search', search);
         const res = await fetch(`${API_BASE}/admin/users?${params.toString()}`, {
             headers: getAuthHeaders(),
         });
@@ -264,10 +396,62 @@ export const api = {
         });
         return handleResponse(res);
     },
+    async approveDoctor(id) {
+        const res = await fetch(`${API_BASE}/admin/doctors/${id}/approve`, {
+            method: 'PATCH',
+            headers: getAuthHeaders(),
+        });
+        return handleResponse(res);
+    },
+    async suspendDoctor(id) {
+        const res = await fetch(`${API_BASE}/admin/doctors/${id}/suspend`, {
+            method: 'PATCH',
+            headers: getAuthHeaders(),
+        });
+        return handleResponse(res);
+    },
     async toggleDoctorAvailability(id) {
         const res = await fetch(`${API_BASE}/admin/doctors/${id}/availability`, {
             method: 'PATCH',
             headers: getAuthHeaders(),
+        });
+        return handleResponse(res);
+    },
+    async getAdminAppointments(filters = {}) {
+        const params = new URLSearchParams();
+        if (filters.status && filters.status !== 'All') params.append('status', filters.status);
+        if (filters.doctorId && filters.doctorId !== 'All') params.append('doctorId', filters.doctorId);
+        if (filters.patientId && filters.patientId !== 'All') params.append('patientId', filters.patientId);
+        if (filters.date) params.append('date', filters.date);
+        if (filters.search) params.append('search', filters.search);
+
+        const res = await fetch(`${API_BASE}/admin/appointments?${params.toString()}`, {
+            headers: getAuthHeaders(),
+        });
+        return handleResponse(res);
+    },
+    async getAuditLogs(filters = {}) {
+        const params = new URLSearchParams();
+        if (filters.eventType && filters.eventType !== 'ALL') params.append('eventType', filters.eventType);
+        if (filters.role && filters.role !== 'ALL') params.append('role', filters.role);
+        if (filters.search) params.append('search', filters.search);
+
+        const res = await fetch(`${API_BASE}/audit-logs?${params.toString()}`, {
+            headers: getAuthHeaders(),
+        });
+        return handleResponse(res);
+    },
+    async getSystemSettings() {
+        const res = await fetch(`${API_BASE}/admin/settings`, {
+            headers: getAuthHeaders(),
+        });
+        return handleResponse(res);
+    },
+    async updateSystemSettings(settings) {
+        const res = await fetch(`${API_BASE}/admin/settings`, {
+            method: 'PUT',
+            headers: getAuthHeaders(),
+            body: JSON.stringify(settings),
         });
         return handleResponse(res);
     },

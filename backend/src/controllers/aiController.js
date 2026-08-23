@@ -101,15 +101,20 @@ export const getAiStatus = async (_req, res) => {
     res.json({ success: true, config: status });
 };
 export const updateAiConfig = async (req, res) => {
-    const { apiKey } = req.body;
-    if (!apiKey || typeof apiKey !== 'string') {
-        res.status(400).json({ success: false, message: 'Valid API key is required' });
-        return;
+    try {
+        const { apiKey } = req.body;
+        if (!apiKey || typeof apiKey !== 'string') {
+            res.status(400).json({ success: false, message: 'Valid API key is required' });
+            return;
+        }
+        setApiKey(apiKey);
+        res.json({
+            success: true,
+            message: 'Google Gemini API Key configured successfully! Live AI is now active.',
+            config: getAiConfig(),
+        });
     }
-    const result = setApiKey(apiKey);
-    res.json({
-        success: true,
-        message: 'Google Gemini API Key configured successfully! Live AI is now active.',
-        config: getAiConfig(),
-    });
+    catch (error) {
+        res.status(400).json({ success: false, message: error.message || 'Failed to update API configuration' });
+    }
 };

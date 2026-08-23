@@ -42,50 +42,48 @@ export function setApiKey(newKey) {
 export function getAiConfig() {
     return {
         hasKey: Boolean(activeApiKey && activeApiKey.length > 5),
-        activeModel: activeApiKey ? 'Google Gemini 3.6 Flash (Live AI)' : 'MediGuide Clinical Engine (Key Required for Live Gemini)',
+        activeModel: activeApiKey ? 'Google Gemini 2.0 Flash (Live AI)' : 'MediGuide Clinical Engine (Key Required for Live Gemini)',
         provider: activeApiKey ? 'Google AI Studio / Gemini API' : 'Built-in Clinical Knowledgebase',
     };
 }
 const MEDICAL_SYSTEM_PROMPT = `
-You are MediGuide AI, an advanced, compassionate, and highly qualified AI Healthcare Assistant.
-Your objective is to provide evidence-based healthcare education, symptom guidance, lifestyle advice, and medical department recommendations.
+You are MediGuide AI, an intelligent, fast, and empathetic clinical AI health companion.
+Your goal is to provide reassuring, evidence-informed preliminary health guidance structured into clear, actionable sections.
 
-CRITICAL SAFETY & CLINICAL PROTOCOLS:
-1. Always maintain a calm, professional, and empathetic tone.
-2. Structure your replies using clear Markdown:
-   - Use ### for major headings
-   - Use #### for sub-points
-   - Use bullet points for steps or recommendations
-   - Highlight key clinical terms in **bold**
-3. Emphasize that your advice is for preliminary educational guidance only, and never a substitute for direct in-person evaluation by a licensed physician.
-4. Clearly recommend the appropriate medical department or specialist (e.g., General Medicine, Cardiology, Dermatology, Neurology, Orthopedics, Pediatrics, ENT, Gastroenterology) when discussing symptoms.
-5. If the user mentions acute red-flag symptoms (e.g. crushing chest pain, difficulty breathing, sudden slurred speech, acute trauma, severe blood loss), immediately advise them to seek emergency medical attention (call local emergency services or visit the nearest ER).
+CRITICAL CLINICAL & FORMATTING RULES:
+1. Keep replies concise, fast, and structured (under 140 words).
+2. Structure your response into these clean Markdown sections:
+   ### [Short Contextual Title]
+   - **What it may mean:** 1-2 sentence clinical perspective.
+   - **What you can do now:** 2-3 practical self-care steps.
+   - **When to seek care:** Clear clinical red flags.
+   *Recommended Specialist: **[Specialty Name]*** (e.g., General Medicine, Cardiology, Neurology, Dermatology, Orthopedics, ENT, Pediatrics).
+3. If red-flag emergency symptoms are present (severe chest pressure, sudden slurred speech, heavy bleeding), clearly prioritize emergency evaluation.
 `;
 export async function generateChatResponse(userMessage, history = []) {
     // If Gemini API is available, invoke real Gemini AI
     if (genAI && activeApiKey) {
         const candidateModels = [
-            'gemini-3.6-flash',
-            'gemini-3.7-flash',
-            'gemini-3.5-flash',
-            'gemini-flash-latest',
-            'gemini-2.5-flash',
+            'gemini-2.0-flash',
             'gemini-1.5-flash',
+            'gemini-1.5-flash-8b',
+            'gemini-2.0-flash-lite',
+            'gemini-flash-latest',
         ];
         for (const modelName of candidateModels) {
             try {
                 const model = genAI.getGenerativeModel({
                     model: modelName,
                     generationConfig: {
-                        temperature: 0.3,
-                        maxOutputTokens: 4096,
+                        temperature: 0.2,
+                        maxOutputTokens: 600,
                     },
                 });
                 const chatContext = history
-                    .slice(-6)
+                    .slice(-4)
                     .map((h) => `${h.sender === 'user' ? 'User' : 'Assistant'}: ${h.text}`)
                     .join('\n\n');
-                const fullPrompt = `${MEDICAL_SYSTEM_PROMPT}\n\nConversation History:\n${chatContext}\n\nUser Question: ${userMessage}\n\nPlease provide a clear, comprehensive, and structured clinical response formatted with markdown headings (###, ####) and bullet points. Never cut off mid-sentence. At the very end, provide 3 suggested short follow-up questions the user might ask, formatted as: [SUGGESTIONS: question1 | question2 | question3]`;
+                const fullPrompt = `${MEDICAL_SYSTEM_PROMPT}\n\nConversation History:\n${chatContext}\n\nUser Question: ${userMessage}\n\nPlease provide a fast, concise, structured clinical answer (under 150 words) with bullet points and a brief title (###). At the very end, provide 2-3 short relevant follow-up questions formatted strictly as: [SUGGESTIONS: question1 | question2 | question3]`;
                 const result = await model.generateContent(fullPrompt);
                 let responseText = result.response.text();
                 // Extract suggestions if present
@@ -101,7 +99,7 @@ export async function generateChatResponse(userMessage, history = []) {
                 if (suggestions.length === 0) {
                     suggestions = generateSuggestedFollowups(userMessage, responseText);
                 }
-                if (responseText && responseText.length > 50) {
+                if (responseText && responseText.length > 20) {
                     return {
                         text: responseText,
                         suggestions,
@@ -127,12 +125,11 @@ export async function analyzeSymptoms(userId, symptoms, severity, duration, body
     // Try real Gemini AI generation first
     if (genAI && activeApiKey) {
         const candidateModels = [
-            'gemini-3.6-flash',
-            'gemini-3.7-flash',
-            'gemini-3.5-flash',
-            'gemini-flash-latest',
-            'gemini-2.5-flash',
+            'gemini-2.0-flash',
             'gemini-1.5-flash',
+            'gemini-1.5-flash-8b',
+            'gemini-2.0-flash-lite',
+            'gemini-flash-latest',
         ];
         for (const modelName of candidateModels) {
             try {
@@ -140,13 +137,13 @@ export async function analyzeSymptoms(userId, symptoms, severity, duration, body
                     model: modelName,
                     generationConfig: {
                         temperature: 0.2,
-                        maxOutputTokens: 4096,
+                        maxOutputTokens: 1024,
                         responseMimeType: 'application/json',
                     },
                 });
                 const prompt = `
 You are an expert AI clinical triage assistant.
-Analyze the following patient reported symptoms and return a strictly valid JSON response.
+Analyze the following patient reported symptoms and return a strictly valid JSON response. Keep preliminaryGuidance concise and actionable (under 80 words).
 
 Patient Data:
 - Symptoms: ${symptomText}
@@ -167,7 +164,7 @@ Available Medical Departments to recommend from:
 
 Return JSON with this exact schema:
 {
-  "preliminaryGuidance": "detailed structured paragraph explaining the physiological basis, immediate home care, and clinical considerations",
+  "preliminaryGuidance": "concise structured paragraph explaining the clinical basis, home care, and next steps (under 80 words)",
   "possibleConditions": ["condition1", "condition2", "condition3"],
   "recommendedDepartment": "one of the available medical departments listed above",
   "urgencyLevel": "Low / Routine" | "Moderate / Consult Soon" | "High / Seek Immediate Care"
@@ -295,42 +292,156 @@ Return JSON with this exact schema:
 }
 function dynamicHealthcareChat(message) {
     const lower = message.toLowerCase();
-    if ((lower.includes('cold') && lower.includes('headache')) ||
-        (lower.includes('sinus') && lower.includes('headache')) ||
-        (lower.includes('congestion') && lower.includes('headache'))) {
+
+    // 1. Diagnostic Lab Reports, Blood Tests, CBC, Lipid, Metabolic, and Vault Documents
+    if (
+        lower.includes('lab report') ||
+        lower.includes('medical record') ||
+        lower.includes('blood report') ||
+        lower.includes('blood test') ||
+        lower.includes('clinical significance') ||
+        lower.includes('test result') ||
+        lower.includes('diagnostic') ||
+        lower.includes('cbc') ||
+        lower.includes('lipid') ||
+        lower.includes('hemoglobin') ||
+        lower.includes('platelet') ||
+        lower.includes('wbc') ||
+        lower.includes('rbc') ||
+        lower.includes('glucose') ||
+        lower.includes('sugar') ||
+        lower.includes('hba1c') ||
+        lower.includes('cholesterol') ||
+        lower.includes('triglyceride') ||
+        lower.includes('creatinine') ||
+        lower.includes('urea') ||
+        lower.includes('thyroid') ||
+        lower.includes('tsh') ||
+        lower.includes('bilirubin') ||
+        lower.includes('lft') ||
+        lower.includes('kft')
+    ) {
         return {
-            text: `### Managing Cold Symptoms with Headache\n\nExperiencing a headache alongside a cold is very common and typically stems from **sinus mucosal inflammation**, nasal congestion building up pressure behind the eyes and forehead, and the body's natural immune response to a viral infection.\n\n#### Recommended Care & Relief Measures:\n- **Steam Inhalation:** Inhale warm steam for 10–15 minutes twice daily to open sinus cavities and ease facial tension.\n- **Aggressive Hydration:** Drink at least 2.5–3 liters of warm fluids daily (herbal teas, warm water with lemon, broths) to thin mucus secretions.\n- **Warm Compress:** Apply a warm, moist towel across your forehead, temples, and nasal bridge.\n- **Sensory Rest:** Rest in a quiet, dim room with digital screens minimized.\n- **Sleep Elevation:** Keep your head slightly elevated with an extra pillow to prevent overnight congestion buildup.\n\n> ⚠️ **When to Seek Medical Attention:** If you develop a persistent high fever (over 38.5°C / 101.3°F), a stiff neck, sudden severe ('thunderclap') pain, or symptoms lasting beyond 7–10 days, seek immediate clinical evaluation.\n\n*Recommended Department: **General Medicine** or **ENT**.*`,
-            suggestions: ['Check symptoms in AI Symptom Checker', 'Book appointment with General Physician', 'How to relieve sinus pressure naturally?'],
+            text: `### Clinical Lab Report & Diagnostic Interpretation\n\nDiagnostic tests provide essential baseline biomarkers to evaluate physiological function and organ health.\n\n- **Core Biomarker Benchmarks:**\n  - **Hemoglobin (Hb):** Normal: *13.5–17.5 g/dL* (men) / *12.0–15.5 g/dL* (women). Evaluates oxygen transportation capacity.\n  - **Total WBC Count:** Normal: *4,000–11,000 /mcL*. Indicates immune defense status.\n  - **Platelet Count:** Normal: *150,000–450,000 /mcL*. Essential for normal vascular clotting.\n  - **Fasting Blood Glucose:** Normal: *70–99 mg/dL* (Prediabetes: 100–125 mg/dL).\n  - **Lipid Profile (Total Cholesterol):** Desirable: *< 200 mg/dL* (LDL < 100, HDL > 50 mg/dL, Triglycerides < 150 mg/dL).\n  - **Kidney Function (Creatinine):** Normal: *0.7–1.3 mg/dL*.\n\n- **What You Can Do Now:**\n  1. Maintain adequate hydration and note whether the test was conducted in a fasting or post-prandial state.\n  2. Compare these numbers against historical baseline trends in your **Digital Health Vault**.\n  3. Note specific inquiries regarding lifestyle or dietary modifications for your follow-up visit.\n\n- **When to Seek Care:**\n  Share this vaulted document directly with your attending specialist or primary physician to correlate with physical examination findings and clinical history.\n\n*Recommended Specialist: **General Medicine** or **Pathology**.*`,
+            suggestions: [
+                'Book consultation with General Physician',
+                'How to prepare for a fasting blood test?',
+                'Share record with doctor',
+                'What foods help improve hemoglobin naturally?',
+            ],
         };
     }
+
+    // 2. Imaging, X-Rays, Ultrasound, CT, and MRI Scans
+    if (
+        lower.includes('imaging') ||
+        lower.includes('x-ray') ||
+        lower.includes('xray') ||
+        lower.includes('scan') ||
+        lower.includes('mri') ||
+        lower.includes('ct scan') ||
+        lower.includes('ultrasound') ||
+        lower.includes('sonography') ||
+        lower.includes('radiology')
+    ) {
+        return {
+            text: `### Imaging & Radiology Report Overview\n\nRadiological imaging visualizes anatomical structures, bone alignment, and soft-tissue densities.\n\n- **Clinical Perspective:** Imaging findings must always be correlated with physical symptoms and clinical palpation.\n- **Common Terms:** *Radiolucent* (darker, air-filled structures), *Radio-opaque* (denser, bone or contrast structures), *Unremarkable* (no pathological abnormalities detected).\n- **Next Steps:** Ensure the complete DICOM file or film series is reviewed alongside the radiologist's impression report.\n\n*Recommended Specialist: **Radiology** or **Orthopedics / General Medicine**.*`,
+            suggestions: [
+                'Book consultation with Specialist',
+                'Upload imaging document to Vault',
+                'Check symptoms in Symptom Checker',
+            ],
+        };
+    }
+
+    // 3. Prescriptions and Medications
+    if (
+        lower.includes('prescription') ||
+        lower.includes('medicine') ||
+        lower.includes('medication') ||
+        lower.includes('tablet') ||
+        lower.includes('dosage') ||
+        lower.includes('drug interaction') ||
+        lower.includes('pill')
+    ) {
+        return {
+            text: `### Prescription & Medication Guidance\n\nAdhering to prescribed dosages and scheduled meal timings is crucial for therapeutic efficacy.\n\n- **Timing & Absorption:** Follow prescribed directions (*Before Food*, *After Food*, or *Bedtime*) to ensure optimal gastrointestinal absorption.\n- **Safety & Interactions:** Do not combine medications or alter dosage amounts without consulting your physician.\n- **Tracking:** Log your scheduled doses in the **Medicine Tracker** to maintain an accurate 7-day adherence streak.\n\n*Recommended Specialist: **General Medicine** or **Pharmacology**.*`,
+            suggestions: [
+                'Open Medicine Tracker',
+                'Check drug interactions',
+                'Book appointment with Doctor',
+            ],
+        };
+    }
+
+    // 4. Vaccines and Immunization
+    if (lower.includes('vaccin') || lower.includes('immuniz') || lower.includes('booster')) {
+        return {
+            text: `### Vaccination & Immunization Record Guidance\n\nVaccines stimulate active antibody production, providing proactive immunity against target viral and bacterial pathogens.\n\n- **Immune Protection:** Immunizations establish memory T and B lymphocytes for long-term pathogen recognition.\n- **Documentation:** Keeping your official certificate vaulted ensures easy access for healthcare records, travel, and booster tracking.\n- **Mild Post-Vaccine Reactions:** Mild localized soreness, low-grade fever, or fatigue typically resolve spontaneously within 24–48 hours.\n\n*Recommended Specialist: **General Medicine / Preventive Health**.*`,
+            suggestions: [
+                'View digital health records',
+                'General wellness blood test benchmarks',
+                'Book consultation with Doctor',
+            ],
+        };
+    }
+
+    // 5. Cold with Sinus Headache
+    if (
+        (lower.includes('cold') && lower.includes('headache')) ||
+        (lower.includes('sinus') && lower.includes('headache')) ||
+        (lower.includes('congestion') && lower.includes('headache'))
+    ) {
+        return {
+            text: `### Cold with Sinus Headache\n\nCold-related headaches typically result from **sinus mucosal inflammation** and nasal congestion building pressure behind the forehead and eyes.\n\n- **Steam Inhalation:** Inhale warm steam for 10 minutes twice daily to clear airways.\n- **Hydration:** Drink 2.5–3L of warm fluids (water, herbal teas, clear broths).\n- **Warm Compress:** Place a warm cloth over the forehead and bridge of the nose.\n- **Elevated Sleep:** Prop your head up slightly to ease overnight sinus drainage.\n\n*Recommended Specialist: **General Medicine** or **ENT**.*`,
+            suggestions: ['Check symptoms in Symptom Checker', 'Book appointment with General Physician', 'How to relieve sinus pressure naturally?'],
+        };
+    }
+
+    // 6. Fever & Temperature
     if (lower.includes('fever') || lower.includes('temperature') || lower.includes('chills')) {
         return {
-            text: `### Managing Elevated Body Temperature & Fever\n\nFever is typically your body's immune response to an active viral or bacterial challenge.\n\n#### Recommended Clinical Care Steps:\n- **Hydration:** Drink plenty of fluids (electrolyte water, warm broths, oral rehydration).\n- **Rest:** Minimize strenuous physical work to conserve metabolic energy.\n- **Room Environment:** Maintain comfortable ambient temperature (20-22°C / 68-72°F) and wear breathable cotton garments.\n- **Vitals Tracking:** Measure body temperature every 4-6 hours.\n\n> ⚠️ **When to Seek Immediate Care:** If fever exceeds 39.4°C (103°F), persists beyond 3 days, or is accompanied by stiff neck, confusion, or difficulty breathing.\n\n*Recommended Department: **General Medicine**.*`,
-            suggestions: ['Check symptoms in Symptom Checker', 'Book appointment with General Physician', 'How to treat dehydration?'],
+            text: `### Managing Fever & Elevated Temperature\n\nFever is your immune system's standard response to an active viral or bacterial infection.\n\n- **Rest & Hydration:** Drink plenty of electrolyte fluids and rest to save metabolic energy.\n- **Comfort:** Wear light, breathable clothing and keep the room at 20-22°C.\n- **Vitals Monitoring:** Check temperature every 4–6 hours.\n- **When to Seek Care:** Seek urgent medical attention if temperature exceeds 39.4°C (103°F) or lasts over 3 days.\n\n*Recommended Specialist: **General Medicine**.*`,
+            suggestions: ['Check symptoms in Symptom Checker', 'Book appointment with General Physician', 'Signs of dehydration'],
         };
     }
+
+    // 7. Blood Pressure
     if (lower.includes('blood pressure') || lower.includes('hypertension') || lower.includes('bp')) {
         return {
-            text: `### Understanding Blood Pressure & Cardiovascular Wellness\n\nMaintaining balanced arterial pressure is fundamental for cardiovascular longevity.\n\n#### Reference Benchmarks:\n- **Normal:** Systolic < 120 mmHg and Diastolic < 80 mmHg\n- **Elevated:** Systolic 120-129 and Diastolic < 80 mmHg\n- **Stage 1 Hypertension:** Systolic 130-139 or Diastolic 80-89 mmHg\n\n#### Evidence-Based Interventions:\n- **DASH Dietary Pattern:** Restrict sodium (< 2,300mg/day) and increase potassium-rich leafy greens and fruits.\n- **Aerobic Activity:** 150 minutes of brisk walking or moderate cardio per week.\n- **Stress Management:** Consistent circadian sleep schedule and slow diaphragmatic breathing.\n\n*Recommended Department: **Cardiology**.*`,
-            suggestions: ['Book appointment with Cardiologist', 'What foods lower BP naturally?', 'How often to log BP readings?'],
+            text: `### Blood Pressure Overview\n\nMaintaining target blood pressure helps protect heart and vascular health.\n\n- **Normal Range:** Systolic < 120 mmHg and Diastolic < 80 mmHg.\n- **Elevated:** Systolic 120–129 mmHg and Diastolic < 80 mmHg.\n- **Key Actions:** Reduce dietary sodium (< 2,300mg/day), engage in 30 mins of moderate daily activity, and manage stress.\n\n*Recommended Specialist: **Cardiology**.*`,
+            suggestions: ['Book appointment with Cardiologist', 'Foods that help lower blood pressure', 'How often should I log BP?'],
         };
     }
+
+    // 8. Headache & Migraine
     if (lower.includes('headache') || lower.includes('migraine')) {
         return {
-            text: `### Guidance on Headaches & Migraine Management\n\nHeadaches frequently arise from muscle contraction, dehydration, digital eye strain, cervical spine tension, or vascular dilation.\n\n#### Immediate Relief Protocols:\n- **Hydration:** Drink 500ml of cool water slowly.\n- **Sensory Rest:** Rest in a quiet, dark room with screen blue-light eliminated.\n- **Compresses:** Apply a cool compress to the forehead or warm towel across neck muscles.\n- **Ergonomics:** Ensure monitor is at eye level and relax shoulder elevation.\n\n> ⚠️ **Red Flags:** Seek emergency care for sudden 'thunderclap' headache, visual aura with numbness, or slurred speech.\n\n*Recommended Department: **Neurology**.*`,
+            text: `### Headache & Migraine Care\n\nHeadaches commonly arise from muscle contraction, dehydration, eye strain, or vascular changes.\n\n- **Immediate Relief:** Drink 500ml of water and rest in a dark, quiet room.\n- **Compress:** Apply a cool compress to your forehead or warm cloth to neck muscles.\n- **Screen Break:** Minimize digital screens and relax neck posture.\n- **Red Flags:** Seek emergency care for sudden 'thunderclap' onset, visual loss, or weakness.\n\n*Recommended Specialist: **Neurology**.*`,
             suggestions: ['Check symptoms in Symptom Checker', 'Book appointment with Neurologist', 'Tips to prevent screen eye strain'],
         };
     }
-    if (lower.includes('sleep') || lower.includes('insomnia') || lower.includes('fatigue')) {
+
+    // 9. Diet & Nutrition
+    if (lower.includes('diet') || lower.includes('food') || lower.includes('nutrition') || lower.includes('cholesterol')) {
         return {
-            text: `### Optimizing Sleep Architecture & Overcoming Fatigue\n\nRestorative sleep regulates neuro-endocrine function, immune response, and cellular repair.\n\n#### Sleep Optimization Guidelines:\n1. **Consistent Wake Time:** Wake up at the exact same hour every day, including weekends.\n2. **Morning Phototherapy:** Get 15 minutes of natural sunlight within 60 minutes of waking.\n3. **Caffeine Timing:** Cease caffeine consumption at least 8 hours before scheduled sleep.\n4. **Thermal Setting:** Maintain bedroom temperature at 18-19°C (65-67°F).\n\n*If unrefreshing sleep persists, schedule a consultation to assess thyroid, iron, or vitamin D levels.*`,
-            suggestions: ['Schedule routine wellness blood test', 'Book consultation with General Medicine', 'Foods that enhance sleep quality'],
+            text: `### Nutrition & Dietary Guidance\n\nA balanced, nutrient-dense diet supports metabolic health and steady energy.\n\n- **Whole Foods:** Prioritize colorful vegetables, lean proteins, legumes, and whole grains.\n- **Healthy Fats:** Choose olive oil, nuts, and seeds over trans and saturated fats.\n- **Portion & Fiber:** Aim for 25–30g of dietary fiber daily to support digestion and lipid balance.\n- **Hydration:** Aim for 2–3 liters of water daily.\n\n*Recommended Specialist: **General Medicine / Clinical Dietetics**.*`,
+            suggestions: ['Calculate daily caloric needs', 'Foods to lower cholesterol', 'Meal ideas for balanced nutrition'],
         };
     }
-    // Generative comprehensive clinical response for any open query
+
+    // 10. Sleep & Recovery
+    if (lower.includes('sleep') || lower.includes('insomnia') || lower.includes('fatigue')) {
+        return {
+            text: `### Sleep Hygiene & Energy Recovery\n\nRestorative sleep is vital for cellular repair, immune response, and mental clarity.\n\n- **Consistent Routine:** Wake and sleep at the same time every day.\n- **Morning Sunlight:** Get 10–15 minutes of natural light within an hour of waking.\n- **Caffeine Cutoff:** Avoid caffeine at least 7–8 hours before bed.\n- **Cool Bedroom:** Keep your bedroom quiet, dark, and cool (18–20°C).\n\n*Recommended Specialist: **General Medicine**.*`,
+            suggestions: ['Schedule routine wellness blood test', 'Book consultation with General Medicine', 'Evening relaxation routine'],
+        };
+    }
+
+    // Concise generative healthcare fallback response
     return {
-        text: `### MediGuide Healthcare Assistant\n\nThank you for your question regarding: *"${message}"*.\n\n#### Clinical Perspective & Guidance:\n- **Overview:** Physical health symptoms are multifaceted and require evaluating onset, duration, and underlying medical history.\n- **Next Steps:** If these symptoms are newly presenting or causing acute discomfort, recording specific details in our **AI Symptom Checker** helps match you with the most appropriate medical specialty.\n- **General Supportive Care:** Prioritize adequate hydration, balanced whole-food nutrition, and proper restorative sleep while monitoring any progressive changes.\n\n*Would you like to analyze specific symptoms or explore available specialist physicians in our network?*`,
-        suggestions: ['Analyze my symptoms in Symptom Checker', 'Browse available specialist doctors', 'How to organize my medications?'],
+        text: `### MediGuide AI Health Guidance\n\nRegarding your query about: *"${message}"*:\n\n- **Clinical Perspective:** Physical health symptoms require evaluating duration, triggers, and severity.\n- **Recommended Step:** Use our **AI Symptom Checker** for tailored assessment and specialist routing.\n- **Supportive Care:** Maintain hydration, balanced nutrition, and monitor any symptom progression.\n\n*Recommended Specialist: **General Medicine**.*`,
+        suggestions: ['Analyze my symptoms in Symptom Checker', 'Browse available specialist doctors', 'Medicine schedule tips'],
     };
 }
 function generateSuggestedFollowups(userMessage, _response) {

@@ -72,7 +72,7 @@ export const ChatHistoryPage = () => {
 
                   <div className="pt-2 border-t border-surface-border flex items-center justify-between">
                     <span className="text-[11px] text-ink-muted">{chat.messages.length} messages</span>
-                    <Link to="/ai-assistant" className="text-xs font-bold text-health-600 hover:text-health-700 flex items-center gap-1">
+                    <Link to={`/ai-assistant?chatId=${chat.id}`} className="text-xs font-bold text-health-600 hover:text-health-700 flex items-center gap-1">
                       <span>Resume Chat</span>
                       <ArrowRight className="w-3.5 h-3.5"/>
                     </Link>
