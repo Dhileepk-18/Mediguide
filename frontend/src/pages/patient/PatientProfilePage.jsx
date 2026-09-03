@@ -2,380 +2,334 @@ import React, { useState } from 'react';
 import { useAuthStore } from '../../store/authStore.js';
 import { useAppStore } from '../../store/appStore.js';
 import {
-    Heart,
-    AlertTriangle,
-    X,
-    Save,
-    MapPin,
-    Languages,
-    ShieldCheck,
-    Info,
-    Plus,
-    User,
-    PhoneCall,
+  User,
+  ShieldCheck,
+  Bell,
+  Link2,
+  Sliders,
+  Check,
+  Save,
+  Phone,
+  Lock,
+  Download,
+  AlertCircle,
 } from 'lucide-react';
 
-const INDIAN_STATES = [
-    'Karnataka', 'Maharashtra', 'Delhi', 'Tamil Nadu', 'Telangana', 'Uttar Pradesh',
-    'Gujarat', 'West Bengal', 'Kerala', 'Rajasthan', 'Madhya Pradesh', 'Punjab',
-    'Haryana', 'Bihar', 'Odisha', 'Andhra Pradesh', 'Assam', 'Jharkhand'
-];
-
-const LANGUAGES = [
-    'English', 'Hindi', 'Tamil', 'Telugu', 'Kannada', 'Bengali', 'Marathi', 'Malayalam', 'Gujarati'
-];
-
 export const PatientProfilePage = () => {
-    const { user, updateUser } = useAuthStore();
-    const { addToast } = useAppStore();
+  const { user, updateUser } = useAuthStore();
+  const { addToast } = useAppStore();
 
-    const [name, setName] = useState(user?.name || '');
-    const [phone, setPhone] = useState(user?.phone || '+91 ');
-    const [age, setAge] = useState(user?.age || 28);
-    const [gender, setGender] = useState(user?.gender || 'Male');
-    const [bloodGroup, setBloodGroup] = useState(user?.bloodGroup || 'O+');
-    const [city, setCity] = useState(user?.city || 'Bengaluru');
-    const [state, setState] = useState(user?.state || 'Karnataka');
-    const [preferredLanguage, setPreferredLanguage] = useState(user?.preferredLanguage || 'English');
-    const [abhaId, setAbhaId] = useState(user?.abhaId || '');
-    const [emergencyContact, setEmergencyContact] = useState(user?.emergencyContact || '');
+  // Basic Info State
+  const [name, setName] = useState(user?.name || '');
+  const [phone, setPhone] = useState(user?.phone || '+91 98765 43210');
+  const [city, setCity] = useState(user?.city || 'Bengaluru');
+  const [state, setState] = useState(user?.state || 'Karnataka');
+  const [emergencyContact, setEmergencyContact] = useState(user?.emergencyContact || '+91 91234 56789');
 
-    const [allergies, setAllergies] = useState(user?.allergies || []);
-    const [newAllergy, setNewAllergy] = useState('');
-    const [chronicConditions, setChronicConditions] = useState(user?.chronicConditions || []);
-    const [newCondition, setNewCondition] = useState('');
+  // Settings State for the 4 Groups (Section 7.7)
+  const [prefLang, setPrefLang] = useState(user?.preferredLanguage || 'English');
+  const [prefMode, setPrefMode] = useState('In-Person');
+  const [abhaConnected, setAbhaConnected] = useState(false);
+  const [syncReminders, setSyncReminders] = useState(true);
+  const [dpdpConsent, setDpdpConsent] = useState(true);
+  const [telemetryOptIn, setTelemetryOptIn] = useState(false);
+  const [doseNotifications, setDoseNotifications] = useState(true);
+  const [aptNotifications, setAptNotifications] = useState(true);
 
-    const [isSaving, setIsSaving] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
-    const handleAddAllergy = (e) => {
-        e.preventDefault();
-        if (!newAllergy.trim()) return;
-        if (!allergies.includes(newAllergy.trim())) {
-            setAllergies([...allergies, newAllergy.trim()]);
-        }
-        setNewAllergy('');
-    };
+  const handleSaveProfile = async e => {
+    e.preventDefault();
+    setIsSaving(true);
+    try {
+      const success = await updateUser({
+        name,
+        phone,
+        city,
+        state,
+        emergencyContact,
+        preferredLanguage: prefLang,
+      });
 
-    const handleAddCondition = (e) => {
-        e.preventDefault();
-        if (!newCondition.trim()) return;
-        if (!chronicConditions.includes(newCondition.trim())) {
-            setChronicConditions([...chronicConditions, newCondition.trim()]);
-        }
-        setNewCondition('');
-    };
+      if (success) {
+        addToast({
+          type: 'success',
+          title: 'Profile Updated',
+          message: 'Personal clinical settings saved.',
+        });
+      }
+    } catch {
+      addToast({
+        type: 'error',
+        title: 'Save Failed',
+        message: 'Could not update profile.',
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
-    const handleSave = async (e) => {
-        e.preventDefault();
-        setIsSaving(true);
-        try {
-            const success = await updateUser({
-                name,
-                phone,
-                age: Number(age),
-                gender,
-                bloodGroup,
-                city,
-                state,
-                preferredLanguage,
-                abhaId,
-                emergencyContact,
-                allergies,
-                chronicConditions,
-            });
-            if (success) {
-                addToast({
-                    type: 'success',
-                    title: 'Health Profile Updated',
-                    message: 'Your demographic and clinical vitals have been securely saved.',
-                });
-            }
-        } catch {
-            addToast({
-                type: 'error',
-                title: 'Save failed',
-                message: 'Could not update profile.',
-            });
-        } finally {
-            setIsSaving(false);
-        }
-    };
+  return (
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+      {/* Header */}
+      <div className="space-y-1">
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-[#0B3441]" />
+          <span className="text-xs font-semibold uppercase tracking-wider text-[#5A6C77]">
+            Account & System Preferences
+          </span>
+        </div>
+        <h1 className="text-3xl sm:text-4xl font-semibold font-serif text-[#061017] tracking-tight">
+          Profile & Care Settings
+        </h1>
+        <p className="text-sm text-[#5A6C77]">
+          Manage your personal information, privacy controls, and communication channels.
+        </p>
+      </div>
 
-    return (
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-fadeIn">
-            {/* Header */}
-            <div>
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-health-100 text-health-800 text-xs font-semibold mb-2">
-                    <User className="w-3.5 h-3.5 text-health-600" />
-                    <span>Personal Healthcare Profile &bull; India First</span>
+      {/* Profile Overview Card */}
+      <div className="p-6 rounded-[18px] bg-white border border-[rgba(6,16,23,0.10)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 rounded-2xl bg-[#0B3441] text-white flex items-center justify-center font-serif text-xl font-semibold shrink-0">
+            {name ? name[0] : 'P'}
+          </div>
+          <div>
+            <div className="text-base font-semibold text-[#061017]">{name || 'Rahul Verma'}</div>
+            <div className="text-xs text-[#5A6C77]">{user?.email || 'patient@mediguide.in'} • Patient Role</div>
+            <div className="text-xs text-[#2A7A5B] font-medium pt-0.5">Accredited MediGuide India Account</div>
+          </div>
+        </div>
+
+        <button
+          onClick={handleSaveProfile}
+          disabled={isSaving}
+          className="px-4 py-2 rounded-xl bg-[#0B3441] text-white hover:bg-[#08252E] text-xs font-semibold flex items-center gap-2 transition-colors disabled:opacity-50"
+        >
+          <Save className="w-3.5 h-3.5" />
+          <span>{isSaving ? 'Saving...' : 'Save Changes'}</span>
+        </button>
+      </div>
+
+      {/* 4 Grouped Settings (Section 7.7: plain-language name + one-line description + single control) */}
+      <div className="space-y-6">
+        {/* GROUP 1: Preferences */}
+        <div className="p-6 rounded-[18px] bg-white border border-[rgba(6,16,23,0.10)] space-y-4">
+          <div className="flex items-center gap-2 pb-2 border-b border-[rgba(6,16,23,0.08)]">
+            <Sliders className="w-4 h-4 text-[#0B3441]" />
+            <h2 className="text-sm font-semibold text-[#061017]">Preferences</h2>
+          </div>
+
+          <div className="divide-y divide-[rgba(6,16,23,0.06)]">
+            {/* Row 1: Language */}
+            <div className="py-3 flex items-center justify-between gap-4">
+              <div>
+                <div className="text-xs font-semibold text-[#061017]">Primary Healthcare Language</div>
+                <div className="text-[11px] text-[#5A6C77]">
+                  Preferred language for AI responses and appointment notifications.
                 </div>
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-ink-main">My Health Profile</h1>
-                <p className="text-xs sm:text-sm text-ink-muted">
-                    Manage your clinical vitals, emergency contacts, Indian state/city location, and optional 14-digit ABHA details.
-                </p>
+              </div>
+              <select
+                value={prefLang}
+                onChange={e => setPrefLang(e.target.value)}
+                className="px-3 py-1.5 rounded-lg border border-[rgba(6,16,23,0.15)] bg-[#FAFBFB] text-xs text-[#061017] focus:outline-none"
+              >
+                <option value="English">English</option>
+                <option value="Hindi">Hindi (हिंदी)</option>
+                <option value="Tamil">Tamil (தமிழ்)</option>
+                <option value="Telugu">Telugu (తెలుగు)</option>
+                <option value="Kannada">Kannada (ಕನ್ನಡ)</option>
+              </select>
             </div>
 
-            <form onSubmit={handleSave} className="space-y-8">
-                {/* Profile Identity Card */}
-                <div className="bg-surface p-6 sm:p-8 rounded-3xl border border-surface-border shadow-soft space-y-6">
-                    <div className="flex items-center gap-4 pb-6 border-b border-surface-border">
-                        <img
-                            src={user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${name}`}
-                            alt={name}
-                            className="w-16 h-16 rounded-2xl object-cover ring-4 ring-health-100 shrink-0"
-                        />
-                        <div>
-                            <h2 className="text-lg font-bold text-ink-main">{name}</h2>
-                            <p className="text-xs text-ink-muted">{user?.email}</p>
-                            <span className="inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-health-100 text-health-800">
-                                Patient UID: {user?.id}
-                            </span>
-                        </div>
-                    </div>
-
-                    {/* Demographic Info */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                        <div>
-                            <label className="block font-bold text-ink-main mb-1.5">Full Name</label>
-                            <input
-                                type="text"
-                                required
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                className="w-full px-4 py-2.5 bg-surface-muted rounded-xl border border-surface-border font-semibold focus:outline-none focus:border-health-400"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block font-bold text-ink-main mb-1.5">Mobile Number (Defaults to +91)</label>
-                            <input
-                                type="tel"
-                                placeholder="+91 98765 43210"
-                                value={phone}
-                                onChange={(e) => setPhone(e.target.value)}
-                                className="w-full px-4 py-2.5 bg-surface-muted rounded-xl border border-surface-border font-semibold focus:outline-none focus:border-health-400"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block font-bold text-ink-main mb-1.5">Age</label>
-                            <input
-                                type="number"
-                                value={age || ''}
-                                onChange={(e) => setAge(Number(e.target.value))}
-                                className="w-full px-4 py-2.5 bg-surface-muted rounded-xl border border-surface-border font-semibold focus:outline-none focus:border-health-400"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block font-bold text-ink-main mb-1.5">Gender</label>
-                            <select
-                                value={gender}
-                                onChange={(e) => setGender(e.target.value)}
-                                className="w-full px-3 py-2.5 bg-surface-muted rounded-xl border border-surface-border font-semibold focus:outline-none focus:border-health-400"
-                            >
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label className="block font-bold text-ink-main mb-1.5">Blood Group</label>
-                            <select
-                                value={bloodGroup}
-                                onChange={(e) => setBloodGroup(e.target.value)}
-                                className="w-full px-3 py-2.5 bg-surface-muted rounded-xl border border-surface-border font-semibold focus:outline-none focus:border-health-400"
-                            >
-                                <option value="A+">A+</option>
-                                <option value="A-">A-</option>
-                                <option value="B+">B+</option>
-                                <option value="B-">B-</option>
-                                <option value="O+">O+</option>
-                                <option value="O-">O-</option>
-                                <option value="AB+">AB+</option>
-                                <option value="AB-">AB-</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label className="block font-bold text-ink-main mb-1.5">Preferred Language</label>
-                            <select
-                                value={preferredLanguage}
-                                onChange={(e) => setPreferredLanguage(e.target.value)}
-                                className="w-full px-3 py-2.5 bg-surface-muted rounded-xl border border-surface-border font-semibold focus:outline-none focus:border-health-400"
-                            >
-                                {LANGUAGES.map(l => (
-                                    <option key={l} value={l}>{l}</option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div>
-                            <label className="block font-bold text-ink-main mb-1.5">City / Locality</label>
-                            <input
-                                type="text"
-                                placeholder="e.g. Bengaluru, Mumbai, Indiranagar"
-                                value={city}
-                                onChange={(e) => setCity(e.target.value)}
-                                className="w-full px-4 py-2.5 bg-surface-muted rounded-xl border border-surface-border font-semibold focus:outline-none focus:border-health-400"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block font-bold text-ink-main mb-1.5">State / Union Territory</label>
-                            <select
-                                value={state}
-                                onChange={(e) => setState(e.target.value)}
-                                className="w-full px-3 py-2.5 bg-surface-muted rounded-xl border border-surface-border font-semibold focus:outline-none focus:border-health-400"
-                            >
-                                {INDIAN_STATES.map(s => (
-                                    <option key={s} value={s}>{s}</option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div className="sm:col-span-2">
-                            <label className="block font-bold text-ink-main mb-1.5">Emergency Contact Details</label>
-                            <input
-                                type="text"
-                                value={emergencyContact}
-                                onChange={(e) => setEmergencyContact(e.target.value)}
-                                placeholder="e.g. Priya Sharma (Spouse) - +91 98765 12345"
-                                className="w-full px-4 py-2.5 bg-surface-muted rounded-xl border border-surface-border font-semibold focus:outline-none focus:border-health-400"
-                            />
-                        </div>
-
-                        {/* Optional 14-Digit ABHA ID */}
-                        <div className="sm:col-span-2 p-4 rounded-2xl bg-sky-50 border border-sky-200 space-y-1">
-                            <div className="flex items-center justify-between">
-                                <label className="font-bold text-sky-900 flex items-center gap-1.5">
-                                    <ShieldCheck className="w-4 h-4 text-sky-600" />
-                                    Ayushman Bharat Health Account (ABHA ID) &bull; Optional
-                                </label>
-                                <span className="text-[10px] text-sky-700 font-semibold bg-sky-100 px-2 py-0.5 rounded-full">
-                                    14-digit format
-                                </span>
-                            </div>
-                            <input
-                                type="text"
-                                placeholder="e.g. 91-4820-1948-2849"
-                                value={abhaId}
-                                onChange={(e) => setAbhaId(e.target.value)}
-                                className="w-full px-4 py-2 bg-white rounded-xl border border-sky-300 font-mono font-bold text-xs focus:outline-none focus:border-sky-500"
-                            />
-                            <p className="text-[10px] text-sky-700 leading-relaxed">
-                                Note: MediGuide uses an ABDM-compatible data structure. ABHA linking remains conceptual until live sandbox gateway credentials are provided.
-                            </p>
-                        </div>
-                    </div>
+            {/* Row 2: Default Consultation Mode */}
+            <div className="py-3 flex items-center justify-between gap-4">
+              <div>
+                <div className="text-xs font-semibold text-[#061017]">Default Consultation Mode</div>
+                <div className="text-[11px] text-[#5A6C77]">
+                  Standard pre-selection when initiating appointment booking.
                 </div>
+              </div>
+              <select
+                value={prefMode}
+                onChange={e => setPrefMode(e.target.value)}
+                className="px-3 py-1.5 rounded-lg border border-[rgba(6,16,23,0.15)] bg-[#FAFBFB] text-xs text-[#061017] focus:outline-none"
+              >
+                <option value="In-Person">In-Person Clinic Visit</option>
+                <option value="Audio/Telehealth">Audio Telehealth</option>
+              </select>
+            </div>
 
-                {/* Clinical Tags: Allergies & Chronic Conditions */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    {/* Allergies */}
-                    <div className="bg-surface p-6 rounded-3xl border border-surface-border shadow-soft space-y-4">
-                        <div className="flex items-center gap-2">
-                            <AlertTriangle className="w-4 h-4 text-status-warning" />
-                            <h3 className="font-bold text-sm text-ink-main">Known Allergies (Food / Drugs)</h3>
-                        </div>
-
-                        <div className="flex flex-wrap gap-2 min-h-[44px]">
-                            {allergies.map((allergy) => (
-                                <span
-                                    key={allergy}
-                                    className="px-3 py-1 bg-amber-50 text-amber-900 border border-amber-200 rounded-xl text-xs font-semibold flex items-center gap-1.5"
-                                >
-                                    <span>{allergy}</span>
-                                    <button
-                                        type="button"
-                                        onClick={() => setAllergies(allergies.filter((a) => a !== allergy))}
-                                        className="hover:text-red-700"
-                                    >
-                                        <X className="w-3 h-3" />
-                                    </button>
-                                </span>
-                            ))}
-                            {allergies.length === 0 && (
-                                <span className="text-xs text-ink-muted italic">No allergies recorded.</span>
-                            )}
-                        </div>
-
-                        <div className="flex gap-2">
-                            <input
-                                type="text"
-                                placeholder="Add allergy (e.g. Sulfa, Peanuts)..."
-                                value={newAllergy}
-                                onChange={(e) => setNewAllergy(e.target.value)}
-                                className="flex-1 px-3 py-2 text-xs bg-surface-muted rounded-xl border border-surface-border focus:outline-none focus:border-health-400"
-                            />
-                            <button
-                                onClick={handleAddAllergy}
-                                className="px-3 py-2 bg-health-100 text-health-800 rounded-xl text-xs font-bold hover:bg-health-200"
-                            >
-                                <Plus className="w-3.5 h-3.5" />
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Chronic Conditions */}
-                    <div className="bg-surface p-6 rounded-3xl border border-surface-border shadow-soft space-y-4">
-                        <div className="flex items-center gap-2">
-                            <Heart className="w-4 h-4 text-health-600" />
-                            <h3 className="font-bold text-sm text-ink-main">Existing Chronic Conditions</h3>
-                        </div>
-
-                        <div className="flex flex-wrap gap-2 min-h-[44px]">
-                            {chronicConditions.map((condition) => (
-                                <span
-                                    key={condition}
-                                    className="px-3 py-1 bg-health-50 text-health-900 border border-health-200 rounded-xl text-xs font-semibold flex items-center gap-1.5"
-                                >
-                                    <span>{condition}</span>
-                                    <button
-                                        type="button"
-                                        onClick={() => setChronicConditions(chronicConditions.filter((c) => c !== condition))}
-                                        className="hover:text-red-700"
-                                    >
-                                        <X className="w-3 h-3" />
-                                    </button>
-                                </span>
-                            ))}
-                            {chronicConditions.length === 0 && (
-                                <span className="text-xs text-ink-muted italic">No conditions recorded.</span>
-                            )}
-                        </div>
-
-                        <div className="flex gap-2">
-                            <input
-                                type="text"
-                                placeholder="Add condition (e.g. Hypertension, Thyroid)..."
-                                value={newCondition}
-                                onChange={(e) => setNewCondition(e.target.value)}
-                                className="flex-1 px-3 py-2 text-xs bg-surface-muted rounded-xl border border-surface-border focus:outline-none focus:border-health-400"
-                            />
-                            <button
-                                onClick={handleAddCondition}
-                                className="px-3 py-2 bg-health-100 text-health-800 rounded-xl text-xs font-bold hover:bg-health-200"
-                            >
-                                <Plus className="w-3.5 h-3.5" />
-                            </button>
-                        </div>
-                    </div>
+            {/* Row 3: Emergency Contact */}
+            <div className="py-3 flex items-center justify-between gap-4">
+              <div>
+                <div className="text-xs font-semibold text-[#061017]">Emergency SOS Contact</div>
+                <div className="text-[11px] text-[#5A6C77]">
+                  Contact number notified when priority emergency mode is activated.
                 </div>
-
-                {/* Save Action */}
-                <div className="flex justify-end pt-4">
-                    <button
-                        type="submit"
-                        disabled={isSaving}
-                        className="px-8 py-3.5 bg-health-500 hover:bg-health-600 text-white font-bold rounded-2xl text-xs sm:text-sm shadow-soft transition-all flex items-center gap-2"
-                    >
-                        <Save className="w-4 h-4" />
-                        <span>{isSaving ? 'Saving Changes...' : 'Save Health Profile'}</span>
-                    </button>
-                </div>
-            </form>
+              </div>
+              <input
+                type="text"
+                value={emergencyContact}
+                onChange={e => setEmergencyContact(e.target.value)}
+                className="px-3 py-1.5 rounded-lg border border-[rgba(6,16,23,0.15)] bg-[#FAFBFB] text-xs text-[#061017] focus:outline-none max-w-[180px]"
+              />
+            </div>
+          </div>
         </div>
-    );
+
+        {/* GROUP 2: Connected Services */}
+        <div className="p-6 rounded-[18px] bg-white border border-[rgba(6,16,23,0.10)] space-y-4">
+          <div className="flex items-center gap-2 pb-2 border-b border-[rgba(6,16,23,0.08)]">
+            <Link2 className="w-4 h-4 text-[#39679B]" />
+            <h2 className="text-sm font-semibold text-[#061017]">Connected Services</h2>
+          </div>
+
+          <div className="divide-y divide-[rgba(6,16,23,0.06)]">
+            {/* Row 1: Ayushman Bharat Health Account */}
+            <div className="py-3 flex items-center justify-between gap-4">
+              <div>
+                <div className="text-xs font-semibold text-[#061017]">ABHA / ABDM Healthcare ID</div>
+                <div className="text-[11px] text-[#5A6C77]">
+                  Link 14-digit National Digital Health ID for seamless inter-hospital records.
+                </div>
+              </div>
+              <button
+                onClick={() => setAbhaConnected(!abhaConnected)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                  abhaConnected
+                    ? 'bg-[#2A7A5B] text-white'
+                    : 'bg-[#FAFBFB] border border-[rgba(6,16,23,0.15)] text-[#061017] hover:border-[#0B3441]'
+                }`}
+              >
+                {abhaConnected ? 'Connected' : 'Connect ID'}
+              </button>
+            </div>
+
+            {/* Row 2: Device Calendar Sync */}
+            <div className="py-3 flex items-center justify-between gap-4">
+              <div>
+                <div className="text-xs font-semibold text-[#061017]">Device Calendar Sync</div>
+                <div className="text-[11px] text-[#5A6C77]">
+                  Automatically push confirmed doctor appointments to Google / Apple Calendar.
+                </div>
+              </div>
+              <input
+                type="checkbox"
+                checked={syncReminders}
+                onChange={e => setSyncReminders(e.target.checked)}
+                className="w-4 h-4 accent-[#0B3441] rounded cursor-pointer"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* GROUP 3: Privacy & Consent */}
+        <div className="p-6 rounded-[18px] bg-white border border-[rgba(6,16,23,0.10)] space-y-4">
+          <div className="flex items-center gap-2 pb-2 border-b border-[rgba(6,16,23,0.08)]">
+            <ShieldCheck className="w-4 h-4 text-[#2A7A5B]" />
+            <h2 className="text-sm font-semibold text-[#061017]">Privacy & Consent (DPDP Act 2023)</h2>
+          </div>
+
+          <div className="divide-y divide-[rgba(6,16,23,0.06)]">
+            {/* Row 1: Consent Framework */}
+            <div className="py-3 flex items-center justify-between gap-4">
+              <div>
+                <div className="text-xs font-semibold text-[#061017]">Clinical Data Consent</div>
+                <div className="text-[11px] text-[#5A6C77]">
+                  Permit attending physicians to view previous lab reports during an active appointment.
+                </div>
+              </div>
+              <input
+                type="checkbox"
+                checked={dpdpConsent}
+                onChange={e => setDpdpConsent(e.target.checked)}
+                className="w-4 h-4 accent-[#0B3441] rounded cursor-pointer"
+              />
+            </div>
+
+            {/* Row 2: Anonymous Clinical Research */}
+            <div className="py-3 flex items-center justify-between gap-4">
+              <div>
+                <div className="text-xs font-semibold text-[#061017]">De-identified Health Analytics</div>
+                <div className="text-[11px] text-[#5A6C77]">
+                  Contribute anonymized symptom trends to improve machine-learning triage accuracy.
+                </div>
+              </div>
+              <input
+                type="checkbox"
+                checked={telemetryOptIn}
+                onChange={e => setTelemetryOptIn(e.target.checked)}
+                className="w-4 h-4 accent-[#0B3441] rounded cursor-pointer"
+              />
+            </div>
+
+            {/* Row 3: Export Data */}
+            <div className="py-3 flex items-center justify-between gap-4">
+              <div>
+                <div className="text-xs font-semibold text-[#061017]">Download All Health Records</div>
+                <div className="text-[11px] text-[#5A6C77]">
+                  Export a complete encrypted ZIP archive of your prescriptions and health vault files.
+                </div>
+              </div>
+              <button
+                onClick={() =>
+                  addToast({
+                    type: 'info',
+                    title: 'Export Started',
+                    message: 'Preparing your encrypted healthcare package.',
+                  })
+                }
+                className="px-3 py-1.5 rounded-lg border border-[rgba(6,16,23,0.15)] bg-[#FAFBFB] text-xs font-medium text-[#061017] hover:bg-white flex items-center gap-1.5"
+              >
+                <Download className="w-3.5 h-3.5 text-[#5A6C77]" />
+                <span>Export Data</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* GROUP 4: Notifications */}
+        <div className="p-6 rounded-[18px] bg-white border border-[rgba(6,16,23,0.10)] space-y-4">
+          <div className="flex items-center gap-2 pb-2 border-b border-[rgba(6,16,23,0.08)]">
+            <Bell className="w-4 h-4 text-[#C9A24D]" />
+            <h2 className="text-sm font-semibold text-[#061017]">Notifications & Alerts</h2>
+          </div>
+
+          <div className="divide-y divide-[rgba(6,16,23,0.06)]">
+            {/* Row 1: Medicine Reminders */}
+            <div className="py-3 flex items-center justify-between gap-4">
+              <div>
+                <div className="text-xs font-semibold text-[#061017]">Medicine Dose Alerts</div>
+                <div className="text-[11px] text-[#5A6C77]">
+                  Receive morning, afternoon, and evening in-app push notifications for prescribed medicines.
+                </div>
+              </div>
+              <input
+                type="checkbox"
+                checked={doseNotifications}
+                onChange={e => setDoseNotifications(e.target.checked)}
+                className="w-4 h-4 accent-[#0B3441] rounded cursor-pointer"
+              />
+            </div>
+
+            {/* Row 2: Appointment Status Updates */}
+            <div className="py-3 flex items-center justify-between gap-4">
+              <div>
+                <div className="text-xs font-semibold text-[#061017]">Appointment Reminders</div>
+                <div className="text-[11px] text-[#5A6C77]">
+                  Alerts when your doctor confirms, reschedules, or adds notes to your booking.
+                </div>
+              </div>
+              <input
+                type="checkbox"
+                checked={aptNotifications}
+                onChange={e => setAptNotifications(e.target.checked)}
+                className="w-4 h-4 accent-[#0B3441] rounded cursor-pointer"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };

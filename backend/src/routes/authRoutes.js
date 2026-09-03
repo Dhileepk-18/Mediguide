@@ -1,15 +1,15 @@
 import { Router } from 'express';
 import {
-    register,
-    login,
-    demoLogin,
-    getMe,
-    updateProfile,
-    forgotPassword,
-    resetPassword,
-    exportUserData,
-    deleteAccount,
-    getDemoAccounts,
+  register,
+  login,
+  demoLogin,
+  getMe,
+  updateProfile,
+  forgotPassword,
+  resetPassword,
+  exportUserData,
+  deleteAccount,
+  getDemoAccounts,
 } from '../controllers/authController.js';
 import { requireAuth } from '../middleware/auth.js';
 

@@ -1,5 +1,9 @@
 import { Router } from 'express';
-import { getHealthRecords, addHealthRecord, deleteHealthRecord, } from '../controllers/healthRecordController.js';
+import {
+  getHealthRecords,
+  addHealthRecord,
+  deleteHealthRecord,
+} from '../controllers/healthRecordController.js';
 import { authenticateToken } from '../middleware/auth.js';
 const router = Router();
 router.use(authenticateToken);

@@ -1,0 +1,100 @@
+symptoms,department
+"fever,chills,fatigue,generalized body ache,mild headache",General Medicine
+"mild fever,fatigue,loss of appetite,malaise,weakness",General Medicine
+"high fever,body ache,weakness,dehydration,chills",General Medicine
+"unexplained weight loss,night sweats,fatigue,lethargy",General Medicine
+"chronic fatigue,dizziness,pale skin,weakness,lethargy",General Medicine
+"viral fever,body pain,headache,weakness,shivering",General Medicine
+"dengue symptoms,platelet drop,high fever,severe body ache",General Medicine
+"malaria chills,sweating,fever every alternate day,fatigue",General Medicine
+"typhoid fever,headache,abdominal discomfort,loss of appetite",General Medicine
+"post viral weakness,fatigue,malaise,joint stiffness",General Medicine
+"seasonal flu,fever,body aches,fatigue,chills",General Medicine
+"chest discomfort,breathlessness on exertion,palpitations,fatigue",Cardiology
+"chest tightness,racing heartbeat,shortness of breath,dizziness",Cardiology
+"swollen ankles,irregular pulse,breathlessness lying flat,fatigue",Cardiology
+"high blood pressure readings,palpitations,headache,blurred vision",Cardiology
+"exertional chest pressure,jaw pain,sweating,shortness of breath",Cardiology
+"angina,substernal chest pain,left arm radiation,sweating",Cardiology
+"tachycardia,rapid pulse,palpitations,lightheadedness",Cardiology
+"hypertension,elevated bp,neck tension,morning headache",Cardiology
+"shortness of breath when climbing stairs,chest heaviness,edema",Cardiology
+"irregular heartbeats,fluttering in chest,fatigue,dizziness",Cardiology
+"heart murmur,breathlessness,fatigue,exercise intolerance",Cardiology
+"erythematous rash,pruritus,itching,skin peeling",Dermatology
+"acne vulgaris,facial pustules,oily skin,scars",Dermatology
+"dry scaly patches,intense itching,flaking,red skin",Dermatology
+"hair loss,scalp redness,dandruff,itching",Dermatology
+"urticaria,hives,swelling,skin redness,itching",Dermatology
+"eczema flare,atopic dermatitis,itchy lesions on elbows and knees",Dermatology
+"psoriasis plaques,silvery scales,red inflamed patches",Dermatology
+"fungal ringworm,tinea corporis,circular itchy lesion,red border",Dermatology
+"contact dermatitis,itching after detergent,red blisters",Dermatology
+"boils,furuncles,painful pus filled skin bumps,swelling",Dermatology
+"pigmentation,dark spots on face,melasma,sun damage",Dermatology
+"sore throat,hoarseness of voice,difficulty swallowing,fever",ENT
+"nasal congestion,rhinorrhea,sneezing,sinus pressure",ENT
+"ear pain,ear discharge,reduced hearing,tinnitus",ENT
+"vertigo,spinning sensation,ear fullness,loss of balance",ENT
+"chronic dry cough,throat irritation,nasal blockage",ENT
+"sinusitis,facial pressure,headache behind eyes,nasal drip",ENT
+"tonsillitis,enlarged red tonsils,white spots in throat,fever",ENT
+"deviated septum,nasal obstruction,snoring,mouth breathing",ENT
+"allergic rhinitis,constant morning sneezing,itchy palate",ENT
+"otitis media,middle ear fluid,earache,muffled sound",ENT
+"vocal cord fatigue,strained voice,hoarseness,laryngitis",ENT
+"knee joint pain,swelling,morning stiffness,reduced mobility",Orthopedics
+"lower back pain,sciatica,radiating leg pain,muscle spasm",Orthopedics
+"shoulder pain,rotator stiffness,inability to lift arm",Orthopedics
+"ankle twist,swelling,inability to bear weight,bruising",Orthopedics
+"neck pain,cervical stiffness,radiating tingling into fingers",Orthopedics
+"osteoarthritis,crepitus in knees,difficulty climbing stairs",Orthopedics
+"lumbar slip disc,pinched nerve,numbness down the leg",Orthopedics
+"frozen shoulder,severe restriction of shoulder rotation,pain",Orthopedics
+"rheumatoid arthritis,morning stiffness over 1 hour,swollen finger joints",Orthopedics
+"ligament sprain,knee instability,popping sensation,swelling",Orthopedics
+"tennis elbow,outer elbow pain,weak grip,forearm soreness",Orthopedics
+"migraine,throbbing unilateral headache,nausea,photophobia",Neurology
+"sudden dizziness,vertigo,tingling sensation in fingers,unsteady gait",Neurology
+"facial numbness,mild twitching,persistent tension headache",Neurology
+"tremor in hands,muscle stiffness,slowness of movement",Neurology
+"memory lapses,confusion,difficulty concentrating,sleep disturbance",Neurology
+"cluster headache,piercing pain behind one eye,tearing,nasal drip",Neurology
+"peripheral neuropathy,burning feet sensation,pins and needles",Neurology
+"seizure episode,unconscious jerk,blank stare,confusion",Neurology
+"cervical radiculopathy,shooting nerve pain down the arm,weakness",Neurology
+"carpal tunnel,numb thumb and fingers,night wrist pain",Neurology
+"chronic insomnia,restless legs syndrome,sleep fragmentation",Neurology
+"epigastric burning,acid reflux,heartburn,bloating",Gastroenterology
+"abdominal cramps,watery diarrhea,nausea,vomiting",Gastroenterology
+"chronic constipation,bloating,rectal bleeding,hard stools",Gastroenterology
+"jaundice,yellowish eyes,dark urine,right upper abdominal tenderness",Gastroenterology
+"indigestion,nausea after meals,fullness,loss of appetite",Gastroenterology
+"gastritis,burning stomach ache on empty stomach,nausea",Gastroenterology
+"irritable bowel syndrome,alternating diarrhea and constipation,gas",Gastroenterology
+"fatty liver discomfort,right flank fullness,elevated enzymes,fatigue",Gastroenterology
+"peptic ulcer,stomach pain relieved by antacids,black stool",Gastroenterology
+"gallstones,sharp right upper quadrant pain after fatty meal",Gastroenterology
+"food poisoning,acute vomiting,cramps,fever,dehydration",Gastroenterology
+"persistent wheezing,dry cough,chest congestion,shortness of breath",Pulmonology
+"productive cough,yellow sputum,fever,breathing difficulty",Pulmonology
+"chronic breathlessness,smoker cough,chest tightness",Pulmonology
+"asthma flare,nocturnal breathlessness,whistling sound in chest",Pulmonology
+"pleuritic chest pain,fever,cough with phlegm",Pulmonology
+"bronchitis,hacking deep cough,mucus,low grade fever",Pulmonology
+"post covid cough,lung heaviness,breathlessness on exertion",Pulmonology
+"copd flare,oxygen drop,chronic productive cough,wheezing",Pulmonology
+"allergic asthma,dust allergy,breathing difficulty,coughing at night",Pulmonology
+"pneumonia,high fever,chest pain on deep breath,purulent sputum",Pulmonology
+"sleep apnea,heavy snoring,gasping for air during sleep,daytime sleepiness",Pulmonology
+"pediatric fever,cough,runny nose,irritability",Pediatrics
+"child vomiting,loose stools,dehydration,fussiness",Pediatrics
+"childhood skin rash,mild fever,loss of appetite",Pediatrics
+"ear pulling in infant,crying,fever,restlessness",Pediatrics
+"growth delay,frequent colds,low weight,fatigue in child",Pediatrics
+"infantile colic,inconsolable crying after feeding,distended belly",Pediatrics
+"mumps,swollen salivary glands under jaw,fever in child",Pediatrics
+"measles rash,koplik spots,high fever,watery eyes in toddler",Pediatrics
+"chickenpox,itchy fluid blisters across body,fever in child",Pediatrics
+"hand foot and mouth disease,mouth sores,red spots on palms and soles",Pediatrics
+"newborn feeding difficulty,failure to latch,lethargy,jaundice",Pediatrics

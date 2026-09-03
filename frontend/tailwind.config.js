@@ -1,48 +1,76 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
-        // Luxury Deep Teal Brand Scale
+        // Locked Design Tokens (MediGuide v2.0 Spec)
+        ink: {
+          DEFAULT: '#061017',
+          main: '#061017',
+          muted: '#5A6C77',
+          subtle: '#8C9DA8',
+        },
+        teal: {
+          DEFAULT: '#0B3441',
+          hover: '#08252E',
+          light: '#1B5263',
+        },
+        blue: {
+          DEFAULT: '#39679B',
+          hover: '#2E5480',
+          light: '#E8F0F8',
+        },
+        sky: {
+          DEFAULT: '#9EBAD1',
+          light: '#DCEBF0',
+          soft: '#F0F6F8',
+        },
+        white: {
+          DEFAULT: '#FAFBFB',
+          pure: '#FFFFFF',
+        },
+        gold: {
+          DEFAULT: '#C9A24D',
+          hover: '#B58E3C',
+          light: '#FBF7ED',
+        },
+        success: {
+          DEFAULT: '#2A7A5B',
+          light: '#EDF7F2',
+        },
+        alert: {
+          DEFAULT: '#B83A3A',
+          light: '#FDF2F2',
+        },
+
+        // Legacy / Palette Aliases for components
         health: {
           50: '#F0F6F8',
           100: '#DCEBF0',
           200: '#BDDAE4',
-          300: '#9EBAD1', // Sky accent
+          300: '#9EBAD1',
           400: '#5C90A8',
           500: '#1B5263',
           600: '#0E3E4F',
-          700: '#0B3441', // Deep Teal Primary
+          700: '#0B3441',
           800: '#07242E',
-          900: '#06171E',
+          900: '#061017',
           950: '#030C10',
         },
-        // Warm Editorial Canvas
         surface: {
           DEFAULT: '#FFFFFF',
-          muted: '#FAFBFB', // Warm White Canvas
+          muted: '#FAFBFB',
           card: '#FFFFFF',
-          border: '#E8EDEF',
+          border: 'rgba(6, 16, 23, 0.10)',
           borderDark: '#CBD7DC',
         },
-        // High-Contrast Midnight & Slate Typography
-        ink: {
-          main: '#061017', // Midnight
-          muted: '#5A6C77', // Reassuring slate
-          subtle: '#8C9DA8',
-        },
-        // Warm Gold Editorial Highlight
         accent: {
-          light: '#F8F3E8',
-          DEFAULT: '#C9A24D', // Warm Gold
+          light: '#FBF7ED',
+          DEFAULT: '#C9A24D',
           hover: '#B58E3C',
           dark: '#7D6025',
         },
-        // Sky Blue Data Accent
         skydata: {
           50: '#F2F7FB',
           100: '#E2EEF7',
@@ -50,31 +78,32 @@ export default {
           DEFAULT: '#9EBAD1',
           dark: '#39679B',
         },
-        // Clinical Status Tokens
         status: {
-          success: '#2A7A5B', // Clinical green
-          warning: '#C9A24D', // Warm gold
-          danger: '#B83A3A',  // Clinical red
-          info: '#39679B',    // Steel blue
-        }
+          success: '#2A7A5B',
+          warning: '#C9A24D',
+          danger: '#B83A3A',
+          info: '#39679B',
+        },
       },
       fontFamily: {
-        sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
-        display: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        serif: ['"Source Serif 4"', 'Georgia', 'serif'],
+        display: ['"Source Serif 4"', 'Georgia', 'serif'],
       },
       boxShadow: {
-        'soft': '0 2px 15px -3px rgba(6, 16, 23, 0.04), 0 4px 6px -2px rgba(6, 16, 23, 0.02)',
-        'soft-lg': '0 12px 30px -6px rgba(6, 16, 23, 0.06), 0 6px 12px -4px rgba(6, 16, 23, 0.03)',
-        'luxury': '0 20px 40px -15px rgba(11, 52, 65, 0.08), 0 0 0 1px rgba(232, 237, 239, 0.8)',
-        'glass': '0 8px 32px 0 rgba(11, 52, 65, 0.06)',
+        hairline: '0 0 0 1px rgba(6, 16, 23, 0.10)',
+        drawer: '-8px 0 32px rgba(6, 16, 23, 0.12)',
+        soft: '0 1px 3px rgba(6, 16, 23, 0.05)',
+        luxury: '0 16px 36px -12px rgba(11, 52, 65, 0.12), 0 0 0 1px rgba(6, 16, 23, 0.08)',
       },
       borderRadius: {
-        'xl': '0.875rem', // 14px
-        '2xl': '1.125rem', // 18px (V1.0 spec)
-        '3xl': '1.5rem', // 24px (V1.0 spec)
-        '4xl': '2rem',
-      }
+        panel: '18px',
+        xl: '0.875rem',
+        '2xl': '1.125rem',
+        '3xl': '1.5rem',
+        full: '999px',
+      },
     },
   },
   plugins: [],
-}
+};

@@ -37,20 +37,23 @@ export const LandingPage = () => {
     },
     {
       sender: 'assistant',
-      text: "This pattern strongly aligns with digital eye strain and tension-type headache. I recommend applying the 20-20-20 rule (looking 20 feet away every 20 minutes), staying well-hydrated, and adjusting monitor contrast. If you develop dizziness or visual aura, we suggest scheduling a consultation with our Neurology department.",
+      text: 'This pattern strongly aligns with digital eye strain and tension-type headache. I recommend applying the 20-20-20 rule (looking 20 feet away every 20 minutes), staying well-hydrated, and adjusting monitor contrast. If you develop dizziness or visual aura, we suggest scheduling a consultation with our Neurology department.',
     },
   ]);
   const [isAiTyping, setIsAiTyping] = useState(false);
 
   // Preset quick questions for the AI demo
   const samplePrompts = [
-    "Tips for managing seasonal allergies",
-    "When should I consult a cardiologist for palpitations?",
-    "Healthy dietary habits for mild hypertension",
+    'Tips for managing seasonal allergies',
+    'When should I consult a cardiologist for palpitations?',
+    'Healthy dietary habits for mild hypertension',
   ];
 
   // Interactive Symptom Checker Demo State
-  const [selectedSymptomTags, setSelectedSymptomTags] = useState(['Morning Sneezing', 'Mild Cough']);
+  const [selectedSymptomTags, setSelectedSymptomTags] = useState([
+    'Morning Sneezing',
+    'Mild Cough',
+  ]);
   const [symptomSeverity, setSymptomSeverity] = useState('Mild');
 
   // Interactive Medicine Adherence Demo State
@@ -60,71 +63,73 @@ export const LandingPage = () => {
     { id: 3, name: 'Omega-3 Fish Oil', time: '08:30 PM', taken: false, note: 'Before bed' },
   ]);
 
-  const handleSendDemoChat = (e) => {
+  const handleSendDemoChat = e => {
     e?.preventDefault();
     if (!demoInput.trim()) return;
 
     const userText = demoInput.trim();
     setDemoInput('');
-    setDemoChat((prev) => [...prev, { sender: 'user', text: userText }]);
+    setDemoChat(prev => [...prev, { sender: 'user', text: userText }]);
     setIsAiTyping(true);
 
     setTimeout(() => {
       let reply =
-        "MediGuide AI has analyzed your inquiry. Based on clinical guidelines, maintaining proper hydration and rest is advised. For structured evaluation, explore our symptom triage or book a specialist appointment.";
+        'MediGuide AI has analyzed your inquiry. Based on clinical guidelines, maintaining proper hydration and rest is advised. For structured evaluation, explore our symptom triage or book a specialist appointment.';
       const lower = userText.toLowerCase();
 
       if (lower.includes('chest') || lower.includes('heart') || lower.includes('palpitation')) {
         reply =
-          "For cardiovascular or chest-related symptoms, we advise consulting our **Cardiology** department. Monitor your resting heart rate, avoid strenuous exertion, and seek urgent care if you experience severe shortness of breath or radiating pain.";
+          'For cardiovascular or chest-related symptoms, we advise consulting our **Cardiology** department. Monitor your resting heart rate, avoid strenuous exertion, and seek urgent care if you experience severe shortness of breath or radiating pain.';
       } else if (lower.includes('skin') || lower.includes('rash') || lower.includes('itch')) {
         reply =
-          "Skin dermatoses and rash patterns are best assessed under our **Dermatology** specialty for targeted topical care and allergen assessment.";
+          'Skin dermatoses and rash patterns are best assessed under our **Dermatology** specialty for targeted topical care and allergen assessment.';
       } else if (lower.includes('allerg') || lower.includes('sneeze') || lower.includes('cough')) {
         reply =
-          "Allergic rhinitis and mild respiratory symptoms generally benefit from reducing ambient dust exposure, steam inhalation, and hydration. If symptoms persist beyond 5 days, consult **General Medicine**.";
+          'Allergic rhinitis and mild respiratory symptoms generally benefit from reducing ambient dust exposure, steam inhalation, and hydration. If symptoms persist beyond 5 days, consult **General Medicine**.';
       } else if (lower.includes('headache') || lower.includes('migraine')) {
         reply =
-          "Tension headaches often respond well to dim lighting, screen breaks, and hydration. For persistent or unilateral throbbing headaches with photophobia, a **Neurology** consultation is recommended.";
+          'Tension headaches often respond well to dim lighting, screen breaks, and hydration. For persistent or unilateral throbbing headaches with photophobia, a **Neurology** consultation is recommended.';
       }
 
-      setDemoChat((prev) => [...prev, { sender: 'assistant', text: reply }]);
+      setDemoChat(prev => [...prev, { sender: 'assistant', text: reply }]);
       setIsAiTyping(false);
     }, 700);
   };
 
-  const handleSelectPreset = (promptText) => {
+  const handleSelectPreset = promptText => {
     setDemoInput(promptText);
   };
 
-  const toggleSymptomTag = (tag) => {
+  const toggleSymptomTag = tag => {
     if (selectedSymptomTags.includes(tag)) {
-      setSelectedSymptomTags(selectedSymptomTags.filter((t) => t !== tag));
+      setSelectedSymptomTags(selectedSymptomTags.filter(t => t !== tag));
     } else {
       setSelectedSymptomTags([...selectedSymptomTags, tag]);
     }
   };
 
-  const toggleMedAdherence = (id) => {
-    setAdherenceMeds((prev) =>
-      prev.map((med) => (med.id === id ? { ...med, taken: !med.taken } : med))
+  const toggleMedAdherence = id => {
+    setAdherenceMeds(prev =>
+      prev.map(med => (med.id === id ? { ...med, taken: !med.taken } : med))
     );
   };
 
   const getRecommendedDepartment = () => {
-    if (selectedSymptomTags.some((s) => s.includes('Palpitations') || s.includes('Chest'))) {
+    if (selectedSymptomTags.some(s => s.includes('Palpitations') || s.includes('Chest'))) {
       return { name: 'Cardiology', color: 'text-red-700 bg-red-50 border-red-200' };
     }
-    if (selectedSymptomTags.some((s) => s.includes('Skin') || s.includes('Rash'))) {
+    if (selectedSymptomTags.some(s => s.includes('Skin') || s.includes('Rash'))) {
       return { name: 'Dermatology', color: 'text-pink-700 bg-pink-50 border-pink-200' };
     }
-    if (selectedSymptomTags.some((s) => s.includes('Headache') || s.includes('Migraine'))) {
+    if (selectedSymptomTags.some(s => s.includes('Headache') || s.includes('Migraine'))) {
       return { name: 'Neurology', color: 'text-purple-700 bg-purple-50 border-purple-200' };
     }
-    if (selectedSymptomTags.some((s) => s.includes('Joint') || s.includes('Knee') || s.includes('Back'))) {
+    if (
+      selectedSymptomTags.some(s => s.includes('Joint') || s.includes('Knee') || s.includes('Back'))
+    ) {
       return { name: 'Orthopedics', color: 'text-amber-700 bg-amber-50 border-amber-200' };
     }
-    if (selectedSymptomTags.some((s) => s.includes('Child') || s.includes('Infant'))) {
+    if (selectedSymptomTags.some(s => s.includes('Child') || s.includes('Infant'))) {
       return { name: 'Pediatrics', color: 'text-blue-700 bg-blue-50 border-blue-200' };
     }
     return { name: 'General Medicine', color: 'text-health-700 bg-health-50 border-health-200' };
@@ -162,7 +167,9 @@ export const LandingPage = () => {
             </h1>
 
             <p className="text-base sm:text-lg text-ink-muted leading-relaxed max-w-2xl mx-auto lg:mx-0 font-normal">
-              Preliminary AI symptom guidance, medical department recommendations, doctor appointment booking, medicine reminders, and secure health records — unified into one platform.
+              Preliminary AI symptom guidance, medical department recommendations, doctor
+              appointment booking, medicine reminders, and secure health records — unified into one
+              platform.
             </p>
 
             {/* CTA Buttons */}
@@ -237,7 +244,8 @@ export const LandingPage = () => {
                   </span>
                 </div>
                 <p className="text-[11px] text-ink-muted leading-relaxed">
-                  "Symptoms suggest mild sinus tachycardia. Rest and hydration recommended. Routine cardiology evaluation suggested."
+                  "Symptoms suggest mild sinus tachycardia. Rest and hydration recommended. Routine
+                  cardiology evaluation suggested."
                 </p>
               </div>
 
@@ -249,7 +257,9 @@ export const LandingPage = () => {
                   </div>
                   <div>
                     <div className="text-xs font-bold text-ink-main">Dr. Sarah Jenkins, MD</div>
-                    <div className="text-[11px] text-ink-muted">Cardiology • Tomorrow at 10:30 AM</div>
+                    <div className="text-[11px] text-ink-muted">
+                      Cardiology • Tomorrow at 10:30 AM
+                    </div>
                   </div>
                 </div>
                 <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
@@ -297,7 +307,8 @@ export const LandingPage = () => {
             Everything You Need for Smarter Healthcare
           </h2>
           <p className="text-sm sm:text-base text-ink-muted">
-            Engineered with modern AI assistance, clinical department triage, and streamlined health management for patients and practitioners.
+            Engineered with modern AI assistance, clinical department triage, and streamlined health
+            management for patients and practitioners.
           </p>
         </div>
 
@@ -310,7 +321,8 @@ export const LandingPage = () => {
             <div className="space-y-1">
               <h3 className="text-base font-bold text-ink-main">AI Healthcare Assistant</h3>
               <p className="text-xs text-ink-muted leading-relaxed">
-                Ask general health-related questions in natural language. Powered by Gemini AI with built-in medical safety boundaries and preliminary clarity.
+                Ask general health-related questions in natural language. Powered by Gemini AI with
+                built-in medical safety boundaries and preliminary clarity.
               </p>
             </div>
             <Link
@@ -330,7 +342,8 @@ export const LandingPage = () => {
             <div className="space-y-1">
               <h3 className="text-base font-bold text-ink-main">AI Symptom Checker & Triage</h3>
               <p className="text-xs text-ink-muted leading-relaxed">
-                Input your symptoms, duration, and severity to receive structured preliminary guidance and automatic medical department recommendations.
+                Input your symptoms, duration, and severity to receive structured preliminary
+                guidance and automatic medical department recommendations.
               </p>
             </div>
             <Link
@@ -350,7 +363,8 @@ export const LandingPage = () => {
             <div className="space-y-1">
               <h3 className="text-base font-bold text-ink-main">Doctor Appointment Booking</h3>
               <p className="text-xs text-ink-muted leading-relaxed">
-                Search verified doctors across Cardiology, Neurology, Dermatology, Orthopedics, and General Medicine with seamless slot scheduling.
+                Search verified doctors across Cardiology, Neurology, Dermatology, Orthopedics, and
+                General Medicine with seamless slot scheduling.
               </p>
             </div>
             <Link
@@ -370,7 +384,8 @@ export const LandingPage = () => {
             <div className="space-y-1">
               <h3 className="text-base font-bold text-ink-main">Medicine Reminders</h3>
               <p className="text-xs text-ink-muted leading-relaxed">
-                Maintain medicine names, dosages, reminder times, and food instructions to organize your daily medication schedule without missing doses.
+                Maintain medicine names, dosages, reminder times, and food instructions to organize
+                your daily medication schedule without missing doses.
               </p>
             </div>
             <Link
@@ -390,7 +405,8 @@ export const LandingPage = () => {
             <div className="space-y-1">
               <h3 className="text-base font-bold text-ink-main">Health Record Vault</h3>
               <p className="text-xs text-ink-muted leading-relaxed">
-                Securely upload and access personal lab reports, imaging files, vaccination records, and historical clinical documents anytime.
+                Securely upload and access personal lab reports, imaging files, vaccination records,
+                and historical clinical documents anytime.
               </p>
             </div>
             <Link
@@ -410,7 +426,8 @@ export const LandingPage = () => {
             <div className="space-y-1">
               <h3 className="text-base font-bold text-ink-main">Digital Prescriptions</h3>
               <p className="text-xs text-ink-muted leading-relaxed">
-                Doctors issue electronic prescriptions with exact medication instructions. Patients can view, save, and sync medicines directly to reminders.
+                Doctors issue electronic prescriptions with exact medication instructions. Patients
+                can view, save, and sync medicines directly to reminders.
               </p>
             </div>
             <Link
@@ -437,7 +454,8 @@ export const LandingPage = () => {
                 Experience MediGuide in Action
               </h2>
               <p className="text-xs sm:text-sm text-ink-muted">
-                Test the key capabilities that streamline the patient journey from AI triage to clinical care.
+                Test the key capabilities that streamline the patient journey from AI triage to
+                clinical care.
               </p>
             </div>
 
@@ -492,7 +510,9 @@ export const LandingPage = () => {
                   Natural Language Healthcare Inquiries
                 </h3>
                 <p className="text-xs sm:text-sm text-ink-muted leading-relaxed">
-                  MediGuide AI assists patients in understanding wellness topics, first-aid principles, lifestyle modifications, and when to seek specialized medical attention.
+                  MediGuide AI assists patients in understanding wellness topics, first-aid
+                  principles, lifestyle modifications, and when to seek specialized medical
+                  attention.
                 </p>
 
                 {/* Safety Notice */}
@@ -502,7 +522,8 @@ export const LandingPage = () => {
                     <span>Clinical Safety Disclaimer</span>
                   </div>
                   <p className="text-[11px] text-ink-muted leading-relaxed">
-                    AI responses provide preliminary educational guidance only and do not replace professional diagnosis by licensed physicians.
+                    AI responses provide preliminary educational guidance only and do not replace
+                    professional diagnosis by licensed physicians.
                   </p>
                 </div>
 
@@ -582,11 +603,14 @@ export const LandingPage = () => {
                 </div>
 
                 {/* Chat Input Form */}
-                <form onSubmit={handleSendDemoChat} className="p-3 border-t border-surface-border bg-surface flex gap-2">
+                <form
+                  onSubmit={handleSendDemoChat}
+                  className="p-3 border-t border-surface-border bg-surface flex gap-2"
+                >
                   <input
                     type="text"
                     value={demoInput}
-                    onChange={(e) => setDemoInput(e.target.value)}
+                    onChange={e => setDemoInput(e.target.value)}
                     placeholder="Type or click a sample question above..."
                     className="flex-1 px-3.5 py-2 text-xs bg-surface-muted rounded-xl border border-surface-border focus:outline-none focus:border-health-400"
                   />
@@ -619,7 +643,7 @@ export const LandingPage = () => {
                       'Knee Joint Pain',
                       'Fever & Chills',
                       'Digestive Discomfort',
-                    ].map((tag) => {
+                    ].map(tag => {
                       const isSelected = selectedSymptomTags.includes(tag);
                       return (
                         <button
@@ -645,7 +669,7 @@ export const LandingPage = () => {
                     2. Perceived Severity:
                   </label>
                   <div className="grid grid-cols-3 gap-3">
-                    {['Mild', 'Moderate', 'Severe'].map((sev) => (
+                    {['Mild', 'Moderate', 'Severe'].map(sev => (
                       <button
                         key={sev}
                         type="button"
@@ -665,7 +689,9 @@ export const LandingPage = () => {
                 <div className="p-3.5 rounded-xl bg-surface-muted border border-surface-border text-[11px] text-ink-muted flex items-start gap-2">
                   <AlertCircle className="w-4 h-4 text-health-600 shrink-0 mt-0.5" />
                   <span>
-                    The AI symptom checker correlates selected symptom clusters with clinical departments (e.g. Cardiology, Neurology, Dermatology, Orthopedics, General Medicine).
+                    The AI symptom checker correlates selected symptom clusters with clinical
+                    departments (e.g. Cardiology, Neurology, Dermatology, Orthopedics, General
+                    Medicine).
                   </span>
                 </div>
               </div>
@@ -682,16 +708,22 @@ export const LandingPage = () => {
                 </div>
 
                 <div className="space-y-1">
-                  <div className="text-xs text-ink-muted font-medium">Recommended Specialty Department:</div>
+                  <div className="text-xs text-ink-muted font-medium">
+                    Recommended Specialty Department:
+                  </div>
                   <div className="text-xl font-extrabold text-health-900 flex items-center gap-2">
-                    <span className={`px-2.5 py-0.5 rounded-lg border text-sm font-bold ${recommendedDept.color}`}>
+                    <span
+                      className={`px-2.5 py-0.5 rounded-lg border text-sm font-bold ${recommendedDept.color}`}
+                    >
                       {recommendedDept.name}
                     </span>
                   </div>
                 </div>
 
                 <p className="text-xs text-ink-muted leading-relaxed">
-                  Based on selected indicators ({selectedSymptomTags.length > 0 ? selectedSymptomTags.join(', ') : 'None'}), our clinical system recommends consultation with {recommendedDept.name} practitioners.
+                  Based on selected indicators (
+                  {selectedSymptomTags.length > 0 ? selectedSymptomTags.join(', ') : 'None'}), our
+                  clinical system recommends consultation with {recommendedDept.name} practitioners.
                 </p>
 
                 <div className="pt-2">
@@ -718,12 +750,12 @@ export const LandingPage = () => {
                     <span>Today's Medicine Schedule</span>
                   </h4>
                   <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
-                    {adherenceMeds.filter((m) => m.taken).length} of {adherenceMeds.length} Taken
+                    {adherenceMeds.filter(m => m.taken).length} of {adherenceMeds.length} Taken
                   </span>
                 </div>
 
                 <div className="space-y-2.5">
-                  {adherenceMeds.map((med) => (
+                  {adherenceMeds.map(med => (
                     <div
                       key={med.id}
                       onClick={() => toggleMedAdherence(med.id)}
@@ -744,7 +776,9 @@ export const LandingPage = () => {
                           <Check className="w-3.5 h-3.5" />
                         </div>
                         <div>
-                          <div className={`text-xs font-bold ${med.taken ? 'line-through text-ink-muted' : 'text-ink-main'}`}>
+                          <div
+                            className={`text-xs font-bold ${med.taken ? 'line-through text-ink-muted' : 'text-ink-main'}`}
+                          >
                             {med.name}
                           </div>
                           <div className="text-[10px] text-ink-muted">
@@ -787,8 +821,12 @@ export const LandingPage = () => {
                         LAB
                       </div>
                       <div>
-                        <div className="text-xs font-bold text-ink-main">Comprehensive Metabolic Panel</div>
-                        <div className="text-[10px] text-ink-muted">PDF • Uploaded 3 days ago • Lab Report</div>
+                        <div className="text-xs font-bold text-ink-main">
+                          Comprehensive Metabolic Panel
+                        </div>
+                        <div className="text-[10px] text-ink-muted">
+                          PDF • Uploaded 3 days ago • Lab Report
+                        </div>
                       </div>
                     </div>
                     <span className="text-[10px] font-bold px-2 py-1 rounded-md bg-surface-muted text-ink-muted border border-surface-border">
@@ -802,8 +840,12 @@ export const LandingPage = () => {
                         RX
                       </div>
                       <div>
-                        <div className="text-xs font-bold text-ink-main">Digital Prescription — Dr. Sarah Jenkins</div>
-                        <div className="text-[10px] text-ink-muted">Cardiology • Signed Electronic Rx</div>
+                        <div className="text-xs font-bold text-ink-main">
+                          Digital Prescription — Dr. Sarah Jenkins
+                        </div>
+                        <div className="text-[10px] text-ink-muted">
+                          Cardiology • Signed Electronic Rx
+                        </div>
                       </div>
                     </div>
                     <span className="text-[10px] font-bold px-2 py-1 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">
@@ -847,7 +889,9 @@ export const LandingPage = () => {
                 <UserCheck className="w-6 h-6" />
               </div>
               <div>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-health-700">Primary Users</span>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-health-700">
+                  Primary Users
+                </span>
                 <h3 className="text-lg font-bold text-ink-main">For Patients</h3>
               </div>
               <ul className="space-y-2 text-xs text-ink-muted">
@@ -880,7 +924,9 @@ export const LandingPage = () => {
                 <Stethoscope className="w-6 h-6" />
               </div>
               <div>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-health-700">Healthcare Providers</span>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-health-700">
+                  Healthcare Providers
+                </span>
                 <h3 className="text-lg font-bold text-ink-main">For Doctors</h3>
               </div>
               <ul className="space-y-2 text-xs text-ink-muted">
@@ -913,7 +959,9 @@ export const LandingPage = () => {
                 <Shield className="w-6 h-6" />
               </div>
               <div>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-health-700">System Management</span>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-health-700">
+                  System Management
+                </span>
                 <h3 className="text-lg font-bold text-ink-main">For Administrators</h3>
               </div>
               <ul className="space-y-2 text-xs text-ink-muted">
@@ -945,10 +993,15 @@ export const LandingPage = () => {
       <section id="how-it-works" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="p-8 sm:p-12 rounded-3xl bg-gradient-to-br from-health-50/60 via-surface to-health-50/60 border border-health-200 shadow-soft">
           <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-health-800">4 Simple Steps</span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-ink-main">How MediGuide Works</h2>
+            <span className="text-xs font-bold uppercase tracking-wider text-health-800">
+              4 Simple Steps
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-ink-main">
+              How MediGuide Works
+            </h2>
             <p className="text-xs sm:text-sm text-ink-muted">
-              A structured workflow connecting preliminary AI guidance with licensed clinical practitioners.
+              A structured workflow connecting preliminary AI guidance with licensed clinical
+              practitioners.
             </p>
           </div>
 
@@ -1013,7 +1066,9 @@ export const LandingPage = () => {
               <span>Responsible AI Healthcare Commitment</span>
             </div>
             <p className="text-xs text-ink-muted leading-relaxed">
-              MediGuide adheres to ethical AI standards. AI guidance is explicitly preliminary and educational. It never provides definitive medical diagnoses or replaces the professional judgment of licensed clinical doctors.
+              MediGuide adheres to ethical AI standards. AI guidance is explicitly preliminary and
+              educational. It never provides definitive medical diagnoses or replaces the
+              professional judgment of licensed clinical doctors.
             </p>
           </div>
           <Link
@@ -1038,7 +1093,8 @@ export const LandingPage = () => {
               Ready for Smarter, Simpler Healthcare?
             </h2>
             <p className="text-sm sm:text-base text-health-100/80 leading-relaxed">
-              Join patients and doctors experiencing AI healthcare assistance, instant appointment scheduling, and organized medical records.
+              Join patients and doctors experiencing AI healthcare assistance, instant appointment
+              scheduling, and organized medical records.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
               <Link

@@ -1,5 +1,12 @@
 import { Router } from 'express';
-import { handleChat, handleSymptomCheck, getChatHistories, getSymptomHistories, getAiStatus, updateAiConfig, } from '../controllers/aiController.js';
+import {
+  handleChat,
+  handleSymptomCheck,
+  getChatHistories,
+  getSymptomHistories,
+  getAiStatus,
+  updateAiConfig,
+} from '../controllers/aiController.js';
 import { authenticateToken, optionalAuthenticate } from '../middleware/auth.js';
 const router = Router();
 router.get('/config', getAiStatus);

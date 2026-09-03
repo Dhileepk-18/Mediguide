@@ -1,0 +1,21 @@
+{
+  "model": "Random Forest Classifier",
+  "n_estimators": 100,
+  "classes": [
+    "Cardiology",
+    "Dermatology",
+    "ENT",
+    "Gastroenterology",
+    "General Medicine",
+    "Neurology",
+    "Orthopedics",
+    "Pediatrics",
+    "Pulmonology"
+  ],
+  "accuracy": 0.35,
+  "precision": 0.3125,
+  "recall": 0.35,
+  "f1Score": 0.3119,
+  "totalSamples": 99,
+  "evaluatedAt": "2026-09-03T10:58:29.838681"
+}

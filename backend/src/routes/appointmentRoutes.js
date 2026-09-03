@@ -1,5 +1,10 @@
 import { Router } from 'express';
-import { createAppointment, getMyAppointments, getAppointmentById, updateAppointmentStatus, } from '../controllers/appointmentController.js';
+import {
+  createAppointment,
+  getMyAppointments,
+  getAppointmentById,
+  updateAppointmentStatus,
+} from '../controllers/appointmentController.js';
 import { authenticateToken } from '../middleware/auth.js';
 const router = Router();
 router.use(authenticateToken);

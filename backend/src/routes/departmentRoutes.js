@@ -1,5 +1,11 @@
 import { Router } from 'express';
-import { getAllDepartments, getDepartmentById, createDepartment, updateDepartment, deleteDepartment } from '../controllers/departmentController.js';
+import {
+  getAllDepartments,
+  getDepartmentById,
+  createDepartment,
+  updateDepartment,
+  deleteDepartment,
+} from '../controllers/departmentController.js';
 import { requireAuth } from '../middleware/auth.js';
 
 const router = Router();

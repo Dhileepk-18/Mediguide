@@ -4,23 +4,37 @@
 
 @layer base {
   :root {
-    --color-deep-teal: #0B3441;
+    --ink: #061017;
+    --teal: #0B3441;
+    --blue: #39679B;
+    --sky: #9EBAD1;
+    --white: #FAFBFB;
+    --gold: #C9A24D;
+    --success: #2A7A5B;
+    --alert: #B83A3A;
+
+    /* Aliases */
+    --color-deep-teal: #0b3441;
     --color-ink-midnight: #061017;
-    --color-warm-white: #FAFBFB;
-    --color-warm-accent: #C9A24D;
-    --color-sky: #9EBAD1;
-    --color-blue: #39679B;
-    --color-success: #2A7A5B;
-    --color-alert: #B83A3A;
-    --color-border: #E8EDEF;
+    --color-warm-white: #fafbfb;
+    --color-warm-accent: #c9a24d;
+    --color-sky: #9ebad1;
+    --color-blue: #39679b;
+    --color-success: #2a7a5b;
+    --color-alert: #b83a3a;
+    --color-border: rgba(6, 16, 23, 0.10);
   }
 
   body {
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background-color: var(--color-warm-white);
-    color: var(--color-ink-midnight);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--white);
+    color: var(--ink);
     overflow-x: hidden;
     letter-spacing: -0.011em;
+  }
+
+  h1, h2.font-serif {
+    font-family: 'Source Serif 4', Georgia, serif;
   }
 }
 
@@ -56,22 +70,29 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #FAFBFB;
+  background: #fafbfb;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #DCEBF0;
+  background: #dcebf0;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #9EBAD1;
+  background: #9ebad1;
 }
 
 /* Pulse badge animation */
 @keyframes pulse-subtle {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.88; transform: scale(1.02); }
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.88;
+    transform: scale(1.02);
+  }
 }
 
 .animate-pulse-subtle {

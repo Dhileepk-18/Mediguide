@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import {
-    getDoctors,
-    getDoctorById,
-    getMyPatients,
-    getDoctorSchedule,
-    updateDoctorSchedule,
-    updateDoctorProfile,
+  getDoctors,
+  getDoctorById,
+  getMyPatients,
+  getDoctorSchedule,
+  updateDoctorSchedule,
+  updateDoctorProfile,
 } from '../controllers/doctorController.js';
 import { requireAuth } from '../middleware/auth.js';
 

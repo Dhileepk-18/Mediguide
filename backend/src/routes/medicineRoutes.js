@@ -1,5 +1,11 @@
 import { Router } from 'express';
-import { getMedicines, addMedicine, updateMedicine, deleteMedicine, logAdherence, } from '../controllers/medicineController.js';
+import {
+  getMedicines,
+  addMedicine,
+  updateMedicine,
+  deleteMedicine,
+  logAdherence,
+} from '../controllers/medicineController.js';
 import { authenticateToken } from '../middleware/auth.js';
 const router = Router();
 router.use(authenticateToken);

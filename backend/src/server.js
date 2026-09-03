@@ -16,30 +16,34 @@ import adminRoutes from './routes/adminRoutes.js';
 const app = express();
 
 // Middlewares
-app.use(cors({
+app.use(
+  cors({
     origin: true, // Allow all origins for dev flexibility
     credentials: true,
-}));
+  })
+);
 app.use(express.json({ limit: '15mb' }));
 app.use(express.urlencoded({ extended: true, limit: '15mb' }));
 
 // Request logger
 app.use((req, _res, next) => {
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
-    next();
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
+  next();
 });
 
 // Health check endpoint
 app.get('/api/health', (_req, res) => {
-    res.json({
-        status: 'healthy',
-        product: 'MediGuide AI Healthcare Assistant (India)',
-        timestamp: new Date().toISOString(),
-        version: '1.0.0',
-        aiEngine: config.geminiApiKey ? 'Google Gemini 1.5 Flash API' : 'MediGuide Built-in Clinical Engine',
-        currency: 'INR (₹)',
-        timezone: 'Asia/Kolkata (IST)',
-    });
+  res.json({
+    status: 'healthy',
+    product: 'MediGuide AI Healthcare Assistant (India)',
+    timestamp: new Date().toISOString(),
+    version: '1.0.0',
+    aiEngine: config.geminiApiKey
+      ? 'Google Gemini 1.5 Flash API'
+      : 'MediGuide Built-in Clinical Engine',
+    currency: 'INR (₹)',
+    timezone: 'Asia/Kolkata (IST)',
+  });
 });
 
 // Mount Routes
@@ -57,16 +61,18 @@ app.use('/api/admin', adminRoutes);
 
 // 404 Handler
 app.use((_req, res) => {
-    res.status(404).json({ success: false, message: 'API endpoint not found' });
+  res.status(404).json({ success: false, message: 'API endpoint not found' });
 });
 
 // Start Server
 app.listen(config.port, () => {
-    console.log(`=======================================================`);
-    console.log(`🩺 MediGuide India — AI Healthcare Backend is running!`);
-    console.log(`📡 URL: http://localhost:${config.port}`);
-    console.log(`🤖 AI Engine: ${config.geminiApiKey ? 'Google Gemini 1.5 Flash' : 'Built-in Clinical Medical Knowledge Base'}`);
-    console.log(`🔒 Authentication: Active (JWT + Role RBAC + Audit Logging)`);
-    console.log(`🇮🇳 Localization: INR (₹) | IST Timezone | 112/108 SOS`);
-    console.log(`=======================================================`);
+  console.log(`=======================================================`);
+  console.log(`🩺 MediGuide India — AI Healthcare Backend is running!`);
+  console.log(`📡 URL: http://localhost:${config.port}`);
+  console.log(
+    `🤖 AI Engine: ${config.geminiApiKey ? 'Google Gemini 1.5 Flash' : 'Built-in Clinical Medical Knowledge Base'}`
+  );
+  console.log(`🔒 Authentication: Active (JWT + Role RBAC + Audit Logging)`);
+  console.log(`🇮🇳 Localization: INR (₹) | IST Timezone | 112/108 SOS`);
+  console.log(`=======================================================`);
 });

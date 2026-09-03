@@ -1,16 +1,16 @@
 import { Router } from 'express';
 import {
-    getSystemStats,
-    getAllUsers,
-    updateUserStatus,
-    deleteUser,
-    addDoctorByAdmin,
-    approveDoctor,
-    suspendDoctor,
-    toggleDoctorAvailability,
-    getAllAdminAppointments,
-    getSystemSettings,
-    updateSystemSettings,
+  getSystemStats,
+  getAllUsers,
+  updateUserStatus,
+  deleteUser,
+  addDoctorByAdmin,
+  approveDoctor,
+  suspendDoctor,
+  toggleDoctorAvailability,
+  getAllAdminAppointments,
+  getSystemSettings,
+  updateSystemSettings,
 } from '../controllers/adminController.js';
 import { requireAuth, requireRole } from '../middleware/auth.js';
 
