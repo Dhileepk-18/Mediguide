@@ -69,6 +69,7 @@ const ProtectedRoute = ({ allowedRoles, children }) => {
 const AppLayout = ({ children }) => {
   const { isAuthenticated, user } = useAuthStore();
   const location = useLocation();
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const isEmergency = location.pathname === '/emergency';
 
   if (isEmergency) {
@@ -86,11 +87,16 @@ const AppLayout = ({ children }) => {
 
   return (
     <div
-      className={`min-h-screen flex flex-col bg-[#FAFBFB] ${isAiChat ? 'h-screen overflow-hidden' : ''}`}
+      className={`min-h-screen flex flex-col bg-[#F8FAFC] ${isAiChat ? 'h-screen overflow-hidden' : ''}`}
     >
       <Navbar />
       <div className={`flex flex-1 ${isAiChat ? 'overflow-hidden min-h-0' : ''}`}>
-        {showSidebar && <Sidebar />}
+        {showSidebar && (
+          <Sidebar
+            isCollapsed={isSidebarCollapsed}
+            setIsCollapsed={setIsSidebarCollapsed}
+          />
+        )}
         <main
           className={`flex-1 min-w-0 ${isAiChat ? 'flex flex-col h-full overflow-hidden min-h-0' : 'overflow-x-hidden'} ${showSidebar ? 'pb-16 md:pb-0' : ''}`}
         >
@@ -98,7 +104,7 @@ const AppLayout = ({ children }) => {
         </main>
       </div>
       {showSidebar && <BottomTabBar />}
-      {!isAiChat && <Footer />}
+      {isPublic && <Footer />}
       <ToastContainer />
     </div>
   );

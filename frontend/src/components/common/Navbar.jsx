@@ -21,6 +21,8 @@ import {
   Pill,
   Stethoscope,
   Lock,
+  ArrowRight,
+  Shield,
 } from 'lucide-react';
 
 export const Navbar = () => {
@@ -58,7 +60,6 @@ export const Navbar = () => {
   useEffect(() => {
     if (isAuthenticated) {
       loadNotifications();
-      // Polling notifications every 30s
       const timer = setInterval(loadNotifications, 30000);
       return () => clearInterval(timer);
     }
@@ -106,92 +107,102 @@ export const Navbar = () => {
     navigate('/');
   };
 
-  const getDashboardPath = () => {
-    if (!user) return '/login';
-    if (user.role === 'patient') return '/dashboard';
-    if (user.role === 'doctor') return '/doctor/dashboard';
-    if (user.role === 'admin') return '/admin/dashboard';
-    return '/dashboard';
-  };
-
   const isPublicPage = ['/', '/login', '/register'].includes(location.pathname);
 
-  const getNotifIcon = type => {
-    switch (type) {
+  // Determine current active page label for clean breadcrumb
+  const getBreadcrumbTitle = () => {
+    const path = location.pathname;
+    if (path.includes('symptom-checker')) return 'Symptom Triage';
+    if (path.includes('ai-assistant')) return 'MediGuide Assistant';
+    if (path.includes('doctors')) return 'Doctors & Care Discovery';
+    if (path.includes('appointments')) return 'Appointments';
+    if (path.includes('medicines')) return 'Medicine Schedule';
+    if (path.includes('health-records')) return 'Health Records Vault';
+    if (path.includes('prescriptions')) return 'Digital Prescriptions';
+    if (path.includes('chat-history')) return 'Consultation History';
+    if (path.includes('profile')) return 'Account Profile';
+    if (path.includes('privacy')) return 'Privacy & Consent (DPDP)';
+    if (path.includes('dashboard')) return user?.role === 'doctor' ? 'Doctor Portal' : user?.role === 'admin' ? 'Admin Control' : 'Patient Dashboard';
+    return '';
+  };
+
+  const breadcrumb = getBreadcrumbTitle();
+
+  const getNotificationIcon = category => {
+    switch (category) {
       case 'appointment':
-        return <Calendar className="w-4 h-4 text-sky-500" />;
+        return <Calendar className="w-4 h-4 text-blue-600" />;
       case 'prescription':
-        return <FileText className="w-4 h-4 text-emerald-500" />;
+        return <FileText className="w-4 h-4 text-emerald-600" />;
       case 'medicine':
-        return <Pill className="w-4 h-4 text-amber-500" />;
+        return <Pill className="w-4 h-4 text-amber-600" />;
       case 'security':
-        return <Lock className="w-4 h-4 text-purple-500" />;
+        return <Lock className="w-4 h-4 text-purple-600" />;
       default:
-        return <Activity className="w-4 h-4 text-health-500" />;
+        return <Activity className="w-4 h-4 text-blue-600" />;
     }
   };
 
   return (
     <>
-      <nav className="sticky top-0 z-40 bg-surface/90 backdrop-blur-md border-b border-surface-border transition-all">
+      <nav className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 transition-all">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
-            {/* Logo */}
-            <Link to="/" className="flex items-center gap-3 group">
-              <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-health-600 to-health-400 flex items-center justify-center text-white shadow-soft group-hover:scale-105 transition-transform">
-                <Activity className="w-6 h-6 text-health-100" />
-              </div>
-              <div>
+          <div className="flex items-center justify-between h-16">
+            {/* Logo & Breadcrumb */}
+            <div className="flex items-center gap-3">
+              <Link to={isAuthenticated ? '/dashboard' : '/'} className="flex items-center gap-2.5 group">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform">
+                  <Activity className="w-5 h-5 text-white" />
+                </div>
                 <div className="flex items-center gap-2">
-                  <span className="font-extrabold text-xl tracking-tight text-ink-main">
-                    Medi<span className="text-health-500">Guide</span>
+                  <span className="font-bold text-lg tracking-tight text-slate-900">
+                    Medi<span className="text-blue-600">Guide</span>
                   </span>
-                  <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 bg-orange-100 text-orange-900 rounded-full border border-orange-200">
+                  <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 bg-blue-50 text-blue-700 rounded-full border border-blue-100 hidden sm:inline-block">
                     India
                   </span>
                 </div>
-                <p className="text-[11px] text-ink-muted hidden sm:block">
-                  AI Healthcare Companion (IST)
-                </p>
-              </div>
-            </Link>
+              </Link>
 
-            {/* Desktop Navigation Links for Public */}
+              {/* Clean Active Section Breadcrumb */}
+              {isAuthenticated && breadcrumb && (
+                <div className="hidden md:flex items-center gap-2 pl-3 border-l border-slate-200 text-xs font-medium text-slate-400">
+                  <span>/</span>
+                  <span className="text-slate-700 font-semibold">{breadcrumb}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Desktop Navigation Links for Public Pages */}
             {isPublicPage && (
-              <div className="hidden md:flex items-center gap-7 text-sm font-medium text-ink-muted">
-                <Link to="/" className="hover:text-health-600 transition-colors">
+              <div className="hidden md:flex items-center gap-6 text-xs font-semibold text-slate-600">
+                <Link to="/" className="hover:text-blue-600 transition-colors">
                   Home
                 </Link>
-                <a href="#features" className="hover:text-health-600 transition-colors">
-                  Features
+                <a href="#features" className="hover:text-blue-600 transition-colors">
+                  Clinical Capabilities
                 </a>
-                <a
-                  href="#preview"
-                  className="hover:text-health-600 transition-colors flex items-center gap-1"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-health-500" />
+                <a href="#preview" className="hover:text-blue-600 transition-colors flex items-center gap-1">
+                  <Sparkles className="w-3.5 h-3.5 text-blue-600" />
                   Live Preview
                 </a>
-                <a href="#roles" className="hover:text-health-600 transition-colors">
-                  Portals
-                </a>
-                <a href="#how-it-works" className="hover:text-health-600 transition-colors">
+                <a href="#how-it-works" className="hover:text-blue-600 transition-colors">
                   How It Works
                 </a>
               </div>
             )}
 
             {/* Action Buttons & Helpers */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2.5 sm:gap-3">
               {/* Emergency SOS Button (India 112/108) */}
               <button
                 onClick={() => setIsEmergencyModalOpen(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-xl text-xs font-bold transition-all shadow-sm active:scale-95 group"
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-xl text-xs font-bold transition-all shadow-2xs active:scale-95 group"
                 title="India 24x7 Emergency Helplines (112, 108, 102)"
               >
                 <PhoneCall className="w-3.5 h-3.5 text-red-600 animate-pulse group-hover:scale-110" />
-                <span className="hidden sm:inline">Emergency SOS</span>
-                <span className="text-[10px] bg-red-600 text-white px-1.5 py-0.2 rounded font-black">
+                <span className="hidden sm:inline">Emergency</span>
+                <span className="text-[10px] bg-red-600 text-white px-1.5 py-0.5 rounded font-black">
                   112
                 </span>
               </button>
@@ -201,12 +212,12 @@ export const Navbar = () => {
                 <div className="relative">
                   <button
                     onClick={() => setIsNotificationOpen(!isNotificationOpen)}
-                    className="relative p-2 rounded-xl text-ink-muted hover:text-ink-main hover:bg-health-50 border border-transparent hover:border-health-200 transition-all"
+                    className="relative p-2 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-100/80 border border-transparent transition-all"
                     title="In-App Notifications"
                   >
-                    <Bell className="w-5 h-5" />
+                    <Bell className="w-4 h-4" />
                     {unreadCount > 0 && (
-                      <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-red-500 text-white font-black text-[10px] rounded-full flex items-center justify-center animate-bounce shadow-soft">
+                      <span className="absolute 1 top-1 right-1 w-4 h-4 bg-red-500 text-white font-black text-[9px] rounded-full flex items-center justify-center shadow-xs">
                         {unreadCount > 9 ? '9+' : unreadCount}
                       </span>
                     )}
@@ -215,24 +226,24 @@ export const Navbar = () => {
                   {/* Dropdown Menu */}
                   {isNotificationOpen && (
                     <div
-                      className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-3xl shadow-2xl border border-surface-border p-3 z-50 animate-fadeIn"
+                      className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-xl border border-slate-200 p-3 z-50 animate-fadeIn"
                       onMouseLeave={() => setIsNotificationOpen(false)}
                     >
-                      <div className="flex items-center justify-between px-3 py-2 border-b border-surface-border">
+                      <div className="flex items-center justify-between px-3 py-2 border-b border-slate-100">
                         <div className="flex items-center gap-2">
-                          <h4 className="text-xs font-bold text-ink-main uppercase tracking-wider">
+                          <h4 className="text-xs font-bold text-slate-900 tracking-wider">
                             Notifications
                           </h4>
                           {unreadCount > 0 && (
-                            <span className="px-2 py-0.5 bg-red-100 text-red-700 text-[10px] font-bold rounded-full">
-                              {unreadCount} unread
+                            <span className="px-1.5 py-0.5 bg-red-50 text-red-700 text-[10px] font-bold rounded-full border border-red-200">
+                              {unreadCount} new
                             </span>
                           )}
                         </div>
                         {unreadCount > 0 && (
                           <button
                             onClick={handleMarkAllRead}
-                            className="text-[11px] font-semibold text-health-600 hover:text-health-800 flex items-center gap-1"
+                            className="text-[11px] font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1"
                           >
                             <CheckCheck className="w-3.5 h-3.5" />
                             Mark all read
@@ -240,45 +251,37 @@ export const Navbar = () => {
                         )}
                       </div>
 
-                      <div className="max-h-72 overflow-y-auto divide-y divide-surface-border mt-1">
+                      <div className="max-h-72 overflow-y-auto divide-y divide-slate-100 mt-1">
                         {notifications.length === 0 ? (
-                          <div className="py-8 text-center text-xs text-ink-muted">
-                            <Bell className="w-8 h-8 mx-auto text-slate-300 mb-2" />
-                            No new notifications
+                          <div className="py-8 text-center text-xs text-slate-400">
+                            <Bell className="w-7 h-7 mx-auto text-slate-300 mb-2" />
+                            No notifications yet
                           </div>
                         ) : (
                           notifications.map(n => (
                             <div
                               key={n.id}
                               onClick={() => handleNotificationClick(n)}
-                              className={`p-3 rounded-2xl cursor-pointer transition-colors flex items-start gap-3 ${
+                              className={`p-2.5 rounded-xl cursor-pointer transition-colors flex items-start gap-2.5 ${
                                 n.isRead
-                                  ? 'hover:bg-slate-50 opacity-75'
-                                  : 'bg-health-50/70 hover:bg-health-50 font-medium'
+                                  ? 'hover:bg-slate-50 opacity-70'
+                                  : 'bg-blue-50/50 hover:bg-blue-50 font-medium'
                               }`}
                             >
-                              <div className="p-2 rounded-xl bg-white shadow-sm shrink-0 mt-0.5">
-                                {getNotifIcon(n.type)}
+                              <div className="p-1.5 rounded-lg bg-white shadow-2xs shrink-0 mt-0.5 border border-slate-100">
+                                {getNotificationIcon(n.category)}
                               </div>
-                              <div className="min-w-0 flex-1">
-                                <div className="flex items-center justify-between">
-                                  <p className="text-xs font-bold text-ink-main truncate">
-                                    {n.title}
-                                  </p>
-                                  {!n.isRead && (
-                                    <span className="w-2 h-2 rounded-full bg-red-500 shrink-0" />
-                                  )}
-                                </div>
-                                <p className="text-[11px] text-ink-muted leading-tight mt-0.5 line-clamp-2">
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs text-slate-900 line-clamp-1">{n.title}</p>
+                                <p className="text-[11px] text-slate-500 line-clamp-2 mt-0.5">
                                   {n.message}
                                 </p>
-                                <span className="text-[9px] text-slate-400 mt-1 block">
+                                <p className="text-[10px] text-slate-400 mt-1">
                                   {new Date(n.createdAt).toLocaleTimeString([], {
                                     hour: '2-digit',
                                     minute: '2-digit',
-                                  })}{' '}
-                                  IST
-                                </span>
+                                  })}
+                                </p>
                               </div>
                             </div>
                           ))
@@ -289,102 +292,64 @@ export const Navbar = () => {
                 </div>
               )}
 
-              {/* Auth Buttons / Profile */}
-              {isAuthenticated && user ? (
+              {/* Profile or Login CTA */}
+              {isAuthenticated ? (
                 <div className="relative">
                   <button
                     onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                    className="flex items-center gap-2.5 p-1.5 rounded-2xl hover:bg-health-50 border border-transparent hover:border-health-200 transition-all"
+                    className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-slate-100/80 transition-all border border-slate-200/80"
                   >
-                    <img
-                      src={
-                        user.avatar ||
-                        `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.name}`
-                      }
-                      alt={user.name}
-                      className="w-9 h-9 rounded-xl object-cover ring-2 ring-health-200"
-                    />
-                    <div className="hidden lg:block text-left">
-                      <div className="text-xs font-bold text-ink-main leading-tight">
-                        {user.name}
-                      </div>
-                      <div className="text-[10px] capitalize text-health-600 font-semibold">
-                        {user.role} Portal
-                      </div>
+                    <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-bold text-xs flex items-center justify-center shadow-2xs">
+                      {user.name ? user.name[0].toUpperCase() : 'U'}
                     </div>
-                    <ChevronDown className="w-4 h-4 text-ink-muted" />
+                    <span className="text-xs font-semibold text-slate-700 hidden md:block max-w-[100px] truncate">
+                      {user.name}
+                    </span>
+                    <ChevronDown className="w-3.5 h-3.5 text-slate-400 hidden sm:block" />
                   </button>
 
+                  {/* Profile Dropdown */}
                   {isProfileDropdownOpen && (
                     <div
-                      className="absolute right-0 mt-2 w-56 bg-surface rounded-2xl shadow-xl border border-surface-border p-2 z-50"
+                      className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 py-1.5 z-50 animate-fadeIn"
                       onMouseLeave={() => setIsProfileDropdownOpen(false)}
                     >
-                      <div className="px-3 py-2 border-b border-surface-border">
-                        <p className="text-xs font-bold text-ink-main">{user.name}</p>
-                        <p className="text-[11px] text-ink-muted truncate">{user.email}</p>
+                      <div className="px-3.5 py-2 border-b border-slate-100">
+                        <p className="text-xs font-bold text-slate-900 truncate">{user.name}</p>
+                        <p className="text-[11px] text-slate-400 truncate">{user.email}</p>
+                        <span className="inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-100">
+                          {user.role}
+                        </span>
                       </div>
-                      <Link
-                        to={getDashboardPath()}
-                        onClick={() => setIsProfileDropdownOpen(false)}
-                        className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-ink-main hover:bg-health-50 rounded-xl transition-colors mt-1"
-                      >
-                        <Activity className="w-4 h-4 text-health-600" />
-                        Dashboard
-                      </Link>
 
-                      {user.role === 'patient' && (
-                        <>
-                          <Link
-                            to="/doctors"
-                            onClick={() => setIsProfileDropdownOpen(false)}
-                            className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-ink-main hover:bg-health-50 rounded-xl transition-colors"
-                          >
-                            <Stethoscope className="w-4 h-4 text-health-600" />
-                            Doctor Discovery
-                          </Link>
-                          <Link
-                            to="/ai-assistant"
-                            onClick={() => setIsProfileDropdownOpen(false)}
-                            className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-ink-main hover:bg-health-50 rounded-xl transition-colors"
-                          >
-                            <Bot className="w-4 h-4 text-health-600" />
-                            AI Assistant
-                          </Link>
-                          <Link
-                            to="/appointments"
-                            onClick={() => setIsProfileDropdownOpen(false)}
-                            className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-ink-main hover:bg-health-50 rounded-xl transition-colors"
-                          >
-                            <Calendar className="w-4 h-4 text-health-600" />
-                            Appointments
-                          </Link>
-                          <Link
-                            to="/profile"
-                            onClick={() => setIsProfileDropdownOpen(false)}
-                            className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-ink-main hover:bg-health-50 rounded-xl transition-colors"
-                          >
-                            <User className="w-4 h-4 text-health-600" />
-                            My Health Profile
-                          </Link>
-                          <Link
-                            to="/privacy-settings"
-                            onClick={() => setIsProfileDropdownOpen(false)}
-                            className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-ink-main hover:bg-health-50 rounded-xl transition-colors"
-                          >
-                            <Lock className="w-4 h-4 text-health-600" />
-                            Privacy & DPDP Rights
-                          </Link>
-                        </>
-                      )}
+                      <div className="py-1">
+                        <Link
+                          to={user.role === 'doctor' ? '/doctor/profile' : '/profile'}
+                          onClick={() => setIsProfileDropdownOpen(false)}
+                          className="flex items-center gap-2.5 px-3.5 py-2 text-xs text-slate-700 hover:bg-slate-50 transition-colors"
+                        >
+                          <User className="w-4 h-4 text-slate-400" />
+                          View Profile
+                        </Link>
+                        <Link
+                          to="/privacy-settings"
+                          onClick={() => setIsProfileDropdownOpen(false)}
+                          className="flex items-center gap-2.5 px-3.5 py-2 text-xs text-slate-700 hover:bg-slate-50 transition-colors"
+                        >
+                          <Shield className="w-4 h-4 text-slate-400" />
+                          Privacy & Consent
+                        </Link>
+                      </div>
 
-                      <button
-                        onClick={handleLogout}
-                        className="w-full flex items-center gap-2 px-3 py-2 text-xs font-medium text-status-danger hover:bg-red-50 rounded-xl transition-colors border-t border-surface-border mt-1"
-                      >
-                        <LogOut className="w-4 h-4" />
-                        Sign Out
-                      </button>
+                      <div className="border-t border-slate-100 pt-1">
+                        <button
+                          onClick={handleLogout}
+                          className="w-full flex items-center gap-2.5 px-3.5 py-2 text-xs text-red-600 hover:bg-red-50 transition-colors"
+                        >
+                          <LogOut className="w-4 h-4 text-red-500" />
+                          Sign Out
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -392,24 +357,23 @@ export const Navbar = () => {
                 <div className="flex items-center gap-2">
                   <Link
                     to="/login"
-                    className="px-4 py-2 text-xs font-semibold text-ink-main hover:text-health-700 transition-colors"
+                    className="px-3.5 py-1.5 text-xs font-semibold text-slate-700 hover:text-blue-600 transition-colors"
                   >
-                    Log In
+                    Sign In
                   </Link>
                   <Link
                     to="/register"
-                    className="px-4 py-2 text-xs font-semibold bg-health-500 hover:bg-health-600 text-white rounded-xl shadow-soft hover:shadow-md transition-all flex items-center gap-1.5"
+                    className="px-4 py-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-all shadow-xs"
                   >
-                    <Sparkles className="w-3.5 h-3.5 text-health-200" />
-                    Get Started
+                    Register
                   </Link>
                 </div>
               )}
 
-              {/* Mobile Menu Button */}
+              {/* Mobile Drawer Button */}
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="p-2 md:hidden rounded-xl text-ink-muted hover:text-ink-main hover:bg-health-50"
+                className="md:hidden p-2 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors"
               >
                 {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
@@ -417,60 +381,82 @@ export const Navbar = () => {
           </div>
         </div>
 
-        {/* Mobile Menu Dropdown */}
+        {/* Mobile Navigation Drawer */}
         {isMobileMenuOpen && (
-          <div className="md:hidden px-4 pt-2 pb-6 border-t border-surface-border bg-surface space-y-3">
-            <Link
-              to="/"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block px-3 py-2 text-sm font-medium text-ink-main hover:bg-health-50 rounded-xl"
-            >
-              Home
-            </Link>
-            <Link
-              to="/doctors"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block px-3 py-2 text-sm font-medium text-ink-main hover:bg-health-50 rounded-xl"
-            >
-              Doctor Discovery (India)
-            </Link>
-            <a
-              href="#features"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block px-3 py-2 text-sm font-medium text-ink-main hover:bg-health-50 rounded-xl"
-            >
-              Features
-            </a>
-            <a
-              href="#roles"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block px-3 py-2 text-sm font-medium text-ink-main hover:bg-health-50 rounded-xl"
-            >
-              User Roles
-            </a>
+          <div className="md:hidden border-t border-slate-200 bg-white px-4 py-4 space-y-2 animate-fadeIn">
             {isAuthenticated ? (
-              <Link
-                to={getDashboardPath()}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block px-3 py-2 text-sm font-bold text-health-700 bg-health-50 rounded-xl"
-              >
-                Go to Dashboard
-              </Link>
+              <div className="space-y-1">
+                <Link
+                  to="/dashboard"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium text-slate-700 hover:bg-slate-50"
+                >
+                  <Activity className="w-4 h-4 text-blue-600" />
+                  Dashboard
+                </Link>
+                <Link
+                  to="/symptom-checker"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium text-slate-700 hover:bg-slate-50"
+                >
+                  <Sparkles className="w-4 h-4 text-blue-600" />
+                  Symptom Triage
+                </Link>
+                <Link
+                  to="/ai-assistant"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium text-slate-700 hover:bg-slate-50"
+                >
+                  <Bot className="w-4 h-4 text-blue-600" />
+                  AI Assistant
+                </Link>
+                <Link
+                  to="/doctors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium text-slate-700 hover:bg-slate-50"
+                >
+                  <Stethoscope className="w-4 h-4 text-blue-600" />
+                  Doctors & Appointments
+                </Link>
+                <Link
+                  to="/medicines"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium text-slate-700 hover:bg-slate-50"
+                >
+                  <Pill className="w-4 h-4 text-blue-600" />
+                  Medicines
+                </Link>
+                <Link
+                  to="/health-records"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium text-slate-700 hover:bg-slate-50"
+                >
+                  <FileText className="w-4 h-4 text-blue-600" />
+                  Health Records
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium text-red-600 hover:bg-red-50"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Sign Out
+                </button>
+              </div>
             ) : (
-              <div className="flex gap-2 pt-2">
+              <div className="space-y-2">
                 <Link
                   to="/login"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex-1 text-center py-2 text-sm font-semibold border border-surface-border rounded-xl"
+                  className="block w-full text-center py-2 text-xs font-semibold text-slate-700 bg-slate-50 rounded-xl"
                 >
-                  Log In
+                  Sign In
                 </Link>
                 <Link
                   to="/register"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex-1 text-center py-2 text-sm font-semibold bg-health-500 text-white rounded-xl"
+                  className="block w-full text-center py-2 text-xs font-semibold text-white bg-blue-600 rounded-xl"
                 >
-                  Sign Up
+                  Register Account
                 </Link>
               </div>
             )}
@@ -478,7 +464,7 @@ export const Navbar = () => {
         )}
       </nav>
 
-      {/* Indian Emergency Modal */}
+      {/* Emergency Modal */}
       <EmergencyModal
         isOpen={isEmergencyModalOpen}
         onClose={() => setIsEmergencyModalOpen(false)}

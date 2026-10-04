@@ -125,34 +125,34 @@ export const DoctorDiscoveryPage = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-fadeIn">
       {/* Header */}
       <div className="space-y-1">
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[#0B3441]" />
-          <span className="text-xs font-semibold uppercase tracking-wider text-[#5A6C77]">
-            Care Navigation
+          <span className="w-2 h-2 rounded-full bg-blue-600" />
+          <span className="text-xs font-bold uppercase tracking-wider text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-100">
+            Care & Specialist Directory
           </span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-semibold font-serif text-[#061017] tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
           Find Care & Accredited Providers
         </h1>
-        <p className="text-sm text-[#5A6C77]">
-          Discover Indian-licensed medical practitioners. Book visits directly without modal dialogs or separate pages.
+        <p className="text-xs sm:text-sm text-slate-500 max-w-2xl leading-relaxed">
+          Discover verified Indian-registered medical practitioners with NMC credentials. Select your specialty or search to book an appointment directly.
         </p>
       </div>
 
-      {/* Filter Bar & Chips (Section 7.5: specialty, availability, distance) */}
+      {/* Filter Bar & Chips */}
       <div className="space-y-3">
         {/* Search Input */}
         <div className="relative max-w-md">
-          <Search className="w-4 h-4 text-[#5A6C77] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             placeholder="Search doctor by name, specialty, or clinic..."
-            className="w-full pl-10 pr-4 py-2 rounded-xl bg-white border border-[rgba(6,16,23,0.15)] text-xs text-[#061017] focus:outline-none focus:border-[#0B3441]"
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 shadow-2xs"
           />
         </div>
 
@@ -160,10 +160,10 @@ export const DoctorDiscoveryPage = () => {
         <div className="flex flex-wrap items-center gap-2 pt-1">
           <button
             onClick={() => setSelectedDept('All')}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
               selectedDept === 'All'
-                ? 'bg-[#0B3441] text-white font-semibold'
-                : 'bg-[#FAFBFB] text-[#061017] border border-[rgba(6,16,23,0.12)] hover:border-[#0B3441]'
+                ? 'bg-blue-600 text-white shadow-xs'
+                : 'bg-white text-slate-600 border border-slate-200 hover:border-blue-300 hover:bg-blue-50/30'
             }`}
           >
             All Specialties
@@ -180,10 +180,10 @@ export const DoctorDiscoveryPage = () => {
             <button
               key={dept}
               onClick={() => setSelectedDept(dept)}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
                 selectedDept === dept
-                  ? 'bg-[#0B3441] text-white font-semibold'
-                  : 'bg-[#FAFBFB] text-[#061017] border border-[rgba(6,16,23,0.12)] hover:border-[#0B3441]'
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'bg-white text-slate-600 border border-slate-200 hover:border-blue-300 hover:bg-blue-50/30'
               }`}
             >
               {dept}
@@ -192,8 +192,8 @@ export const DoctorDiscoveryPage = () => {
         </div>
       </div>
 
-      {/* Provider Rows (Not cards per Section 7.5) with Inline 3-Step Booking */}
-      <div className="rounded-[18px] bg-white border border-[rgba(6,16,23,0.10)] divide-y divide-[rgba(6,16,23,0.08)] overflow-hidden">
+      {/* Provider Rows with Inline 3-Step Booking */}
+      <div className="clinic-card divide-y divide-slate-100 overflow-hidden">
         {doctors.length > 0 ? (
           doctors.map(doctor => {
             const isExpanded = expandedDocId === doctor.id;
@@ -206,50 +206,54 @@ export const DoctorDiscoveryPage = () => {
               : 'DR';
 
             return (
-              <div key={doctor.id} className="transition-colors">
-                {/* Provider Row (Section 7.5) */}
+              <div key={doctor.id} className="transition-colors hover:bg-slate-50/50">
+                {/* Provider Row */}
                 <div className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   {/* Avatar / Initials + Details */}
                   <div className="flex items-center gap-3.5 min-w-0">
-                    <div className="w-11 h-11 rounded-xl bg-[#0B3441] text-white flex items-center justify-center font-serif text-sm font-semibold shrink-0">
+                    <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-2xs">
                       {initials}
                     </div>
 
                     <div className="min-w-0 space-y-0.5">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-semibold text-[#061017] truncate">
+                        <span className="text-sm font-bold text-slate-900 truncate">
                           {doctor.name}
                         </span>
                         {doctor.verified !== false && (
-                          <ShieldCheck className="w-4 h-4 text-[#2A7A5B] shrink-0" title="Verified Practitioner" />
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                            <ShieldCheck className="w-3 h-3 text-emerald-600" /> Verified NMC
+                          </span>
                         )}
                       </div>
-                      <div className="text-xs text-[#5A6C77] flex flex-wrap items-center gap-x-2">
-                        <span className="font-medium text-[#0B3441]">{doctor.department}</span>
+                      <div className="text-xs text-slate-500 flex flex-wrap items-center gap-x-2">
+                        <span className="font-semibold text-blue-700">{doctor.department}</span>
                         <span>•</span>
-                        <span>{doctor.experience || '8+ yrs experience'}</span>
+                        <span>{doctor.experience || '8+ yrs exp'}</span>
                         <span>•</span>
                         <span>{doctor.city || 'Delhi NCR'}</span>
+                        <span>•</span>
+                        <span className="font-semibold text-slate-700">₹{doctor.fee || '750'} / visit</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Rating + Next availability + Single CTA */}
-                  <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-[rgba(6,16,23,0.06)]">
+                  <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
                     <div className="text-right text-xs">
-                      <div className="flex items-center gap-1 font-semibold text-[#061017]">
-                        <Star className="w-3.5 h-3.5 text-[#C9A24D] fill-[#C9A24D]" />
+                      <div className="flex items-center gap-1 font-bold text-slate-800">
+                        <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
                         <span>{doctor.rating || '4.9'}</span>
                       </div>
-                      <span className="text-[11px] text-[#2A7A5B] font-medium">Tomorrow Available</span>
+                      <span className="text-[11px] text-emerald-600 font-semibold">Tomorrow Available</span>
                     </div>
 
                     <button
                       onClick={() => toggleExpandDoctor(doctor.id)}
-                      className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                      className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs ${
                         isExpanded
-                          ? 'bg-[#061017] text-white'
-                          : 'bg-[#0B3441] text-white hover:bg-[#08252E]'
+                          ? 'bg-slate-900 text-white'
+                          : 'bg-blue-600 hover:bg-blue-700 text-white'
                       }`}
                     >
                       <span>{isExpanded ? 'Close' : 'Book Visit'}</span>
