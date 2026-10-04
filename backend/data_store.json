@@ -25,7 +25,7 @@
       ],
       "emergencyContact": "Priya Sharma (Spouse) - +91 98765 12345",
       "createdAt": "2026-08-23T13:26:35.228Z",
-      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzci1wYXRpZW50LTEiLCJyb2xlIjoicGF0aWVudCIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzkxMTAyNTg2LCJleHAiOjE3OTE3MDczODZ9.QTxjVIiIQfWOMCBrUP5_81BYEoOicJF2IAnwA7lQ26M"
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzci1wYXRpZW50LTEiLCJyb2xlIjoicGF0aWVudCIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzkxMTA1MDg1LCJleHAiOjE3OTE3MDk4ODV9.-dk9Gx8_fxd8zGLGNw-dRF-XI-KqFxwirBz7mQ04GFI"
     },
     {
       "id": "usr-patient-2",
@@ -51,7 +51,7 @@
       ],
       "emergencyContact": "K. Nair (Father) - +91 98450 99887",
       "createdAt": "2026-08-23T13:26:35.228Z",
-      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzci1wYXRpZW50LTIiLCJyb2xlIjoicGF0aWVudCIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzkxMTAyNTg2LCJleHAiOjE3OTE3MDczODZ9.N1Co9kOs_5vsXPdmoPEYFSKlsWjv8yR2n8Is_I3SLoQ"
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzci1wYXRpZW50LTIiLCJyb2xlIjoicGF0aWVudCIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzkxMTA1MDg1LCJleHAiOjE3OTE3MDk4ODV9.sq4BoAWgTT-AhGvidFYRAZoKRT6Yp8bVQQjlXqEw4_s"
     },
     {
       "id": "usr-doctor-1",
@@ -64,7 +64,7 @@
       "status": "active",
       "doctorId": "doc-1",
       "createdAt": "2026-08-23T13:26:35.228Z",
-      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzci1kb2N0b3ItMSIsInJvbGUiOiJkb2N0b3IiLCJ0b2tlblZlcnNpb24iOjAsImlhdCI6MTc5MTEwMjU4NiwiZXhwIjoxNzkxNzA3Mzg2fQ.fS1zLXuQLBQsjqMHN_VIo4jZBvM4LsEI4vRk738jVDI"
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzci1kb2N0b3ItMSIsInJvbGUiOiJkb2N0b3IiLCJ0b2tlblZlcnNpb24iOjAsImlhdCI6MTc5MTEwNTA4NSwiZXhwIjoxNzkxNzA5ODg1fQ.NVe_yd7k1uP8V1Bll5dWaUiUdIYH2ZJ_M8HH7b9L-GI"
     },
     {
       "id": "usr-doctor-2",
@@ -100,7 +100,7 @@
       "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
       "status": "active",
       "createdAt": "2026-08-23T13:26:35.228Z",
-      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzci1hZG1pbi0xIiwicm9sZSI6ImFkbWluIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3OTExMDI1ODYsImV4cCI6MTc5MTcwNzM4Nn0.ZrAPUTltPZyS9hchR6aeyu9cuAxBM48CCjQFIPU5hIE"
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzci1hZG1pbi0xIiwicm9sZSI6ImFkbWluIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3OTExMDUwODUsImV4cCI6MTc5MTcwOTg4NX0.13-BPMyu8auZLZWhEqHqIieZ-ivtqqmTwd3JeVPqzXk"
     },
     {
       "id": "usr-1787499684924",
@@ -197,6 +197,20 @@
       "id": "usr-unlinked-1791102586464",
       "name": "Unlinked Patient",
       "email": "unlinked.1791102586464@example.com",
+      "password": "$2b$10$mXIf6Gu.Xx/5UidR2rFj1eFtT.8Nbj2HQpsce8ikBot/zJueeiwZ.",
+      "role": "patient"
+    },
+    {
+      "id": "usr-unlinked-1791104673634",
+      "name": "Unlinked Patient",
+      "email": "unlinked.1791104673634@example.com",
+      "password": "$2b$10$mXIf6Gu.Xx/5UidR2rFj1eFtT.8Nbj2HQpsce8ikBot/zJueeiwZ.",
+      "role": "patient"
+    },
+    {
+      "id": "usr-unlinked-1791105085197",
+      "name": "Unlinked Patient",
+      "email": "unlinked.1791105085197@example.com",
       "password": "$2b$10$mXIf6Gu.Xx/5UidR2rFj1eFtT.8Nbj2HQpsce8ikBot/zJueeiwZ.",
       "role": "patient"
     }
@@ -616,6 +630,50 @@
     }
   ],
   "appointments": [
+    {
+      "id": "apt-test-1791105085203",
+      "patientId": "usr-patient-1",
+      "patientName": "Rahul Sharma",
+      "doctorId": "doc-cardio-1",
+      "doctorName": "Dr. Rajesh Venkat",
+      "date": "2026-10-15",
+      "timeSlot": "10:00 AM",
+      "status": "confirmed",
+      "reason": "Routine Cardiology Follow-up"
+    },
+    {
+      "id": "apt-patient-b-1791105085098",
+      "patientId": "usr-patient-2",
+      "patientName": "Priya Nair",
+      "doctorId": "doc-derma-1",
+      "doctorName": "Dr. Ananya Deshmukh",
+      "date": "2026-10-22",
+      "timeSlot": "11:30 AM",
+      "status": "confirmed",
+      "reason": "Skin allergy consultation"
+    },
+    {
+      "id": "apt-test-1791104673640",
+      "patientId": "usr-patient-1",
+      "patientName": "Rahul Sharma",
+      "doctorId": "doc-cardio-1",
+      "doctorName": "Dr. Rajesh Venkat",
+      "date": "2026-10-15",
+      "timeSlot": "10:00 AM",
+      "status": "confirmed",
+      "reason": "Routine Cardiology Follow-up"
+    },
+    {
+      "id": "apt-patient-b-1791104673534",
+      "patientId": "usr-patient-2",
+      "patientName": "Priya Nair",
+      "doctorId": "doc-derma-1",
+      "doctorName": "Dr. Ananya Deshmukh",
+      "date": "2026-10-22",
+      "timeSlot": "11:30 AM",
+      "status": "confirmed",
+      "reason": "Skin allergy consultation"
+    },
     {
       "id": "apt-test-1791102586474",
       "patientId": "usr-patient-1",
@@ -1070,6 +1128,54 @@
     }
   ],
   "prescriptions": [
+    {
+      "id": "rx-patient-b-1791105085098",
+      "patientId": "usr-patient-2",
+      "patientName": "Priya Nair",
+      "doctorId": "doc-derma-1",
+      "doctorName": "Dr. Ananya Deshmukh",
+      "registrationNumber": "NMC-2026-4482",
+      "qrVerificationCode": "MG-RX-IN-TEST-999",
+      "date": "2026-10-22",
+      "diagnosis": "Contact Dermatitis",
+      "medicines": [
+        {
+          "name": "Cetirizine",
+          "dosage": "10mg",
+          "frequency": "Once Daily",
+          "duration": "7 days",
+          "instructions": "Take at night"
+        }
+      ],
+      "diagnosticTests": [
+        "Serum IgE",
+        "Patch Allergy Test"
+      ]
+    },
+    {
+      "id": "rx-patient-b-1791104673534",
+      "patientId": "usr-patient-2",
+      "patientName": "Priya Nair",
+      "doctorId": "doc-derma-1",
+      "doctorName": "Dr. Ananya Deshmukh",
+      "registrationNumber": "NMC-2026-4482",
+      "qrVerificationCode": "MG-RX-IN-TEST-999",
+      "date": "2026-10-22",
+      "diagnosis": "Contact Dermatitis",
+      "medicines": [
+        {
+          "name": "Cetirizine",
+          "dosage": "10mg",
+          "frequency": "Once Daily",
+          "duration": "7 days",
+          "instructions": "Take at night"
+        }
+      ],
+      "diagnosticTests": [
+        "Serum IgE",
+        "Patch Allergy Test"
+      ]
+    },
     {
       "id": "rx-patient-b-1791102586355",
       "patientId": "usr-patient-2",
@@ -1765,6 +1871,258 @@
     }
   ],
   "symptomChecks": [
+    {
+      "id": "sym-1791105588640",
+      "userId": "test-usr-1",
+      "symptoms": [
+        "dry itchy skin rash with scales"
+      ],
+      "severity": "Mild",
+      "duration": "5 days",
+      "bodyArea": "Arms",
+      "additionalNotes": "None",
+      "preliminaryGuidance": "Your dermatological symptoms (dry itchy skin rash with scales) suggest localized skin inflammation or an allergic contact response. Keep the affected area clean, moisturized, and avoid harsh scented soaps. A clinical skin examination will confirm appropriate topical therapy.",
+      "possibleConditions": [
+        "Contact Dermatitis",
+        "Eczema / Atopic Flare",
+        "Urticaria / Allergy",
+        "Superficial Dermatosis"
+      ],
+      "recommendedDepartment": "Dermatology",
+      "confidence": 78,
+      "urgencyLevel": "Low / Routine",
+      "redFlagDetected": false,
+      "isEmergency": false,
+      "contributingFactors": [
+        "dry itchy skin rash with scales"
+      ],
+      "explanation": "Recommendation for Dermatology was determined based on reported symptoms (dry itchy skin rash with scales) aligning with standard primary care guidelines.",
+      "emergencyContacts": {
+        "national": "112",
+        "ambulance": "108",
+        "medical": "102"
+      },
+      "matchedDoctorIds": [
+        "doc-3"
+      ],
+      "disclaimer": "Important Notice: MediGuide AI provides preliminary guidance and informational assessment only. It does not constitute a formal medical diagnosis or prescription. If you are experiencing acute emergencies, please contact emergency medical services immediately.",
+      "createdAt": "2026-10-04T09:19:48.640Z"
+    },
+    {
+      "id": "sym-1791105588638",
+      "userId": "test-usr-1",
+      "symptoms": [
+        "severe chest pain radiating to left arm",
+        "profuse sweating"
+      ],
+      "severity": "Severe",
+      "duration": "1 hour",
+      "bodyArea": "Chest",
+      "additionalNotes": "Sudden onset while resting",
+      "modelUsed": "MediGuide Emergency Safety Protocol (Deterministic Guardrail)",
+      "confidence": 96,
+      "recommendedDepartment": "Emergency Medicine / Cardiology",
+      "alternativeDepartments": [
+        {
+          "department": "Cardiology",
+          "confidence": 90
+        },
+        {
+          "department": "Pulmonology",
+          "confidence": 75
+        }
+      ],
+      "preliminaryGuidance": "CRITICAL EMERGENCY: Severe acute cardiovascular, neurological, or respiratory indicators detected. Prioritize immediate emergency care. Call 112 or 108 or proceed to the nearest emergency department immediately.",
+      "possibleConditions": [
+        "Acute Cardiovascular / Respiratory Compromise",
+        "Medical Emergency Assessment"
+      ],
+      "urgencyLevel": "High / Seek Immediate Care",
+      "redFlagDetected": true,
+      "isEmergency": true,
+      "contributingFactors": [
+        "chest pain"
+      ],
+      "explanation": "Emergency override activated due to critical indicators: chest pain.",
+      "emergencyContacts": {
+        "national": "112",
+        "ambulance": "108",
+        "medical": "102"
+      },
+      "matchedDoctorIds": [
+        "doc-2"
+      ],
+      "disclaimer": "CRITICAL SAFETY ALERT: This protocol overrides standard scheduling. Seek immediate emergency care.",
+      "createdAt": "2026-10-04T09:19:48.638Z"
+    },
+    {
+      "id": "sym-1791105093453",
+      "userId": "test-usr-1",
+      "symptoms": [
+        "dry itchy skin rash with scales"
+      ],
+      "severity": "Mild",
+      "duration": "5 days",
+      "bodyArea": "Arms",
+      "additionalNotes": "None",
+      "preliminaryGuidance": "Your dermatological symptoms (dry itchy skin rash with scales) suggest localized skin inflammation or an allergic contact response. Keep the affected area clean, moisturized, and avoid harsh scented soaps. A clinical skin examination will confirm appropriate topical therapy.",
+      "possibleConditions": [
+        "Contact Dermatitis",
+        "Eczema / Atopic Flare",
+        "Urticaria / Allergy",
+        "Superficial Dermatosis"
+      ],
+      "recommendedDepartment": "Dermatology",
+      "confidence": 78,
+      "urgencyLevel": "Low / Routine",
+      "redFlagDetected": false,
+      "isEmergency": false,
+      "contributingFactors": [
+        "dry itchy skin rash with scales"
+      ],
+      "explanation": "Recommendation for Dermatology was determined based on reported symptoms (dry itchy skin rash with scales) aligning with standard primary care guidelines.",
+      "emergencyContacts": {
+        "national": "112",
+        "ambulance": "108",
+        "medical": "102"
+      },
+      "matchedDoctorIds": [
+        "doc-3"
+      ],
+      "disclaimer": "Important Notice: MediGuide AI provides preliminary guidance and informational assessment only. It does not constitute a formal medical diagnosis or prescription. If you are experiencing acute emergencies, please contact emergency medical services immediately.",
+      "createdAt": "2026-10-04T09:11:33.453Z"
+    },
+    {
+      "id": "sym-1791105086028",
+      "userId": "test-usr-1",
+      "symptoms": [
+        "severe chest pain radiating to left arm",
+        "profuse sweating"
+      ],
+      "severity": "Severe",
+      "duration": "1 hour",
+      "bodyArea": "Chest",
+      "additionalNotes": "Sudden onset while resting",
+      "modelUsed": "MediGuide Emergency Safety Protocol (Deterministic Guardrail)",
+      "confidence": 96,
+      "recommendedDepartment": "Emergency Medicine / Cardiology",
+      "alternativeDepartments": [
+        {
+          "department": "Cardiology",
+          "confidence": 90
+        },
+        {
+          "department": "Pulmonology",
+          "confidence": 75
+        }
+      ],
+      "preliminaryGuidance": "CRITICAL EMERGENCY: Severe acute cardiovascular, neurological, or respiratory indicators detected. Prioritize immediate emergency care. Call 112 or 108 or proceed to the nearest emergency department immediately.",
+      "possibleConditions": [
+        "Acute Cardiovascular / Respiratory Compromise",
+        "Medical Emergency Assessment"
+      ],
+      "urgencyLevel": "High / Seek Immediate Care",
+      "redFlagDetected": true,
+      "isEmergency": true,
+      "contributingFactors": [
+        "chest pain"
+      ],
+      "explanation": "Emergency override activated due to critical indicators: chest pain.",
+      "emergencyContacts": {
+        "national": "112",
+        "ambulance": "108",
+        "medical": "102"
+      },
+      "matchedDoctorIds": [
+        "doc-2"
+      ],
+      "disclaimer": "CRITICAL SAFETY ALERT: This protocol overrides standard scheduling. Seek immediate emergency care.",
+      "createdAt": "2026-10-04T09:11:26.028Z"
+    },
+    {
+      "id": "sym-1791104683899",
+      "userId": "test-usr-1",
+      "symptoms": [
+        "dry itchy skin rash with scales"
+      ],
+      "severity": "Mild",
+      "duration": "5 days",
+      "bodyArea": "Arms",
+      "additionalNotes": "None",
+      "preliminaryGuidance": "Your dermatological symptoms (dry itchy skin rash with scales) suggest localized skin inflammation or an allergic contact response. Keep the affected area clean, moisturized, and avoid harsh scented soaps. A clinical skin examination will confirm appropriate topical therapy.",
+      "possibleConditions": [
+        "Contact Dermatitis",
+        "Eczema / Atopic Flare",
+        "Urticaria / Allergy",
+        "Superficial Dermatosis"
+      ],
+      "recommendedDepartment": "Dermatology",
+      "confidence": 78,
+      "urgencyLevel": "Low / Routine",
+      "redFlagDetected": false,
+      "isEmergency": false,
+      "contributingFactors": [
+        "dry itchy skin rash with scales"
+      ],
+      "explanation": "Recommendation for Dermatology was determined based on reported symptoms (dry itchy skin rash with scales) aligning with standard primary care guidelines.",
+      "emergencyContacts": {
+        "national": "112",
+        "ambulance": "108",
+        "medical": "102"
+      },
+      "matchedDoctorIds": [
+        "doc-3"
+      ],
+      "disclaimer": "Important Notice: MediGuide AI provides preliminary guidance and informational assessment only. It does not constitute a formal medical diagnosis or prescription. If you are experiencing acute emergencies, please contact emergency medical services immediately.",
+      "createdAt": "2026-10-04T09:04:43.899Z"
+    },
+    {
+      "id": "sym-1791104674417",
+      "userId": "test-usr-1",
+      "symptoms": [
+        "severe chest pain radiating to left arm",
+        "profuse sweating"
+      ],
+      "severity": "Severe",
+      "duration": "1 hour",
+      "bodyArea": "Chest",
+      "additionalNotes": "Sudden onset while resting",
+      "modelUsed": "MediGuide Emergency Safety Protocol (Deterministic Guardrail)",
+      "confidence": 96,
+      "recommendedDepartment": "Emergency Medicine / Cardiology",
+      "alternativeDepartments": [
+        {
+          "department": "Cardiology",
+          "confidence": 90
+        },
+        {
+          "department": "Pulmonology",
+          "confidence": 75
+        }
+      ],
+      "preliminaryGuidance": "CRITICAL EMERGENCY: Severe acute cardiovascular, neurological, or respiratory indicators detected. Prioritize immediate emergency care. Call 112 or 108 or proceed to the nearest emergency department immediately.",
+      "possibleConditions": [
+        "Acute Cardiovascular / Respiratory Compromise",
+        "Medical Emergency Assessment"
+      ],
+      "urgencyLevel": "High / Seek Immediate Care",
+      "redFlagDetected": true,
+      "isEmergency": true,
+      "contributingFactors": [
+        "chest pain"
+      ],
+      "explanation": "Emergency override activated due to critical indicators: chest pain.",
+      "emergencyContacts": {
+        "national": "112",
+        "ambulance": "108",
+        "medical": "102"
+      },
+      "matchedDoctorIds": [
+        "doc-2"
+      ],
+      "disclaimer": "CRITICAL SAFETY ALERT: This protocol overrides standard scheduling. Seek immediate emergency care.",
+      "createdAt": "2026-10-04T09:04:34.417Z"
+    },
     {
       "id": "sym-1791102584587",
       "userId": "test-usr-1",
@@ -2771,6 +3129,146 @@
     }
   ],
   "auditLogs": [
+    {
+      "id": "log-1791105085285-o7eecf",
+      "timestamp": "2026-10-04T09:11:25.285Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-admin-1",
+      "actorEmail": "admin@mediguide.com",
+      "actorRole": "admin",
+      "details": "ADMIN Vikramaditya Roy logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791105085205-6j5zi",
+      "timestamp": "2026-10-04T09:11:25.205Z",
+      "status": "SUCCESS",
+      "eventType": "RECORD_ACCESS",
+      "actorId": "usr-doctor-1",
+      "actorEmail": "doctor.smith@mediguide.com",
+      "actorRole": "doctor",
+      "details": "DOCTOR Dr. Priya Sharma accessed health records vault of patient usr-patient-1."
+    },
+    {
+      "id": "log-1791105085196-e3x2e",
+      "timestamp": "2026-10-04T09:11:25.196Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-doctor-1",
+      "actorEmail": "doctor.smith@mediguide.com",
+      "actorRole": "doctor",
+      "details": "DOCTOR Dr. Priya Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791105085097-p3bs4i",
+      "timestamp": "2026-10-04T09:11:25.097Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-2",
+      "actorEmail": "priya.nair@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Priya Nair logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791105085015-h2un",
+      "timestamp": "2026-10-04T09:11:25.015Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Rahul Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791105084916-sjamrq",
+      "timestamp": "2026-10-04T09:11:24.916Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Rahul Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791105084825-qtiu0a",
+      "timestamp": "2026-10-04T09:11:24.825Z",
+      "status": "SUCCESS",
+      "eventType": "FAILED_LOGIN_ATTEMPT",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "Failed password authentication attempt for user patient@mediguide.com"
+    },
+    {
+      "id": "log-1791104673721-nhvxre",
+      "timestamp": "2026-10-04T09:04:33.721Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-admin-1",
+      "actorEmail": "admin@mediguide.com",
+      "actorRole": "admin",
+      "details": "ADMIN Vikramaditya Roy logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791104673642-76l6ut",
+      "timestamp": "2026-10-04T09:04:33.642Z",
+      "status": "SUCCESS",
+      "eventType": "RECORD_ACCESS",
+      "actorId": "usr-doctor-1",
+      "actorEmail": "doctor.smith@mediguide.com",
+      "actorRole": "doctor",
+      "details": "DOCTOR Dr. Priya Sharma accessed health records vault of patient usr-patient-1."
+    },
+    {
+      "id": "log-1791104673632-mhtpd",
+      "timestamp": "2026-10-04T09:04:33.632Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-doctor-1",
+      "actorEmail": "doctor.smith@mediguide.com",
+      "actorRole": "doctor",
+      "details": "DOCTOR Dr. Priya Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791104673532-mmf16i",
+      "timestamp": "2026-10-04T09:04:33.532Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-2",
+      "actorEmail": "priya.nair@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Priya Nair logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791104673453-00iqmp",
+      "timestamp": "2026-10-04T09:04:33.453Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Rahul Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791104673354-e85cog",
+      "timestamp": "2026-10-04T09:04:33.354Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Rahul Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791104673268-1dzf3i",
+      "timestamp": "2026-10-04T09:04:33.268Z",
+      "status": "SUCCESS",
+      "eventType": "FAILED_LOGIN_ATTEMPT",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "Failed password authentication attempt for user patient@mediguide.com"
+    },
     {
       "id": "log-1791102586562-ov1ou",
       "timestamp": "2026-10-04T08:29:46.562Z",

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import {
   generateChatResponse,
+  generateChatResponseStream,
   analyzeSymptoms,
   setApiKey,
   getAiConfig,
@@ -114,6 +115,100 @@ export const handleChat = async (req, res) => {
     }
     console.error('Chat error:', error);
     res.status(500).json({ success: false, message: 'Failed to process chat message' });
+  }
+};
+
+export const handleChatStream = async (req, res) => {
+  let isClientConnected = true;
+  req.on('close', () => {
+    isClientConnected = false;
+  });
+
+  try {
+    const { message, conversationId, history = [] } = chatSchema.parse(req.body);
+    const userId = req.user ? req.user.id : 'anonymous';
+
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    if (res.flushHeaders) res.flushHeaders();
+
+    let fullText = '';
+    for await (const chunk of generateChatResponseStream(message, history)) {
+      if (!isClientConnected) break;
+      fullText += chunk;
+      res.write(`data: ${JSON.stringify({ text: chunk })}\n\n`);
+    }
+
+    if (isClientConnected) {
+      if (req.user && fullText) {
+        const userMessage = {
+          id: `msg-${Date.now()}-u`,
+          sender: 'user',
+          text: message,
+          timestamp: new Date().toISOString(),
+        };
+        const assistantMessage = {
+          id: `msg-${Date.now()}-a`,
+          sender: 'assistant',
+          text: fullText,
+          timestamp: new Date().toISOString(),
+        };
+
+        if (isDbConnected()) {
+          if (conversationId) {
+            const existing = await ChatHistory.findOne({ id: conversationId, userId });
+            if (existing) {
+              existing.messages.push(userMessage, assistantMessage);
+              existing.lastUpdated = new Date().toISOString();
+              await existing.save();
+            }
+          } else {
+            const title = message.length > 35 ? message.substring(0, 32) + '...' : message;
+            const newId = `chat-${Date.now()}-${Math.random().toString(36).substring(7)}`;
+            await ChatHistory.create({
+              id: newId,
+              userId,
+              title,
+              messages: [userMessage, assistantMessage],
+              lastUpdated: new Date().toISOString(),
+            });
+          }
+        } else {
+          if (conversationId) {
+            const existing = dbStore.findChatHistoryById(conversationId);
+            if (existing && existing.userId === userId) {
+              existing.messages.push(userMessage, assistantMessage);
+              existing.lastUpdated = new Date().toISOString();
+              dbStore.saveChatHistory(existing);
+            }
+          } else {
+            const title = message.length > 35 ? message.substring(0, 32) + '...' : message;
+            const newId = `chat-${Date.now()}-${Math.random().toString(36).substring(7)}`;
+            dbStore.saveChatHistory({
+              id: newId,
+              userId,
+              title,
+              messages: [userMessage, assistantMessage],
+              lastUpdated: new Date().toISOString(),
+              createdAt: new Date().toISOString(),
+            });
+          }
+        }
+      }
+
+      res.write('data: [DONE]\n\n');
+      res.end();
+    }
+  } catch (error) {
+    if (!res.headersSent) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ success: false, message: error.errors[0].message });
+      }
+      return res.status(500).json({ success: false, message: error.message || 'Stream failed' });
+    }
+    res.write(`event: error\ndata: ${JSON.stringify({ message: error.message || 'Stream error' })}\n\n`);
+    res.end();
   }
 };
 

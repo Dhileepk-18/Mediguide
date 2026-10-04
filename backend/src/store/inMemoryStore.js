@@ -45,8 +45,25 @@ export class DataStore {
     version: '1.0.0 (India Release)',
   };
 
+  _isDirty = false;
+  _isWriting = false;
+  _debounceTimer = null;
+  _hasPendingWrite = false;
+
   constructor() {
     this.loadData();
+    this._setupExitHandlers();
+  }
+
+  _setupExitHandlers() {
+    const flushAndExit = (code = 0) => {
+      this.flushSync();
+      process.exit(code);
+    };
+
+    process.on('exit', () => this.flushSync());
+    process.on('SIGINT', () => flushAndExit(0));
+    process.on('SIGTERM', () => flushAndExit(0));
   }
 
   loadData() {
@@ -83,25 +100,77 @@ export class DataStore {
     }
   }
 
+  _serializeData() {
+    return {
+      users: this.users,
+      doctors: this.doctors,
+      departments: this.departments,
+      appointments: this.appointments,
+      medicines: this.medicines,
+      healthRecords: this.healthRecords,
+      prescriptions: this.prescriptions,
+      chatHistories: this.chatHistories,
+      symptomChecks: this.symptomChecks,
+      notifications: this.notifications,
+      auditLogs: this.auditLogs,
+      systemSettings: this.systemSettings,
+    };
+  }
+
   persist() {
+    this._isDirty = true;
+    if (this._debounceTimer) {
+      clearTimeout(this._debounceTimer);
+    }
+    this._debounceTimer = setTimeout(() => {
+      this._saveAsync();
+    }, 500);
+  }
+
+  async _saveAsync() {
+    if (this._isWriting) {
+      this._hasPendingWrite = true;
+      return;
+    }
+
+    if (!this._isDirty) return;
+
+    this._isWriting = true;
+    this._isDirty = false;
+
+    const data = this._serializeData();
+    const tempPath = `${DATA_FILE_PATH}.tmp`;
+
     try {
-      const data = {
-        users: this.users,
-        doctors: this.doctors,
-        departments: this.departments,
-        appointments: this.appointments,
-        medicines: this.medicines,
-        healthRecords: this.healthRecords,
-        prescriptions: this.prescriptions,
-        chatHistories: this.chatHistories,
-        symptomChecks: this.symptomChecks,
-        notifications: this.notifications,
-        auditLogs: this.auditLogs,
-        systemSettings: this.systemSettings,
-      };
-      fs.writeFileSync(DATA_FILE_PATH, JSON.stringify(data, null, 2), 'utf-8');
+      await fs.promises.writeFile(tempPath, JSON.stringify(data, null, 2), 'utf-8');
+      await fs.promises.rename(tempPath, DATA_FILE_PATH);
     } catch (err) {
-      console.warn('Could not persist data_store.json:', err);
+      console.warn('Could not asynchronously persist data_store.json:', err);
+      this._isDirty = true;
+    } finally {
+      this._isWriting = false;
+      if (this._hasPendingWrite || this._isDirty) {
+        this._hasPendingWrite = false;
+        this._debounceTimer = setTimeout(() => {
+          this._saveAsync();
+        }, 500);
+      }
+    }
+  }
+
+  flushSync() {
+    if (this._debounceTimer) {
+      clearTimeout(this._debounceTimer);
+      this._debounceTimer = null;
+    }
+    if (this._isDirty) {
+      try {
+        const data = this._serializeData();
+        fs.writeFileSync(DATA_FILE_PATH, JSON.stringify(data, null, 2), 'utf-8');
+        this._isDirty = false;
+      } catch (err) {
+        console.warn('Could not synchronously flush data_store.json:', err);
+      }
     }
   }
 

@@ -1,46 +1,46 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from './store/authStore.js';
 import { Navbar } from './components/common/Navbar.jsx';
 import { Sidebar } from './components/common/Sidebar.jsx';
 import { Footer } from './components/common/Footer.jsx';
 import { ToastContainer } from './components/common/ToastContainer.jsx';
-
-// Public Pages
-import { LandingPage } from './pages/public/LandingPage.jsx';
-import { LoginPage } from './pages/public/LoginPage.jsx';
-import { RegisterPage } from './pages/public/RegisterPage.jsx';
-
-// Patient Pages
-import { PatientDashboard } from './pages/patient/PatientDashboard.jsx';
-import { DoctorDiscoveryPage } from './pages/patient/DoctorDiscoveryPage.jsx';
-import { AiAssistantPage } from './pages/patient/AiAssistantPage.jsx';
-import { SymptomCheckerPage } from './pages/patient/SymptomCheckerPage.jsx';
-import { AppointmentsPage } from './pages/patient/AppointmentsPage.jsx';
-import { MedicinesPage } from './pages/patient/MedicinesPage.jsx';
-import { HealthRecordsPage } from './pages/patient/HealthRecordsPage.jsx';
-import { PrescriptionsPage } from './pages/patient/PrescriptionsPage.jsx';
-import { ChatHistoryPage } from './pages/patient/ChatHistoryPage.jsx';
-import { PatientProfilePage } from './pages/patient/PatientProfilePage.jsx';
-import { PrivacySettingsPage } from './pages/patient/PrivacySettingsPage.jsx';
-import { EmergencyPage } from './pages/patient/EmergencyPage.jsx';
 import { BottomTabBar } from './components/common/BottomTabBar.jsx';
 
+// Public Pages
+const LandingPage = lazy(() => import('./pages/public/LandingPage.jsx').then(m => ({ default: m.LandingPage })));
+const LoginPage = lazy(() => import('./pages/public/LoginPage.jsx').then(m => ({ default: m.LoginPage })));
+const RegisterPage = lazy(() => import('./pages/public/RegisterPage.jsx').then(m => ({ default: m.RegisterPage })));
+const EmergencyPage = lazy(() => import('./pages/patient/EmergencyPage.jsx').then(m => ({ default: m.EmergencyPage })));
+
+// Patient Pages
+const PatientDashboard = lazy(() => import('./pages/patient/PatientDashboard.jsx').then(m => ({ default: m.PatientDashboard })));
+const DoctorDiscoveryPage = lazy(() => import('./pages/patient/DoctorDiscoveryPage.jsx').then(m => ({ default: m.DoctorDiscoveryPage })));
+const AiAssistantPage = lazy(() => import('./pages/patient/AiAssistantPage.jsx').then(m => ({ default: m.AiAssistantPage })));
+const SymptomCheckerPage = lazy(() => import('./pages/patient/SymptomCheckerPage.jsx').then(m => ({ default: m.SymptomCheckerPage })));
+const AppointmentsPage = lazy(() => import('./pages/patient/AppointmentsPage.jsx').then(m => ({ default: m.AppointmentsPage })));
+const MedicinesPage = lazy(() => import('./pages/patient/MedicinesPage.jsx').then(m => ({ default: m.MedicinesPage })));
+const HealthRecordsPage = lazy(() => import('./pages/patient/HealthRecordsPage.jsx').then(m => ({ default: m.HealthRecordsPage })));
+const PrescriptionsPage = lazy(() => import('./pages/patient/PrescriptionsPage.jsx').then(m => ({ default: m.PrescriptionsPage })));
+const ChatHistoryPage = lazy(() => import('./pages/patient/ChatHistoryPage.jsx').then(m => ({ default: m.ChatHistoryPage })));
+const PatientProfilePage = lazy(() => import('./pages/patient/PatientProfilePage.jsx').then(m => ({ default: m.PatientProfilePage })));
+const PrivacySettingsPage = lazy(() => import('./pages/patient/PrivacySettingsPage.jsx').then(m => ({ default: m.PrivacySettingsPage })));
+
 // Doctor Pages
-import { DoctorDashboard } from './pages/doctor/DoctorDashboard.jsx';
-import { DoctorPrescriptionsPage } from './pages/doctor/DoctorPrescriptionsPage.jsx';
-import { DoctorPatientsPage } from './pages/doctor/DoctorPatientsPage.jsx';
-import { DoctorSchedulePage } from './pages/doctor/DoctorSchedulePage.jsx';
-import { DoctorProfilePage } from './pages/doctor/DoctorProfilePage.jsx';
+const DoctorDashboard = lazy(() => import('./pages/doctor/DoctorDashboard.jsx').then(m => ({ default: m.DoctorDashboard })));
+const DoctorPrescriptionsPage = lazy(() => import('./pages/doctor/DoctorPrescriptionsPage.jsx').then(m => ({ default: m.DoctorPrescriptionsPage })));
+const DoctorPatientsPage = lazy(() => import('./pages/doctor/DoctorPatientsPage.jsx').then(m => ({ default: m.DoctorPatientsPage })));
+const DoctorSchedulePage = lazy(() => import('./pages/doctor/DoctorSchedulePage.jsx').then(m => ({ default: m.DoctorSchedulePage })));
+const DoctorProfilePage = lazy(() => import('./pages/doctor/DoctorProfilePage.jsx').then(m => ({ default: m.DoctorProfilePage })));
 
 // Admin Pages
-import { AdminDashboard } from './pages/admin/AdminDashboard.jsx';
-import { AdminUsersPage } from './pages/admin/AdminUsersPage.jsx';
-import { AdminDoctorsPage } from './pages/admin/AdminDoctorsPage.jsx';
-import { AdminDepartmentsPage } from './pages/admin/AdminDepartmentsPage.jsx';
-import { AdminAppointmentsPage } from './pages/admin/AdminAppointmentsPage.jsx';
-import { AdminAuditLogsPage } from './pages/admin/AdminAuditLogsPage.jsx';
-import { AdminSettingsPage } from './pages/admin/AdminSettingsPage.jsx';
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard.jsx').then(m => ({ default: m.AdminDashboard })));
+const AdminUsersPage = lazy(() => import('./pages/admin/AdminUsersPage.jsx').then(m => ({ default: m.AdminUsersPage })));
+const AdminDoctorsPage = lazy(() => import('./pages/admin/AdminDoctorsPage.jsx').then(m => ({ default: m.AdminDoctorsPage })));
+const AdminDepartmentsPage = lazy(() => import('./pages/admin/AdminDepartmentsPage.jsx').then(m => ({ default: m.AdminDepartmentsPage })));
+const AdminAppointmentsPage = lazy(() => import('./pages/admin/AdminAppointmentsPage.jsx').then(m => ({ default: m.AdminAppointmentsPage })));
+const AdminAuditLogsPage = lazy(() => import('./pages/admin/AdminAuditLogsPage.jsx').then(m => ({ default: m.AdminAuditLogsPage })));
+const AdminSettingsPage = lazy(() => import('./pages/admin/AdminSettingsPage.jsx').then(m => ({ default: m.AdminSettingsPage })));
 
 const ProtectedRoute = ({ allowedRoles, children }) => {
   const { user, isAuthenticated, isLoading } = useAuthStore();
@@ -120,7 +120,14 @@ export const App = () => {
   return (
     <Router>
       <AppLayout>
-        <Routes>
+        <Suspense
+          fallback={
+            <div className="min-h-[50vh] flex items-center justify-center">
+              <div className="w-8 h-8 border-4 border-health-200 border-t-health-600 rounded-full animate-spin" />
+            </div>
+          }
+        >
+          <Routes>
           {/* Public Routes */}
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -328,7 +335,8 @@ export const App = () => {
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-      </AppLayout>
+      </Suspense>
+    </AppLayout>
     </Router>
   );
 };

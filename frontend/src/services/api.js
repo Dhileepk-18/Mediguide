@@ -1,39 +1,72 @@
 const API_BASE = '/api';
 
-const getAuthHeaders = () => {
-  const token = localStorage.getItem('mediguide_token');
-  return {
-    'Content-Type': 'application/json',
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-  };
-};
+let refreshPromise = null;
 
 async function tryRefreshToken() {
-  const refreshToken = localStorage.getItem('mediguide_refresh_token');
-  if (!refreshToken) return null;
-  try {
-    const res = await fetch(`${API_BASE}/auth/refresh-token`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ refreshToken }),
-    });
-    const data = await res.json().catch(() => ({}));
-    if (res.ok && data.success && data.accessToken) {
-      localStorage.setItem('mediguide_token', data.accessToken);
-      if (data.refreshToken) {
-        localStorage.setItem('mediguide_refresh_token', data.refreshToken);
-      }
-      return data.accessToken;
+  if (refreshPromise) return refreshPromise;
+
+  refreshPromise = (async () => {
+    const refreshToken = localStorage.getItem('mediguide_refresh_token');
+    if (!refreshToken) {
+      localStorage.removeItem('mediguide_token');
+      localStorage.removeItem('mediguide_refresh_token');
+      return null;
     }
-  } catch {
-    // Refresh attempt failed
-  }
-  localStorage.removeItem('mediguide_token');
-  localStorage.removeItem('mediguide_refresh_token');
-  return null;
+    try {
+      const res = await fetch(`${API_BASE}/auth/refresh-token`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refreshToken }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success && data.accessToken) {
+        localStorage.setItem('mediguide_token', data.accessToken);
+        if (data.refreshToken) {
+          localStorage.setItem('mediguide_refresh_token', data.refreshToken);
+        }
+        return data.accessToken;
+      }
+    } catch {
+      // Refresh attempt failed
+    }
+    localStorage.removeItem('mediguide_token');
+    localStorage.removeItem('mediguide_refresh_token');
+    return null;
+  })().finally(() => {
+    refreshPromise = null;
+  });
+
+  return refreshPromise;
 }
 
-async function handleResponse(res) {
+async function request(path, options = {}, isRetry = false) {
+  const url = path.startsWith('http') ? path : `${API_BASE}${path.startsWith('/') ? path : `/${path}`}`;
+  const token = localStorage.getItem('mediguide_token');
+
+  const headers = {
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...options.headers,
+  };
+
+  let body = options.body;
+  if (body && typeof body === 'object' && !(body instanceof FormData)) {
+    body = JSON.stringify(body);
+  }
+
+  const res = await fetch(url, {
+    ...options,
+    headers,
+    body,
+  });
+
+  if (res.status === 401 && !isRetry && !path.includes('/auth/login') && !path.includes('/auth/refresh-token')) {
+    const newToken = await tryRefreshToken();
+    if (newToken) {
+      return request(path, options, true);
+    }
+  }
+
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
     if (res.status === 401) {
@@ -48,90 +81,71 @@ async function handleResponse(res) {
 export const api = {
   // Auth API
   async login(email, password) {
-    const res = await fetch(`${API_BASE}/auth/login`, {
+    return request('/auth/login', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
+      body: { email, password },
     });
-    return handleResponse(res);
   },
+
   async register(userData) {
-    const res = await fetch(`${API_BASE}/auth/register`, {
+    return request('/auth/register', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(userData),
+      body: userData,
     });
-    return handleResponse(res);
   },
+
   async demoLogin(role) {
-    const res = await fetch(`${API_BASE}/auth/demo-login`, {
+    return request('/auth/demo-login', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ role }),
+      body: { role },
     });
-    return handleResponse(res);
   },
+
   async getMe() {
-    const res = await fetch(`${API_BASE}/auth/me`, {
-      headers: getAuthHeaders(),
-    });
-    return handleResponse(res);
+    return request('/auth/me');
   },
+
   async updateProfile(updates) {
-    const res = await fetch(`${API_BASE}/auth/profile`, {
+    return request('/auth/profile', {
       method: 'PUT',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(updates),
+      body: updates,
     });
-    return handleResponse(res);
   },
+
   async forgotPassword(email) {
-    const res = await fetch(`${API_BASE}/auth/forgot-password`, {
+    return request('/auth/forgot-password', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email }),
+      body: { email },
     });
-    return handleResponse(res);
   },
+
   async resetPassword(email, otp, newPassword) {
-    const res = await fetch(`${API_BASE}/auth/reset-password`, {
+    return request('/auth/reset-password', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, otp, newPassword }),
+      body: { email, otp, newPassword },
     });
-    return handleResponse(res);
   },
+
   async exportUserData() {
-    const res = await fetch(`${API_BASE}/auth/export-data`, {
-      headers: getAuthHeaders(),
-    });
-    return handleResponse(res);
+    return request('/auth/export-data');
   },
+
   async deleteUserAccount() {
-    const res = await fetch(`${API_BASE}/auth/delete-account`, {
+    return request('/auth/delete-account', {
       method: 'DELETE',
-      headers: getAuthHeaders(),
     });
-    return handleResponse(res);
   },
+
   async refreshToken(refreshToken) {
-    const res = await fetch(`${API_BASE}/auth/refresh-token`, {
+    return request('/auth/refresh-token', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ refreshToken }),
+      body: { refreshToken },
     });
-    return handleResponse(res);
   },
+
   async logout() {
-    const token = localStorage.getItem('mediguide_token');
     try {
-      await fetch(`${API_BASE}/auth/logout`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-      });
+      await request('/auth/logout', { method: 'POST' });
     } catch {
       // Ignore network errors on logout
     }
@@ -141,56 +155,46 @@ export const api = {
 
   // In-App Notifications (FR-15)
   async getNotifications() {
-    const res = await fetch(`${API_BASE}/notifications`, {
-      headers: getAuthHeaders(),
-    });
-    return handleResponse(res);
+    return request('/notifications');
   },
+
   async markNotificationRead(id) {
-    const res = await fetch(`${API_BASE}/notifications/${id}/read`, {
+    return request(`/notifications/${id}/read`, {
       method: 'PATCH',
-      headers: getAuthHeaders(),
     });
-    return handleResponse(res);
   },
+
   async markAllNotificationsRead() {
-    const res = await fetch(`${API_BASE}/notifications/read-all`, {
+    return request('/notifications/read-all', {
       method: 'PATCH',
-      headers: getAuthHeaders(),
     });
-    return handleResponse(res);
   },
+
   async deleteNotification(id) {
-    const res = await fetch(`${API_BASE}/notifications/${id}`, {
+    return request(`/notifications/${id}`, {
       method: 'DELETE',
-      headers: getAuthHeaders(),
     });
-    return handleResponse(res);
   },
 
   // AI API
   async getAiConfig() {
-    const res = await fetch(`${API_BASE}/ai/config`, {
-      headers: getAuthHeaders(),
-    });
-    return handleResponse(res);
+    return request('/ai/config');
   },
+
   async setAiApiKey(apiKey) {
-    const res = await fetch(`${API_BASE}/ai/config`, {
+    return request('/ai/config', {
       method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify({ apiKey }),
+      body: { apiKey },
     });
-    return handleResponse(res);
   },
+
   async sendChatMessage(message, conversationId, history) {
-    const res = await fetch(`${API_BASE}/ai/chat`, {
+    return request('/ai/chat', {
       method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify({ message, conversationId, history }),
+      body: { message, conversationId, history },
     });
-    return handleResponse(res);
   },
+
   async analyzeSymptoms(symptomsOrOptions, severity, duration, bodyArea, additionalNotes) {
     let payload;
     if (symptomsOrOptions && typeof symptomsOrOptions === 'object' && !Array.isArray(symptomsOrOptions)) {
@@ -199,7 +203,6 @@ export const api = {
       let finalSeverity = severity;
       let finalDuration = duration;
       const validSeverities = ['Mild', 'Moderate', 'Severe'];
-      // Defensive check: if caller accidentally passed duration in 2nd arg and severity in 3rd arg
       if (!validSeverities.includes(severity) && validSeverities.includes(duration)) {
         finalSeverity = duration;
         finalDuration = severity;
@@ -212,25 +215,18 @@ export const api = {
         additionalNotes,
       };
     }
-    const res = await fetch(`${API_BASE}/ai/symptom-check`, {
+    return request('/ai/symptom-check', {
       method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(payload),
+      body: payload,
     });
-    return handleResponse(res);
   },
 
   async getChatHistories() {
-    const res = await fetch(`${API_BASE}/ai/chat-history`, {
-      headers: getAuthHeaders(),
-    });
-    return handleResponse(res);
+    return request('/ai/chat-history');
   },
+
   async getSymptomHistories() {
-    const res = await fetch(`${API_BASE}/ai/symptom-history`, {
-      headers: getAuthHeaders(),
-    });
-    return handleResponse(res);
+    return request('/ai/symptom-history');
   },
 
   // Doctors API & Discovery
@@ -245,73 +241,63 @@ export const api = {
     if (filters.maxFee) params.append('maxFee', filters.maxFee);
     if (filters.search) params.append('search', filters.search);
 
-    const res = await fetch(`${API_BASE}/doctors?${params.toString()}`);
-    return handleResponse(res);
+    const query = params.toString();
+    return request(query ? `/doctors?${query}` : '/doctors');
   },
+
   async getDoctorById(id) {
-    const res = await fetch(`${API_BASE}/doctors/${id}`);
-    return handleResponse(res);
+    return request(`/doctors/${id}`);
   },
+
   async getMyPatients() {
-    const res = await fetch(`${API_BASE}/doctors/my-patients`, {
-      headers: getAuthHeaders(),
-    });
-    return handleResponse(res);
+    return request('/doctors/my-patients');
   },
+
   async getDoctorSchedule() {
-    const res = await fetch(`${API_BASE}/doctors/schedule/me`, {
-      headers: getAuthHeaders(),
-    });
-    return handleResponse(res);
+    return request('/doctors/schedule/me');
   },
+
   async updateDoctorSchedule(scheduleData) {
-    const res = await fetch(`${API_BASE}/doctors/schedule/me`, {
+    return request('/doctors/schedule/me', {
       method: 'PUT',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(scheduleData),
+      body: scheduleData,
     });
-    return handleResponse(res);
   },
+
   async updateDoctorProfile(profileData) {
-    const res = await fetch(`${API_BASE}/doctors/profile/me`, {
+    return request('/doctors/profile/me', {
       method: 'PUT',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(profileData),
+      body: profileData,
     });
-    return handleResponse(res);
   },
 
   // Medical Departments API
   async getDepartments() {
-    const res = await fetch(`${API_BASE}/departments`);
-    return handleResponse(res);
+    return request('/departments');
   },
+
   async getDepartmentById(id) {
-    const res = await fetch(`${API_BASE}/departments/${id}`);
-    return handleResponse(res);
+    return request(`/departments/${id}`);
   },
+
   async createDepartment(data) {
-    const res = await fetch(`${API_BASE}/departments`, {
+    return request('/departments', {
       method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(data),
+      body: data,
     });
-    return handleResponse(res);
   },
+
   async updateDepartment(id, updates) {
-    const res = await fetch(`${API_BASE}/departments/${id}`, {
+    return request(`/departments/${id}`, {
       method: 'PUT',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(updates),
+      body: updates,
     });
-    return handleResponse(res);
   },
+
   async deleteDepartment(id) {
-    const res = await fetch(`${API_BASE}/departments/${id}`, {
+    return request(`/departments/${id}`, {
       method: 'DELETE',
-      headers: getAuthHeaders(),
     });
-    return handleResponse(res);
   },
 
   // Appointments API
@@ -320,182 +306,147 @@ export const api = {
       ...data,
       timeSlot: data.timeSlot || data.time,
     };
-    const res = await fetch(`${API_BASE}/appointments`, {
+    return request('/appointments', {
       method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(payload),
+      body: payload,
     });
-    return handleResponse(res);
   },
+
   async createAppointment(data) {
     return this.bookAppointment(data);
   },
+
   async getMyAppointments() {
-    const res = await fetch(`${API_BASE}/appointments/my`, {
-      headers: getAuthHeaders(),
-    });
-    return handleResponse(res);
+    return request('/appointments/my');
   },
+
   async updateAppointmentStatus(id, status, notes, prescriptionId, date, timeSlot) {
-    const res = await fetch(`${API_BASE}/appointments/${id}/status`, {
+    return request(`/appointments/${id}/status`, {
       method: 'PATCH',
-      headers: getAuthHeaders(),
-      body: JSON.stringify({ status, notes, prescriptionId, date, timeSlot }),
+      body: { status, notes, prescriptionId, date, timeSlot },
     });
-    return handleResponse(res);
   },
 
   // Medicines API
   async getMedicines(patientId) {
-    const url = patientId
-      ? `${API_BASE}/medicines?patientId=${patientId}`
-      : `${API_BASE}/medicines`;
-    const res = await fetch(url, {
-      headers: getAuthHeaders(),
-    });
-    return handleResponse(res);
+    const path = patientId ? `/medicines?patientId=${patientId}` : '/medicines';
+    return request(path);
   },
+
   async addMedicine(data) {
-    const res = await fetch(`${API_BASE}/medicines`, {
+    return request('/medicines', {
       method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(data),
+      body: data,
     });
-    return handleResponse(res);
   },
+
   async updateMedicine(id, updates) {
-    const res = await fetch(`${API_BASE}/medicines/${id}`, {
+    return request(`/medicines/${id}`, {
       method: 'PUT',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(updates),
+      body: updates,
     });
-    return handleResponse(res);
   },
+
   async deleteMedicine(id) {
-    const res = await fetch(`${API_BASE}/medicines/${id}`, {
+    return request(`/medicines/${id}`, {
       method: 'DELETE',
-      headers: getAuthHeaders(),
     });
-    return handleResponse(res);
   },
+
   async logMedicineAdherence(id, date, timeSlot, taken) {
-    const res = await fetch(`${API_BASE}/medicines/${id}/adherence`, {
+    return request(`/medicines/${id}/adherence`, {
       method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify({ date, timeSlot, taken }),
+      body: { date, timeSlot, taken },
     });
-    return handleResponse(res);
   },
 
   // Health Records API
   async getHealthRecords(patientId) {
-    const url = patientId
-      ? `${API_BASE}/health-records?patientId=${patientId}`
-      : `${API_BASE}/health-records`;
-    const res = await fetch(url, {
-      headers: getAuthHeaders(),
-    });
-    return handleResponse(res);
+    const path = patientId ? `/health-records?patientId=${patientId}` : '/health-records';
+    return request(path);
   },
+
   async addHealthRecord(record) {
-    const res = await fetch(`${API_BASE}/health-records`, {
+    return request('/health-records', {
       method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(record),
+      body: record,
     });
-    return handleResponse(res);
   },
+
   async deleteHealthRecord(id) {
-    const res = await fetch(`${API_BASE}/health-records/${id}`, {
+    return request(`/health-records/${id}`, {
       method: 'DELETE',
-      headers: getAuthHeaders(),
     });
-    return handleResponse(res);
   },
 
   // Prescriptions API
   async getMyPrescriptions() {
-    const res = await fetch(`${API_BASE}/prescriptions/my`, {
-      headers: getAuthHeaders(),
-    });
-    return handleResponse(res);
+    return request('/prescriptions/my');
   },
+
   async getPrescriptionById(id) {
-    const res = await fetch(`${API_BASE}/prescriptions/${id}`, {
-      headers: getAuthHeaders(),
-    });
-    return handleResponse(res);
+    return request(`/prescriptions/${id}`);
   },
+
   async createPrescription(data) {
-    const res = await fetch(`${API_BASE}/prescriptions`, {
+    return request('/prescriptions', {
       method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(data),
+      body: data,
     });
-    return handleResponse(res);
   },
 
   // Admin API
   async getAdminStats() {
-    const res = await fetch(`${API_BASE}/admin/stats`, {
-      headers: getAuthHeaders(),
-    });
-    return handleResponse(res);
+    return request('/admin/stats');
   },
+
   async getAdminUsers(role, status, search) {
     const params = new URLSearchParams();
     if (role && role !== 'all') params.append('role', role);
     if (status && status !== 'all') params.append('status', status);
     if (search) params.append('search', search);
-    const res = await fetch(`${API_BASE}/admin/users?${params.toString()}`, {
-      headers: getAuthHeaders(),
-    });
-    return handleResponse(res);
+    const query = params.toString();
+    return request(query ? `/admin/users?${query}` : '/admin/users');
   },
+
   async updateAdminUser(id, updates) {
-    const res = await fetch(`${API_BASE}/admin/users/${id}/status`, {
+    return request(`/admin/users/${id}/status`, {
       method: 'PATCH',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(updates),
+      body: updates,
     });
-    return handleResponse(res);
   },
+
   async deleteAdminUser(id) {
-    const res = await fetch(`${API_BASE}/admin/users/${id}`, {
+    return request(`/admin/users/${id}`, {
       method: 'DELETE',
-      headers: getAuthHeaders(),
     });
-    return handleResponse(res);
   },
+
   async addDoctor(data) {
-    const res = await fetch(`${API_BASE}/admin/doctors`, {
+    return request('/admin/doctors', {
       method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(data),
+      body: data,
     });
-    return handleResponse(res);
   },
+
   async approveDoctor(id) {
-    const res = await fetch(`${API_BASE}/admin/doctors/${id}/approve`, {
+    return request(`/admin/doctors/${id}/approve`, {
       method: 'PATCH',
-      headers: getAuthHeaders(),
     });
-    return handleResponse(res);
   },
+
   async suspendDoctor(id) {
-    const res = await fetch(`${API_BASE}/admin/doctors/${id}/suspend`, {
+    return request(`/admin/doctors/${id}/suspend`, {
       method: 'PATCH',
-      headers: getAuthHeaders(),
     });
-    return handleResponse(res);
   },
+
   async toggleDoctorAvailability(id) {
-    const res = await fetch(`${API_BASE}/admin/doctors/${id}/availability`, {
+    return request(`/admin/doctors/${id}/availability`, {
       method: 'PATCH',
-      headers: getAuthHeaders(),
     });
-    return handleResponse(res);
   },
+
   async getAdminAppointments(filters = {}) {
     const params = new URLSearchParams();
     if (filters.status && filters.status !== 'All') params.append('status', filters.status);
@@ -505,11 +456,10 @@ export const api = {
     if (filters.date) params.append('date', filters.date);
     if (filters.search) params.append('search', filters.search);
 
-    const res = await fetch(`${API_BASE}/admin/appointments?${params.toString()}`, {
-      headers: getAuthHeaders(),
-    });
-    return handleResponse(res);
+    const query = params.toString();
+    return request(query ? `/admin/appointments?${query}` : '/admin/appointments');
   },
+
   async getAuditLogs(filters = {}) {
     const params = new URLSearchParams();
     if (filters.eventType && filters.eventType !== 'ALL')
@@ -517,23 +467,18 @@ export const api = {
     if (filters.role && filters.role !== 'ALL') params.append('role', filters.role);
     if (filters.search) params.append('search', filters.search);
 
-    const res = await fetch(`${API_BASE}/audit-logs?${params.toString()}`, {
-      headers: getAuthHeaders(),
-    });
-    return handleResponse(res);
+    const query = params.toString();
+    return request(query ? `/audit-logs?${query}` : '/audit-logs');
   },
+
   async getSystemSettings() {
-    const res = await fetch(`${API_BASE}/admin/settings`, {
-      headers: getAuthHeaders(),
-    });
-    return handleResponse(res);
+    return request('/admin/settings');
   },
+
   async updateSystemSettings(settings) {
-    const res = await fetch(`${API_BASE}/admin/settings`, {
+    return request('/admin/settings', {
       method: 'PUT',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(settings),
+      body: settings,
     });
-    return handleResponse(res);
   },
 };

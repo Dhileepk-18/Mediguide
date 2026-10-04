@@ -120,6 +120,53 @@ export async function generateChatResponse(userMessage, history = []) {
   };
 }
 
+export async function* generateChatResponseStream(userMessage, history = []) {
+  if (genAI && activeApiKey) {
+    const candidateModels = [
+      'gemini-3.8-flash',
+      'gemini-2.5-flash',
+      'gemini-2.0-flash',
+      'gemini-1.5-flash',
+      'gemini-flash-latest',
+    ];
+    for (const modelName of candidateModels) {
+      try {
+        const model = genAI.getGenerativeModel({
+          model: modelName,
+          generationConfig: {
+            temperature: 0.2,
+            maxOutputTokens: 600,
+          },
+        });
+        const chatContext = history
+          .slice(-4)
+          .map(h => `${h.sender === 'user' ? 'User' : 'Assistant'}: ${h.text}`)
+          .join('\n\n');
+        const fullPrompt = `${MEDICAL_SYSTEM_PROMPT}\n\nConversation History:\n${chatContext}\n\nUser Question: ${userMessage}\n\nPlease provide a fast, concise, structured clinical answer (under 150 words) with bullet points and a brief title (###).`;
+
+        const streamingResult = await model.generateContentStream(fullPrompt);
+        let yieldedAny = false;
+        for await (const chunk of streamingResult.stream) {
+          const chunkText = chunk.text();
+          if (chunkText) {
+            yieldedAny = true;
+            yield chunkText;
+          }
+        }
+        if (yieldedAny) {
+          return;
+        }
+      } catch (err) {
+        console.warn(`Streaming attempt with ${modelName} failed:`, err.message || err);
+      }
+    }
+  }
+
+  // Fallback intelligent reasoning engine
+  const fallback = dynamicHealthcareChat(userMessage);
+  yield fallback.text;
+}
+
 // Red-flag emergency detection patterns for deterministic safety overrides (PRD Section 9.6)
 export const RED_FLAG_EMERGENCY_PATTERNS = [
   'chest pain',

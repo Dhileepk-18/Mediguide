@@ -195,35 +195,152 @@ export const AiAssistantPage = () => {
     setMessages(prev => [...prev, userMsg]);
     setInput('');
 
+    const formattedHistory = messages
+      .filter(m => m.id !== 'welcome-msg')
+      .map(m => ({ sender: m.sender, text: m.text }));
+
+    let streamedSuccessfully = false;
+    let assistantMsgId = null;
+
     try {
-      const formattedHistory = messages
-        .filter(m => m.id !== 'welcome-msg')
-        .map(m => ({ sender: m.sender, text: m.text }));
+      const token = localStorage.getItem('mediguide_token');
+      const response = await fetch('/api/ai/chat/stream', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({
+          message: text,
+          conversationId,
+          history: formattedHistory,
+        }),
+      });
 
-      const res = await api.sendChatMessage(text, conversationId, formattedHistory);
+      if (!response.ok || !response.body) {
+        throw new Error('Streaming connection failed');
+      }
 
-      if (res.success) {
-        const assistantMsg = {
-          id: `msg-${Date.now()}-a`,
-          sender: 'assistant',
-          text: res.text,
-          timestamp: new Date().toISOString(),
-          suggestions: res.suggestions,
-        };
-        setMessages(prev => [...prev, assistantMsg]);
-        if (res.conversationId) setConversationId(res.conversationId);
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let accumulatedText = '';
+      let buffer = '';
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n\n');
+        buffer = lines.pop() || '';
+
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed || trimmed.startsWith('event:')) continue;
+          if (trimmed === 'data: [DONE]') continue;
+          if (trimmed.startsWith('data: ')) {
+            try {
+              const parsed = JSON.parse(trimmed.slice(6));
+              if (parsed.text) {
+                if (!assistantMsgId) {
+                  assistantMsgId = `msg-${Date.now()}-a`;
+                  setIsLoading(false);
+                  accumulatedText = parsed.text;
+                  setMessages(prev => [
+                    ...prev,
+                    {
+                      id: assistantMsgId,
+                      sender: 'assistant',
+                      text: accumulatedText,
+                      timestamp: new Date().toISOString(),
+                    },
+                  ]);
+                } else {
+                  accumulatedText += parsed.text;
+                  setMessages(prev =>
+                    prev.map(m =>
+                      m.id === assistantMsgId ? { ...m, text: accumulatedText } : m
+                    )
+                  );
+                }
+              }
+            } catch {
+              // Ignore chunk parse error
+            }
+          }
+        }
+      }
+
+      if (buffer.trim()) {
+        const trimmed = buffer.trim();
+        if (trimmed.startsWith('data: ') && trimmed !== 'data: [DONE]') {
+          try {
+            const parsed = JSON.parse(trimmed.slice(6));
+            if (parsed.text) {
+              accumulatedText += parsed.text;
+              setMessages(prev =>
+                prev.map(m =>
+                  m.id === assistantMsgId ? { ...m, text: accumulatedText } : m
+                )
+              );
+            }
+          } catch {}
+        }
+      }
+
+      if (accumulatedText.trim().length > 0) {
+        streamedSuccessfully = true;
         loadChatHistories();
       }
-    } catch (err) {
-      addToast({
-        type: 'error',
-        title: 'Chat error',
-        message: err.message || 'Failed to receive AI response.',
-      });
-    } finally {
-      isSendingRef.current = false;
-      setIsLoading(false);
+    } catch {
+      // Fallback to non-streaming if stream connection fails
     }
+
+    if (!streamedSuccessfully) {
+      try {
+        const res = await api.sendChatMessage(text, conversationId, formattedHistory);
+        if (res.success) {
+          const fallbackAssistantMsg = {
+            id: assistantMsgId || `msg-${Date.now()}-a`,
+            sender: 'assistant',
+            text: res.text,
+            timestamp: new Date().toISOString(),
+            suggestions: res.suggestions,
+          };
+          setMessages(prev => {
+            if (assistantMsgId && prev.some(m => m.id === assistantMsgId)) {
+              return prev.map(m => (m.id === assistantMsgId ? fallbackAssistantMsg : m));
+            }
+            return [...prev, fallbackAssistantMsg];
+          });
+          if (res.conversationId) setConversationId(res.conversationId);
+        } else {
+          throw new Error(res?.message || 'AI service unavailable');
+        }
+      } catch (err) {
+        const friendlyErrMsg = {
+          id: assistantMsgId || `msg-${Date.now()}-a`,
+          sender: 'assistant',
+          text: "I'm having trouble connecting to the AI assistant right now. Please try again in a moment, or consult a doctor if you need urgent medical care.",
+          timestamp: new Date().toISOString(),
+          suggestions: ['When should I see a doctor?', 'Emergency contacts'],
+        };
+        setMessages(prev => {
+          if (assistantMsgId && prev.some(m => m.id === assistantMsgId)) {
+            return prev.map(m => (m.id === assistantMsgId ? friendlyErrMsg : m));
+          }
+          return [...prev, friendlyErrMsg];
+        });
+        addToast({
+          type: 'warning',
+          title: 'AI Service Offline',
+          message: 'The AI assistant is temporarily unavailable. Please try again shortly.',
+        });
+      }
+    }
+
+    isSendingRef.current = false;
+    setIsLoading(false);
   };
 
   const handleSaveApiKey = async e => {
@@ -656,6 +773,9 @@ export const AiAssistantPage = () => {
               <span className="hidden sm:inline">Send</span>
             </button>
           </form>
+          <p className="text-[11px] text-center text-ink-muted mt-2">
+            This is not a medical diagnosis. Please consult a doctor.
+          </p>
         </div>
       </div>
 
