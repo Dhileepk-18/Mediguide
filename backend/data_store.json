@@ -25,7 +25,7 @@
       ],
       "emergencyContact": "Priya Sharma (Spouse) - +91 98765 12345",
       "createdAt": "2026-08-23T13:26:35.228Z",
-      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzci1wYXRpZW50LTEiLCJyb2xlIjoicGF0aWVudCIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzkxMTAxNTMzLCJleHAiOjE3OTE3MDYzMzN9.XtMyQE57sd6AVni51FmK-Y11WcOlVEIRzbi0X_FnLnA"
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzci1wYXRpZW50LTEiLCJyb2xlIjoicGF0aWVudCIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzkxMTAyMDUyLCJleHAiOjE3OTE3MDY4NTJ9.Y2rRc7RTmFHwIlrpV82mTvA6_AwSDsMBMBRKwfpddbc"
     },
     {
       "id": "usr-patient-2",
@@ -51,7 +51,7 @@
       ],
       "emergencyContact": "K. Nair (Father) - +91 98450 99887",
       "createdAt": "2026-08-23T13:26:35.228Z",
-      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzci1wYXRpZW50LTIiLCJyb2xlIjoicGF0aWVudCIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzkxMTAxNTMzLCJleHAiOjE3OTE3MDYzMzN9.OIAZ-VJFjfol_Y6nTMBsPISu4Bv0SZlsLEGAOfhNEVg"
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzci1wYXRpZW50LTIiLCJyb2xlIjoicGF0aWVudCIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzkxMTAyMDUyLCJleHAiOjE3OTE3MDY4NTJ9.Xz8zGfa5GUfup2A-MaZWl9XloKKXsPgpR3joh3JuB8E"
     },
     {
       "id": "usr-doctor-1",
@@ -64,7 +64,7 @@
       "status": "active",
       "doctorId": "doc-1",
       "createdAt": "2026-08-23T13:26:35.228Z",
-      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzci1kb2N0b3ItMSIsInJvbGUiOiJkb2N0b3IiLCJ0b2tlblZlcnNpb24iOjAsImlhdCI6MTc5MTEwMTUzMywiZXhwIjoxNzkxNzA2MzMzfQ.a-WK8I6FlM0ECbavCYsDxkmSwjXafJPYC10aKv07sCc"
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzci1kb2N0b3ItMSIsInJvbGUiOiJkb2N0b3IiLCJ0b2tlblZlcnNpb24iOjAsImlhdCI6MTc5MTEwMjA1MiwiZXhwIjoxNzkxNzA2ODUyfQ.gcEhdNC__dps4KS0bAts5-y19yELqHVsnpubCufNWg4"
     },
     {
       "id": "usr-doctor-2",
@@ -100,7 +100,7 @@
       "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
       "status": "active",
       "createdAt": "2026-08-23T13:26:35.228Z",
-      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzci1hZG1pbi0xIiwicm9sZSI6ImFkbWluIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3OTExMDE1MzMsImV4cCI6MTc5MTcwNjMzM30.JL9CSE_to0y9pdKulQQomHVeQopD4f2m63g-AFp-ylI"
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzci1hZG1pbi0xIiwicm9sZSI6ImFkbWluIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3OTExMDIwNTIsImV4cCI6MTc5MTcwNjg1Mn0.31K6oYmKk0NxSH4x9ce_lpHtxL7tEZjagkUZJxPixTA"
     },
     {
       "id": "usr-1787499684924",
@@ -183,6 +183,13 @@
       "id": "usr-unlinked-1791101533820",
       "name": "Unlinked Patient",
       "email": "unlinked.1791101533820@example.com",
+      "password": "$2b$10$mXIf6Gu.Xx/5UidR2rFj1eFtT.8Nbj2HQpsce8ikBot/zJueeiwZ.",
+      "role": "patient"
+    },
+    {
+      "id": "usr-unlinked-1791102052462",
+      "name": "Unlinked Patient",
+      "email": "unlinked.1791102052462@example.com",
       "password": "$2b$10$mXIf6Gu.Xx/5UidR2rFj1eFtT.8Nbj2HQpsce8ikBot/zJueeiwZ.",
       "role": "patient"
     }
@@ -603,6 +610,28 @@
   ],
   "appointments": [
     {
+      "id": "apt-test-1791102052473",
+      "patientId": "usr-patient-1",
+      "patientName": "Rahul Sharma",
+      "doctorId": "doc-cardio-1",
+      "doctorName": "Dr. Rajesh Venkat",
+      "date": "2026-10-15",
+      "timeSlot": "10:00 AM",
+      "status": "confirmed",
+      "reason": "Routine Cardiology Follow-up"
+    },
+    {
+      "id": "apt-patient-b-1791102052350",
+      "patientId": "usr-patient-2",
+      "patientName": "Priya Nair",
+      "doctorId": "doc-derma-1",
+      "doctorName": "Dr. Ananya Deshmukh",
+      "date": "2026-10-22",
+      "timeSlot": "11:30 AM",
+      "status": "confirmed",
+      "reason": "Skin allergy consultation"
+    },
+    {
       "id": "apt-test-1791101533829",
       "patientId": "usr-patient-1",
       "patientName": "Rahul Sharma",
@@ -1012,6 +1041,30 @@
     }
   ],
   "prescriptions": [
+    {
+      "id": "rx-patient-b-1791102052353",
+      "patientId": "usr-patient-2",
+      "patientName": "Priya Nair",
+      "doctorId": "doc-derma-1",
+      "doctorName": "Dr. Ananya Deshmukh",
+      "registrationNumber": "NMC-2026-4482",
+      "qrVerificationCode": "MG-RX-IN-TEST-999",
+      "date": "2026-10-22",
+      "diagnosis": "Contact Dermatitis",
+      "medicines": [
+        {
+          "name": "Cetirizine",
+          "dosage": "10mg",
+          "frequency": "Once Daily",
+          "duration": "7 days",
+          "instructions": "Take at night"
+        }
+      ],
+      "diagnosticTests": [
+        "Serum IgE",
+        "Patch Allergy Test"
+      ]
+    },
     {
       "id": "rx-patient-b-1791101533712",
       "patientId": "usr-patient-2",
@@ -1659,6 +1712,237 @@
     }
   ],
   "symptomChecks": [
+    {
+      "id": "sym-1791102050765",
+      "userId": "test-usr-1",
+      "symptoms": [
+        "dry itchy skin rash with scales"
+      ],
+      "severity": "Mild",
+      "duration": "5 days",
+      "bodyArea": "Arms",
+      "additionalNotes": "None",
+      "modelUsed": "MediGuide Python Random Forest ML Service (FastAPI)",
+      "confidence": 81,
+      "recommendedDepartment": "Dermatology",
+      "alternativeDepartments": [
+        {
+          "department": "Pediatrics",
+          "confidence": 12
+        }
+      ],
+      "preliminaryGuidance": "Findings suggest dermatological or cutaneous inflammation. Maintain good skin hydration and avoid scratching or applying harsh cleansers until evaluated.",
+      "possibleConditions": [
+        "Dermatology",
+        "Primary Clinical Assessment"
+      ],
+      "urgencyLevel": "Low / Routine",
+      "redFlagDetected": false,
+      "isEmergency": false,
+      "contributingFactors": [
+        "dry",
+        "scales",
+        "itchy",
+        "skin rash"
+      ],
+      "explanation": "Recommendation for Dermatology was primarily guided by reported symptoms: dry, scales, itchy, skin rash.",
+      "emergencyContacts": {
+        "national": "112",
+        "ambulance": "108",
+        "medical": "102"
+      },
+      "matchedDoctorIds": [
+        "doc-3"
+      ],
+      "disclaimer": "Suggested Department — Not a Medical Diagnosis. Based on Random Forest classification.",
+      "createdAt": "2026-10-04T08:20:50.765Z"
+    },
+    {
+      "id": "sym-1791102050747",
+      "userId": "test-usr-1",
+      "symptoms": [
+        "severe chest pain radiating to left arm",
+        "profuse sweating"
+      ],
+      "severity": "Severe",
+      "duration": "1 hour",
+      "bodyArea": "Chest",
+      "additionalNotes": "Sudden onset while resting",
+      "modelUsed": "MediGuide Python Random Forest ML Service (FastAPI)",
+      "confidence": 95,
+      "recommendedDepartment": "Emergency Medicine / Cardiology",
+      "alternativeDepartments": [
+        {
+          "department": "Cardiology",
+          "confidence": 90
+        },
+        {
+          "department": "Pulmonology",
+          "confidence": 70
+        }
+      ],
+      "preliminaryGuidance": "CRITICAL: Severe acute cardiovascular, neurological, or respiratory indicators detected. Prioritize immediate emergency care or call 112 / 108.",
+      "possibleConditions": [
+        "Emergency Medicine / Cardiology",
+        "Primary Clinical Assessment"
+      ],
+      "urgencyLevel": "High / Seek Immediate Care",
+      "redFlagDetected": true,
+      "isEmergency": true,
+      "contributingFactors": [
+        "chest pain"
+      ],
+      "explanation": "Emergency safety override activated due to high-risk red-flag indicators: chest pain.",
+      "emergencyContacts": {
+        "national": "112",
+        "ambulance": "108",
+        "medical": "102"
+      },
+      "matchedDoctorIds": [
+        "doc-1",
+        "doc-2"
+      ],
+      "disclaimer": "Urgent Safety Protocol: Preliminary triage rules override normal scheduling.",
+      "createdAt": "2026-10-04T08:20:50.747Z"
+    },
+    {
+      "id": "sym-1791102028980",
+      "userId": "guest-user",
+      "symptoms": [
+        "sudden crushing chest pain radiating to left arm and cold sweating"
+      ],
+      "severity": "Mild",
+      "duration": "A few days",
+      "modelUsed": "MediGuide Python Random Forest ML Service (FastAPI)",
+      "confidence": 95,
+      "recommendedDepartment": "Emergency Medicine / Cardiology",
+      "alternativeDepartments": [
+        {
+          "department": "Cardiology",
+          "confidence": 90
+        },
+        {
+          "department": "Pulmonology",
+          "confidence": 70
+        }
+      ],
+      "preliminaryGuidance": "CRITICAL: Severe acute cardiovascular, neurological, or respiratory indicators detected. Prioritize immediate emergency care or call 112 / 108.",
+      "possibleConditions": [
+        "Emergency Medicine / Cardiology",
+        "Primary Clinical Assessment"
+      ],
+      "urgencyLevel": "High / Seek Immediate Care",
+      "redFlagDetected": true,
+      "isEmergency": true,
+      "contributingFactors": [
+        "chest pain"
+      ],
+      "explanation": "Emergency safety override activated due to high-risk red-flag indicators: chest pain.",
+      "emergencyContacts": {
+        "national": "112",
+        "ambulance": "108",
+        "medical": "102"
+      },
+      "matchedDoctorIds": [
+        "doc-1",
+        "doc-2"
+      ],
+      "disclaimer": "Urgent Safety Protocol: Preliminary triage rules override normal scheduling.",
+      "createdAt": "2026-10-04T08:20:28.980Z"
+    },
+    {
+      "id": "sym-1791102022942",
+      "userId": "guest-user",
+      "symptoms": [
+        "throbbing migraine with aura and light sensitivity"
+      ],
+      "severity": "Mild",
+      "duration": "A few days",
+      "modelUsed": "MediGuide Python Random Forest ML Service (FastAPI)",
+      "confidence": 45,
+      "recommendedDepartment": "Neurology",
+      "alternativeDepartments": [
+        {
+          "department": "General Medicine",
+          "confidence": 25
+        },
+        {
+          "department": "Cardiology",
+          "confidence": 8
+        }
+      ],
+      "preliminaryGuidance": "Findings reflect potential cranial, vestibular, or neuro-vascular patterns. Ensure rest in a quiet, dimly lit room and monitor for visual or sensory changes.",
+      "possibleConditions": [
+        "Neurology",
+        "Primary Clinical Assessment"
+      ],
+      "urgencyLevel": "Low / Routine",
+      "redFlagDetected": false,
+      "isEmergency": false,
+      "contributingFactors": [
+        "migraine",
+        "throbbing migraine",
+        "throbbing"
+      ],
+      "explanation": "Recommendation for Neurology was primarily guided by reported symptoms: migraine, throbbing migraine, throbbing.",
+      "emergencyContacts": {
+        "national": "112",
+        "ambulance": "108",
+        "medical": "102"
+      },
+      "matchedDoctorIds": [
+        "doc-5"
+      ],
+      "disclaimer": "Suggested Department — Not a Medical Diagnosis. Based on Random Forest classification.",
+      "createdAt": "2026-10-04T08:20:22.942Z"
+    },
+    {
+      "id": "sym-1791102011046",
+      "userId": "guest-user",
+      "symptoms": [
+        "severe migraine aura",
+        "throbbing head pain",
+        "light sensitivity"
+      ],
+      "severity": "Mild",
+      "duration": "A few days",
+      "modelUsed": "MediGuide Python Random Forest ML Service (FastAPI)",
+      "confidence": 45,
+      "recommendedDepartment": "Neurology",
+      "alternativeDepartments": [
+        {
+          "department": "Gastroenterology",
+          "confidence": 18
+        },
+        {
+          "department": "Orthopedics",
+          "confidence": 12
+        }
+      ],
+      "preliminaryGuidance": "Findings reflect potential cranial, vestibular, or neuro-vascular patterns. Ensure rest in a quiet, dimly lit room and monitor for visual or sensory changes.",
+      "possibleConditions": [
+        "Neurology",
+        "Primary Clinical Assessment"
+      ],
+      "urgencyLevel": "Low / Routine",
+      "redFlagDetected": false,
+      "isEmergency": false,
+      "contributingFactors": [
+        "migraine",
+        "throbbing"
+      ],
+      "explanation": "Recommendation for Neurology was primarily guided by reported symptoms: migraine, throbbing.",
+      "emergencyContacts": {
+        "national": "112",
+        "ambulance": "108",
+        "medical": "102"
+      },
+      "matchedDoctorIds": [
+        "doc-5"
+      ],
+      "disclaimer": "Suggested Department — Not a Medical Diagnosis. Based on Random Forest classification.",
+      "createdAt": "2026-10-04T08:20:11.046Z"
+    },
     {
       "id": "sym-1791101532143",
       "userId": "test-usr-1",
@@ -2341,6 +2625,76 @@
     }
   ],
   "auditLogs": [
+    {
+      "id": "log-1791102052561-q3mnel",
+      "timestamp": "2026-10-04T08:20:52.561Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-admin-1",
+      "actorEmail": "admin@mediguide.com",
+      "actorRole": "admin",
+      "details": "ADMIN Vikramaditya Roy logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791102052478-s0q35x",
+      "timestamp": "2026-10-04T08:20:52.478Z",
+      "status": "SUCCESS",
+      "eventType": "RECORD_ACCESS",
+      "actorId": "usr-doctor-1",
+      "actorEmail": "doctor.smith@mediguide.com",
+      "actorRole": "doctor",
+      "details": "DOCTOR Dr. Priya Sharma accessed health records vault of patient usr-patient-1."
+    },
+    {
+      "id": "log-1791102052455-upo1pn",
+      "timestamp": "2026-10-04T08:20:52.455Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-doctor-1",
+      "actorEmail": "doctor.smith@mediguide.com",
+      "actorRole": "doctor",
+      "details": "DOCTOR Dr. Priya Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791102052343-svmbbs",
+      "timestamp": "2026-10-04T08:20:52.343Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-2",
+      "actorEmail": "priya.nair@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Priya Nair logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791102052259-prod5m",
+      "timestamp": "2026-10-04T08:20:52.259Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Rahul Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791102052145-3e0eg",
+      "timestamp": "2026-10-04T08:20:52.145Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Rahul Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791102052053-ahqsx58",
+      "timestamp": "2026-10-04T08:20:52.053Z",
+      "status": "SUCCESS",
+      "eventType": "FAILED_LOGIN_ATTEMPT",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "Failed password authentication attempt for user patient@mediguide.com"
+    },
     {
       "id": "log-1791101533916-bf76hk",
       "timestamp": "2026-10-04T08:12:13.916Z",

@@ -16,7 +16,10 @@ const chatSchema = z.object({
 });
 
 const symptomCheckSchema = z.object({
-  symptoms: z.array(z.string()).min(1, 'Please provide at least one symptom'),
+  symptoms: z.preprocess(
+    val => (typeof val === 'string' ? [val] : val),
+    z.array(z.string()).min(1, 'Please provide at least one symptom')
+  ),
   severity: z.string().optional(),
   duration: z.string().optional(),
   bodyArea: z.string().optional(),
