@@ -8,8 +8,6 @@
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
     "seed": "node src/seed/seed.js",
-    "test": "node test_security_rbac.js && node test_all_features.js",
-    "test:security": "node test_security_rbac.js",
     "build": "echo \"JavaScript backend requires no build step\""
   },
   "dependencies": {
@@ -24,8 +22,5 @@
     "mongoose": "^8.12.0",
     "pdfkit": "^0.20.2",
     "zod": "^3.24.2"
-  },
-  "devDependencies": {
-    "supertest": "^7.3.1"
   }
 }
