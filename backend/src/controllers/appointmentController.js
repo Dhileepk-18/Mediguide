@@ -1,5 +1,7 @@
 import { z } from 'zod';
 import { dbStore } from '../store/inMemoryStore.js';
+import { isDbConnected } from '../config/db.js';
+import { Appointment, Doctor, AuditLog, Notification } from '../models/schemas.js';
 
 const createAppointmentSchema = z.object({
   doctorId: z.string().min(1, 'Doctor is required'),
@@ -27,29 +29,50 @@ export const createAppointment = async (req, res) => {
     }
     const mode = data.mode || data.consultationMode || 'In-Person';
 
-    const doctor = dbStore.findDoctorById(data.doctorId);
+    let doctor;
+    if (isDbConnected()) {
+      doctor = await Doctor.findOne({ id: data.doctorId }).lean();
+    } else {
+      doctor = dbStore.findDoctorById(data.doctorId);
+    }
+
     if (!doctor) {
       res.status(404).json({ success: false, message: 'Selected doctor not found' });
       return;
     }
 
     // Double booking prevention: Check if doctor already has an active appointment at that time
-    const existingBooking = dbStore
-      .getAppointments()
-      .find(
-        a =>
-          a.doctorId === doctor.id &&
-          a.date === data.date &&
-          (a.timeSlot === timeSlot || a.time === timeSlot) &&
-          ['confirmed', 'pending'].includes(a.status)
-      );
+    if (isDbConnected()) {
+      const existingBooking = await Appointment.findOne({
+        doctorId: doctor.id,
+        date: data.date,
+        timeSlot: timeSlot,
+        status: { $in: ['confirmed', 'pending'] },
+      }).lean();
 
-    if (existingBooking) {
-      res.status(400).json({
-        success: false,
-        message: `This time slot (${timeSlot} on ${data.date}) is already booked with ${doctor.name}. Please select a different time slot.`,
-      });
-      return;
+      if (existingBooking) {
+        return res.status(400).json({
+          success: false,
+          message: `This time slot (${timeSlot} on ${data.date}) is already booked with ${doctor.name}. Please select a different time slot.`,
+        });
+      }
+    } else {
+      const existingBooking = dbStore
+        .getAppointments()
+        .find(
+          a =>
+            a.doctorId === doctor.id &&
+            a.date === data.date &&
+            (a.timeSlot === timeSlot || a.time === timeSlot) &&
+            ['confirmed', 'pending'].includes(a.status)
+        );
+
+      if (existingBooking) {
+        return res.status(400).json({
+          success: false,
+          message: `This time slot (${timeSlot} on ${data.date}) is already booked with ${doctor.name}. Please select a different time slot.`,
+        });
+      }
     }
 
     const newAppointment = {
@@ -63,15 +86,56 @@ export const createAppointment = async (req, res) => {
       doctorSpecialization: doctor.specialization,
       doctorAvatar: doctor.avatar,
       department: doctor.department,
-      consultationMode: data.consultationMode || 'In-Person',
+      consultationMode: mode,
       date: data.date,
-      timeSlot: data.timeSlot,
+      timeSlot,
       status: 'confirmed', // Instant confirmation for streamlined demo
       reason: data.reason,
       symptoms: data.symptoms || [],
-      notes: data.notes,
-      createdAt: new Date().toISOString(),
+      notes: data.notes || '',
     };
+
+    if (isDbConnected()) {
+      const savedDoc = await Appointment.create(newAppointment);
+      const saved = savedDoc.toObject();
+
+      await AuditLog.create({
+        id: `aud-${Date.now()}`,
+        eventType: 'APPOINTMENT_BOOKED',
+        actorId: req.user.id,
+        actorEmail: req.user.email,
+        actorRole: req.user.role,
+        details: `Appointment booked with ${doctor.name} on ${data.date} at ${timeSlot} (${mode}).`,
+      });
+
+      await Notification.create({
+        id: `notif-${Date.now()}-p`,
+        userId: req.user.id,
+        role: 'patient',
+        type: 'appointment',
+        title: 'Appointment Confirmed',
+        message: `Your appointment with ${doctor.name} on ${data.date} at ${timeSlot} IST is confirmed.`,
+        link: '/appointments',
+      });
+
+      if (doctor.userId) {
+        await Notification.create({
+          id: `notif-${Date.now()}-d`,
+          userId: doctor.userId,
+          role: 'doctor',
+          type: 'appointment',
+          title: 'New Patient Appointment',
+          message: `${req.user.name} booked a consultation for ${data.date} at ${timeSlot} (${data.reason}).`,
+          link: '/doctor/appointments',
+        });
+      }
+
+      return res.status(201).json({
+        success: true,
+        message: 'Appointment booked successfully',
+        appointment: saved,
+      });
+    }
 
     const saved = dbStore.addAppointment(newAppointment);
 
@@ -81,7 +145,7 @@ export const createAppointment = async (req, res) => {
       actorId: req.user.id,
       actorEmail: req.user.email,
       actorRole: req.user.role,
-      details: `Appointment booked with ${doctor.name} on ${data.date} at ${data.timeSlot} (${data.consultationMode}).`,
+      details: `Appointment booked with ${doctor.name} on ${data.date} at ${timeSlot} (${mode}).`,
     });
 
     // Patient Notification
@@ -90,7 +154,7 @@ export const createAppointment = async (req, res) => {
       role: 'patient',
       type: 'appointment',
       title: 'Appointment Confirmed',
-      message: `Your appointment with ${doctor.name} on ${data.date} at ${data.timeSlot} IST is confirmed.`,
+      message: `Your appointment with ${doctor.name} on ${data.date} at ${timeSlot} IST is confirmed.`,
       link: '/appointments',
     });
 
@@ -101,7 +165,7 @@ export const createAppointment = async (req, res) => {
         role: 'doctor',
         type: 'appointment',
         title: 'New Patient Appointment',
-        message: `${req.user.name} booked a consultation for ${data.date} at ${data.timeSlot} (${data.reason}).`,
+        message: `${req.user.name} booked a consultation for ${data.date} at ${timeSlot} (${data.reason}).`,
         link: '/doctor/appointments',
       });
     }
@@ -125,6 +189,28 @@ export const getMyAppointments = async (req, res) => {
     res.status(401).json({ success: false, message: 'Authentication required' });
     return;
   }
+
+  if (isDbConnected()) {
+    try {
+      let appointments = [];
+      if (req.user.role === 'patient') {
+        appointments = await Appointment.find({ patientId: req.user.id }).sort({ date: -1 }).lean();
+      } else if (req.user.role === 'doctor') {
+        const doc = await Doctor.findOne({
+          $or: [{ id: req.user.id }, { userId: req.user.id }, { email: req.user.email }],
+        }).lean();
+        if (doc) {
+          appointments = await Appointment.find({ doctorId: doc.id }).sort({ date: -1 }).lean();
+        }
+      } else if (req.user.role === 'admin') {
+        appointments = await Appointment.find().sort({ date: -1 }).lean();
+      }
+      return res.json({ success: true, appointments });
+    } catch (err) {
+      return res.status(500).json({ success: false, message: 'Failed to retrieve appointments' });
+    }
+  }
+
   let appointments = [];
   if (req.user.role === 'patient') {
     appointments = dbStore.getAppointmentsByPatientId(req.user.id);
@@ -149,30 +235,48 @@ export const getAppointmentById = async (req, res) => {
     return;
   }
   const { id } = req.params;
-  const appointment = dbStore.findAppointmentById(id);
+
+  let appointment;
+  let doctorProfile;
+
+  if (isDbConnected()) {
+    appointment = await Appointment.findOne({ id }).lean();
+    doctorProfile = await Doctor.findOne({
+      $or: [{ id: req.user.id }, { userId: req.user.id }, { email: req.user.email }],
+    }).lean();
+  } else {
+    appointment = dbStore.findAppointmentById(id);
+    doctorProfile =
+      dbStore.findDoctorById(req.user.id) ||
+      dbStore.getAllDoctors().find(d => d.userId === req.user?.id || d.email === req.user?.email);
+  }
+
   if (!appointment) {
     res.status(404).json({ success: false, message: 'Appointment not found' });
     return;
   }
 
   const isOwnerPatient = appointment.patientId === req.user.id;
-  const doctorProfile =
-    dbStore.findDoctorById(req.user.id) ||
-    dbStore.getAllDoctors().find(d => d.userId === req.user?.id || d.email === req.user?.email);
   const isAssignedDoctor = doctorProfile && appointment.doctorId === doctorProfile.id;
   const isAdmin = req.user.role === 'admin';
 
   if (!isOwnerPatient && !isAssignedDoctor && !isAdmin) {
-    res
-      .status(403)
-      .json({
-        success: false,
-        message: 'Forbidden: You do not have permission to view this appointment',
-      });
+    res.status(403).json({
+      success: false,
+      message: 'Forbidden: You do not have permission to view this appointment',
+    });
     return;
   }
   res.json({ success: true, appointment });
 };
+
+const updateAppointmentStatusSchema = z.object({
+  status: z.enum(['pending', 'confirmed', 'completed', 'cancelled', 'rescheduled']).optional(),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be YYYY-MM-DD').optional(),
+  timeSlot: z.string().optional(),
+  notes: z.string().optional(),
+  prescriptionId: z.string().optional(),
+});
 
 export const updateAppointmentStatus = async (req, res) => {
   try {
@@ -181,43 +285,47 @@ export const updateAppointmentStatus = async (req, res) => {
       return;
     }
     const { id } = req.params;
-    const { status, date, timeSlot, notes, prescriptionId } = req.body;
-    const validStatuses = ['pending', 'confirmed', 'completed', 'cancelled', 'rescheduled'];
-    if (status && !validStatuses.includes(status)) {
-      res.status(400).json({ success: false, message: 'Invalid status' });
-      return;
+    const { status, date, timeSlot, notes, prescriptionId } =
+      updateAppointmentStatusSchema.parse(req.body);
+
+    let appointment;
+    let doctorProfile;
+
+    if (isDbConnected()) {
+      appointment = await Appointment.findOne({ id }).lean();
+      doctorProfile = await Doctor.findOne({
+        $or: [{ id: req.user.id }, { userId: req.user.id }, { email: req.user.email }],
+      }).lean();
+    } else {
+      appointment = dbStore.findAppointmentById(id);
+      doctorProfile =
+        dbStore.findDoctorById(req.user.id) ||
+        dbStore.getAllDoctors().find(d => d.userId === req.user?.id || d.email === req.user?.email);
     }
-    const appointment = dbStore.findAppointmentById(id);
+
     if (!appointment) {
       res.status(404).json({ success: false, message: 'Appointment not found' });
       return;
     }
 
     const isOwnerPatient = appointment.patientId === req.user.id;
-    const doctorProfile =
-      dbStore.findDoctorById(req.user.id) ||
-      dbStore.getAllDoctors().find(d => d.userId === req.user?.id || d.email === req.user?.email);
     const isAssignedDoctor = doctorProfile && appointment.doctorId === doctorProfile.id;
     const isAdmin = req.user.role === 'admin';
 
     // Authorization check: Patients can only cancel or reschedule their own appointment
     if (isOwnerPatient && !isAssignedDoctor && !isAdmin) {
       if (status && !['cancelled', 'rescheduled'].includes(status)) {
-        res
-          .status(403)
-          .json({
-            success: false,
-            message: 'Patients can only cancel or reschedule their own appointments',
-          });
+        res.status(403).json({
+          success: false,
+          message: 'Patients can only cancel or reschedule their own appointments',
+        });
         return;
       }
     } else if (!isAssignedDoctor && !isAdmin && !isOwnerPatient) {
-      res
-        .status(403)
-        .json({
-          success: false,
-          message: 'Forbidden: You do not have permission to modify this appointment',
-        });
+      res.status(403).json({
+        success: false,
+        message: 'Forbidden: You do not have permission to modify this appointment',
+      });
       return;
     }
 
@@ -227,6 +335,38 @@ export const updateAppointmentStatus = async (req, res) => {
     if (timeSlot) updates.timeSlot = timeSlot;
     if (notes !== undefined) updates.notes = notes;
     if (prescriptionId !== undefined) updates.prescriptionId = prescriptionId;
+
+    if (isDbConnected()) {
+      const updated = await Appointment.findOneAndUpdate({ id }, { $set: updates }, { new: true }).lean();
+
+      await AuditLog.create({
+        id: `aud-${Date.now()}`,
+        eventType: 'APPOINTMENT_STATUS_CHANGE',
+        actorId: req.user.id,
+        actorEmail: req.user.email,
+        actorRole: req.user.role,
+        details: `Appointment #${id} updated to ${updated.status} by ${req.user.name} (${req.user.role}).`,
+      });
+
+      const targetUserId = isOwnerPatient ? doctorProfile?.userId : appointment.patientId;
+      if (targetUserId) {
+        await Notification.create({
+          id: `notif-${Date.now()}`,
+          userId: targetUserId,
+          role: isOwnerPatient ? 'doctor' : 'patient',
+          type: 'appointment',
+          title: `Appointment ${status === 'rescheduled' ? 'Rescheduled' : (status || '').toUpperCase()}`,
+          message: `Appointment for ${appointment.patientName} with ${appointment.doctorName} was marked as ${updated.status}${date ? ` for ${date} at ${timeSlot}` : ''}.`,
+          link: isOwnerPatient ? '/doctor/appointments' : '/appointments',
+        });
+      }
+
+      return res.json({
+        success: true,
+        message: `Appointment updated to ${updated.status}`,
+        appointment: updated,
+      });
+    }
 
     const updated = dbStore.updateAppointment(id, updates);
 
@@ -245,7 +385,7 @@ export const updateAppointmentStatus = async (req, res) => {
         userId: targetUserId,
         role: isOwnerPatient ? 'doctor' : 'patient',
         type: 'appointment',
-        title: `Appointment ${status === 'rescheduled' ? 'Rescheduled' : status.toUpperCase()}`,
+        title: `Appointment ${status === 'rescheduled' ? 'Rescheduled' : (status || '').toUpperCase()}`,
         message: `Appointment for ${appointment.patientName} with ${appointment.doctorName} was marked as ${updated.status}${date ? ` for ${date} at ${timeSlot}` : ''}.`,
         link: isOwnerPatient ? '/doctor/appointments' : '/appointments',
       });

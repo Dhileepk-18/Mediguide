@@ -6,21 +6,12 @@ import { Modal } from '../../components/common/Modal.jsx';
 import {
   FileText,
   UploadCloud,
-  Eye,
-  Download,
   Trash2,
   ShieldCheck,
-  Calendar,
-  Building2,
   Sparkles,
   X,
-  FileCheck2,
   Share2,
-  Bot,
   ChevronRight,
-  Lock,
-  ExternalLink,
-  Check,
 } from 'lucide-react';
 
 const CATEGORIES = [

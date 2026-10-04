@@ -5,13 +5,6 @@ import {
   Clock,
   Calendar,
   Save,
-  CheckCircle2,
-  Video,
-  Building2,
-  IndianRupee,
-  ShieldCheck,
-  ToggleLeft,
-  ToggleRight,
 } from 'lucide-react';
 
 const ALL_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];

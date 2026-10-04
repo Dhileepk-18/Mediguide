@@ -15,9 +15,7 @@ import {
   TrendingUp,
   ChevronDown,
   ChevronRight,
-  ShieldCheck,
   CheckCircle2,
-  AlertCircle,
   Activity,
 } from 'lucide-react';
 
@@ -73,12 +71,20 @@ export const PatientDashboard = () => {
 
   const today = new Date().toISOString().split('T')[0];
   const activeMeds = medicines.filter(m => m.active !== false);
-  const totalDosesToday = activeMeds.length * 2 || 4;
   const takenDosesToday = medicines.reduce((acc, med) => {
-    const logs = med.adherenceLogs?.[today] || {};
-    return acc + Object.values(logs).filter(Boolean).length;
+    let takenCount = 0;
+    if (med.adherenceLogs?.[today]) {
+      takenCount = Object.values(med.adherenceLogs[today]).filter(Boolean).length;
+    } else if (Array.isArray(med.adherenceHistory)) {
+      takenCount = med.adherenceHistory.filter(a => a.date === today && a.taken).length;
+    }
+    return acc + takenCount;
   }, 0);
-  const adherenceRate = Math.min(100, Math.round((takenDosesToday / (totalDosesToday || 1)) * 100)) || 85;
+  const totalDosesToday = activeMeds.length;
+  const adherenceRate =
+    totalDosesToday > 0
+      ? Math.min(100, Math.round((takenDosesToday / totalDosesToday) * 100))
+      : 85;
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">

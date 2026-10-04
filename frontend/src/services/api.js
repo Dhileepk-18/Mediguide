@@ -8,16 +8,37 @@ const getAuthHeaders = () => {
   };
 };
 
+async function tryRefreshToken() {
+  const refreshToken = localStorage.getItem('mediguide_refresh_token');
+  if (!refreshToken) return null;
+  try {
+    const res = await fetch(`${API_BASE}/auth/refresh-token`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refreshToken }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && data.success && data.accessToken) {
+      localStorage.setItem('mediguide_token', data.accessToken);
+      if (data.refreshToken) {
+        localStorage.setItem('mediguide_refresh_token', data.refreshToken);
+      }
+      return data.accessToken;
+    }
+  } catch {
+    // Refresh attempt failed
+  }
+  localStorage.removeItem('mediguide_token');
+  localStorage.removeItem('mediguide_refresh_token');
+  return null;
+}
+
 async function handleResponse(res) {
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
-    if (
-      res.status === 401 &&
-      (data.message?.includes('User associated with token not found') ||
-        data.message?.includes('Invalid or expired token') ||
-        data.message?.includes('Access token required'))
-    ) {
+    if (res.status === 401) {
       localStorage.removeItem('mediguide_token');
+      localStorage.removeItem('mediguide_refresh_token');
     }
     throw new Error(data.message || 'API request failed');
   }
@@ -93,6 +114,30 @@ export const api = {
     });
     return handleResponse(res);
   },
+  async refreshToken(refreshToken) {
+    const res = await fetch(`${API_BASE}/auth/refresh-token`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refreshToken }),
+    });
+    return handleResponse(res);
+  },
+  async logout() {
+    const token = localStorage.getItem('mediguide_token');
+    try {
+      await fetch(`${API_BASE}/auth/logout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+      });
+    } catch {
+      // Ignore network errors on logout
+    }
+    localStorage.removeItem('mediguide_token');
+    localStorage.removeItem('mediguide_refresh_token');
+  },
 
   // In-App Notifications (FR-15)
   async getNotifications() {
@@ -146,14 +191,35 @@ export const api = {
     });
     return handleResponse(res);
   },
-  async analyzeSymptoms(symptoms, severity, duration, bodyArea, additionalNotes) {
+  async analyzeSymptoms(symptomsOrOptions, severity, duration, bodyArea, additionalNotes) {
+    let payload;
+    if (symptomsOrOptions && typeof symptomsOrOptions === 'object' && !Array.isArray(symptomsOrOptions)) {
+      payload = symptomsOrOptions;
+    } else {
+      let finalSeverity = severity;
+      let finalDuration = duration;
+      const validSeverities = ['Mild', 'Moderate', 'Severe'];
+      // Defensive check: if caller accidentally passed duration in 2nd arg and severity in 3rd arg
+      if (!validSeverities.includes(severity) && validSeverities.includes(duration)) {
+        finalSeverity = duration;
+        finalDuration = severity;
+      }
+      payload = {
+        symptoms: symptomsOrOptions,
+        severity: finalSeverity || 'Moderate',
+        duration: finalDuration || '2-3 days',
+        bodyArea,
+        additionalNotes,
+      };
+    }
     const res = await fetch(`${API_BASE}/ai/symptom-check`, {
       method: 'POST',
       headers: getAuthHeaders(),
-      body: JSON.stringify({ symptoms, severity, duration, bodyArea, additionalNotes }),
+      body: JSON.stringify(payload),
     });
     return handleResponse(res);
   },
+
   async getChatHistories() {
     const res = await fetch(`${API_BASE}/ai/chat-history`, {
       headers: getAuthHeaders(),

@@ -1,6 +1,8 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { config } from '../config/index.js';
 import { dbStore } from '../store/inMemoryStore.js';
+import { isDbConnected } from '../config/db.js';
+import { SymptomCheck } from '../models/schemas.js';
 import fs from 'fs';
 import path from 'path';
 let activeApiKey = config.geminiApiKey || process.env.GEMINI_API_KEY || '';
@@ -62,10 +64,10 @@ export async function generateChatResponse(userMessage, history = []) {
   // If Gemini API is available, invoke real Gemini AI
   if (genAI && activeApiKey) {
     const candidateModels = [
+      'gemini-3.8-flash',
+      'gemini-2.5-flash',
       'gemini-2.0-flash',
       'gemini-1.5-flash',
-      'gemini-1.5-flash-8b',
-      'gemini-2.0-flash-lite',
       'gemini-flash-latest',
     ];
     for (const modelName of candidateModels) {
@@ -117,6 +119,59 @@ export async function generateChatResponse(userMessage, history = []) {
     modelUsed: 'MediGuide Clinical Engine (Add Gemini API Key for Live AI)',
   };
 }
+
+// Red-flag emergency detection patterns for deterministic safety overrides (PRD Section 9.6)
+export const RED_FLAG_EMERGENCY_PATTERNS = [
+  'chest pain',
+  'chest tightness',
+  'heart attack',
+  'breathlessness',
+  'shortness of breath',
+  'slurred speech',
+  'facial droop',
+  'uncontrolled bleeding',
+  'loss of consciousness',
+  'unresponsive',
+  'anaphylaxis',
+  'tongue swelling',
+  'throat closing',
+  'cyanosis',
+  'thunderclap headache',
+  'coughing up blood',
+  'hemoptysis',
+  'status epilepticus',
+  'seizure lasting',
+];
+
+export const CRITICAL_UNCONDITIONAL_RED_FLAGS = [
+  'heart attack',
+  'slurred speech',
+  'uncontrolled bleeding',
+  'loss of consciousness',
+  'unresponsive',
+  'anaphylaxis',
+  'throat closing',
+  'cyanosis',
+  'chest pain',
+  'thunderclap headache',
+  'coughing up blood',
+];
+
+export function detectEmergencyRedFlags(symptoms, severity = 'Moderate', context = '') {
+  const symptomList = Array.isArray(symptoms) ? symptoms : [String(symptoms)];
+  const combined = (symptomList.join(' ') + ' ' + (context || '')).toLowerCase();
+  
+  const matched = RED_FLAG_EMERGENCY_PATTERNS.filter(pattern => combined.includes(pattern));
+  const isCritical = CRITICAL_UNCONDITIONAL_RED_FLAGS.some(pattern => combined.includes(pattern));
+  const isTriggered = isCritical || (matched.length > 0 && (severity === 'Severe' || severity === 'Moderate'));
+  
+  return {
+    isTriggered,
+    matchedKeywords: matched.length > 0 ? matched : (isTriggered ? ['acute emergency indicator'] : []),
+    emergencyContacts: { national: '112', ambulance: '108', medical: '102' }
+  };
+}
+
 export async function analyzeSymptoms(
   userId,
   symptoms,
@@ -126,9 +181,14 @@ export async function analyzeSymptoms(
   additionalNotes
 ) {
   const symptomText = symptoms.join(', ');
+  const redFlagCheck = detectEmergencyRedFlags(
+    symptoms,
+    severity,
+    `${bodyArea || ''} ${additionalNotes || ''}`
+  );
 
   // 1. Try dedicated Python FastAPI ML Service (PRD Section 9, Techstack Section 8.5)
-  const mlServiceUrl = process.env.ML_SERVICE_URL || 'http://localhost:8000';
+  const mlServiceUrl = config.mlServiceUrl || process.env.ML_SERVICE_URL || 'http://localhost:8000';
   try {
     const mlResponse = await fetch(`${mlServiceUrl}/predict`, {
       method: 'POST',
@@ -144,11 +204,16 @@ export async function analyzeSymptoms(
 
     if (mlResponse.ok) {
       const mlData = await mlResponse.json();
+      const isEmergencyEffective = Boolean(mlData.redFlagDetected || redFlagCheck.isTriggered);
+      const effectiveDept = isEmergencyEffective && !mlData.redFlagDetected
+        ? 'Emergency Medicine / Cardiology'
+        : (mlData.recommendedDepartment || 'General Medicine');
+
       const allDocs = dbStore.getAllDoctors();
       const matchedDocs = allDocs.filter(
         d =>
           d.department.toLowerCase() ===
-            (mlData.recommendedDepartment || 'General Medicine').toLowerCase() && d.isAvailable
+            effectiveDept.toLowerCase() && d.isAvailable
       );
       const matchedDoctorIds =
         matchedDocs.length > 0 ? matchedDocs.map(d => d.id) : allDocs.slice(0, 2).map(d => d.id);
@@ -162,34 +227,90 @@ export async function analyzeSymptoms(
         bodyArea,
         additionalNotes,
         modelUsed: 'MediGuide Python Random Forest ML Service (FastAPI)',
-        confidence: mlData.confidence || 82,
-        recommendedDepartment: mlData.recommendedDepartment,
+        confidence: isEmergencyEffective ? Math.max(mlData.confidence || 82, 95) : (mlData.confidence || 82),
+        recommendedDepartment: effectiveDept,
         alternativeDepartments: mlData.topAlternatives || [],
-        preliminaryGuidance: mlData.preliminaryGuidance,
-        possibleConditions: [mlData.recommendedDepartment, 'Primary Clinical Assessment'],
-        urgencyLevel: mlData.redFlagDetected
+        preliminaryGuidance: isEmergencyEffective && !mlData.redFlagDetected
+          ? 'CRITICAL EMERGENCY: Severe acute cardiovascular or respiratory indicators detected. Prioritize immediate emergency care or call 112 / 108.'
+          : mlData.preliminaryGuidance,
+        possibleConditions: [effectiveDept, 'Primary Clinical Assessment'],
+        urgencyLevel: isEmergencyEffective
           ? 'High / Seek Immediate Care'
           : severity === 'Severe'
             ? 'Moderate / Consult Soon'
             : 'Low / Routine',
+        redFlagDetected: isEmergencyEffective,
+        isEmergency: isEmergencyEffective,
+        contributingFactors: mlData.contributingFactors?.length > 0
+          ? mlData.contributingFactors
+          : (redFlagCheck.matchedKeywords.length > 0 ? redFlagCheck.matchedKeywords : symptoms.slice(0, 3)),
+        explanation: mlData.explanation || (isEmergencyEffective
+          ? `Emergency safety override activated due to critical indicators: ${redFlagCheck.matchedKeywords.join(', ')}.`
+          : `Recommendation for ${effectiveDept} is guided by reported symptoms.`),
+        emergencyContacts: { national: '112', ambulance: '108', medical: '102' },
         matchedDoctorIds,
+        disclaimer:
+          mlData.disclaimer ||
+          'Suggested Department — Not a Medical Diagnosis. Based on Random Forest classification.',
         createdAt: new Date().toISOString(),
       };
 
       dbStore.addSymptomCheck(symptomResult);
+      if (isDbConnected()) {
+        SymptomCheck.create(symptomResult).catch(e => console.warn(e.message));
+      }
       return symptomResult;
     }
   } catch (_mlErr) {
     // Python ML service offline or timed out, seamlessly proceed to Gemini or heuristic
   }
 
+  // 1b. Deterministic Emergency Guardrail (if ML service offline and red flags detected)
+  if (redFlagCheck.isTriggered) {
+    const allDocs = dbStore.getAllDoctors();
+    const matchedDocs = allDocs.filter(d => d.department.toLowerCase() === 'cardiology' && d.isAvailable);
+    const matchedDoctorIds = matchedDocs.length > 0 ? matchedDocs.map(d => d.id) : allDocs.slice(0, 2).map(d => d.id);
+    const emergencyResult = {
+      id: `sym-${Date.now()}`,
+      userId,
+      symptoms,
+      severity,
+      duration,
+      bodyArea,
+      additionalNotes,
+      modelUsed: 'MediGuide Emergency Safety Protocol (Deterministic Guardrail)',
+      confidence: 96,
+      recommendedDepartment: 'Emergency Medicine / Cardiology',
+      alternativeDepartments: [
+        { department: 'Cardiology', confidence: 90 },
+        { department: 'Pulmonology', confidence: 75 }
+      ],
+      preliminaryGuidance: 'CRITICAL EMERGENCY: Severe acute cardiovascular, neurological, or respiratory indicators detected. Prioritize immediate emergency care. Call 112 or 108 or proceed to the nearest emergency department immediately.',
+      possibleConditions: ['Acute Cardiovascular / Respiratory Compromise', 'Medical Emergency Assessment'],
+      urgencyLevel: 'High / Seek Immediate Care',
+      redFlagDetected: true,
+      isEmergency: true,
+      contributingFactors: redFlagCheck.matchedKeywords,
+      explanation: `Emergency override activated due to critical indicators: ${redFlagCheck.matchedKeywords.join(', ')}.`,
+      emergencyContacts: redFlagCheck.emergencyContacts,
+      matchedDoctorIds,
+      disclaimer: 'CRITICAL SAFETY ALERT: This protocol overrides standard scheduling. Seek immediate emergency care.',
+      createdAt: new Date().toISOString(),
+    };
+    dbStore.addSymptomCheck(emergencyResult);
+    if (isDbConnected()) {
+      SymptomCheck.create(emergencyResult).catch(e => console.warn(e.message));
+    }
+    return emergencyResult;
+  }
+
   // 2. Try real Gemini AI generation if available
   if (genAI && activeApiKey) {
     const candidateModels = [
+      'gemini-3.8-flash',
+      'gemini-2.5-flash',
       'gemini-2.0-flash',
       'gemini-1.5-flash',
-      'gemini-1.5-flash-8b',
-      'gemini-2.0-flash-lite',
       'gemini-flash-latest',
     ];
     for (const modelName of candidateModels) {
@@ -256,12 +377,20 @@ Return JSON with this exact schema:
           urgencyLevel:
             parsed.urgencyLevel ||
             (severity === 'Severe' ? 'Moderate / Consult Soon' : 'Low / Routine'),
+          redFlagDetected: false,
+          isEmergency: false,
+          contributingFactors: symptoms.slice(0, 3),
+          explanation: `Recommendation for ${parsed.recommendedDepartment || 'General Medicine'} was generated from clinical triage analysis of: ${symptoms.slice(0, 3).join(', ')}.`,
+          emergencyContacts: { national: '112', ambulance: '108', medical: '102' },
           matchedDoctorIds,
           disclaimer:
             'Important Notice: MediGuide AI provides preliminary guidance and informational assessment only. It does not constitute a formal medical diagnosis or prescription. If you are experiencing acute emergencies, please contact emergency medical services immediately.',
           createdAt: new Date().toISOString(),
         };
         dbStore.addSymptomCheck(symptomResult);
+        if (isDbConnected()) {
+          SymptomCheck.create(symptomResult).catch(e => console.warn(e.message));
+        }
         return symptomResult;
       } catch (err) {
         console.warn(`Attempt with ${modelName} failed:`, err);
@@ -390,6 +519,9 @@ Return JSON with this exact schema:
   );
   const matchedDoctorIds =
     matchedDocs.length > 0 ? matchedDocs.map(d => d.id) : allDocs.slice(0, 2).map(d => d.id);
+  const contributingFactors = symptoms && symptoms.length > 0 ? symptoms.slice(0, 3) : ['General clinical presentation'];
+  const explanation = `Recommendation for ${recommendedDepartment} was determined based on reported symptoms (${contributingFactors.join(', ')}) aligning with standard primary care guidelines.`;
+
   const fallbackResult = {
     id: `sym-${Date.now()}`,
     userId,
@@ -401,13 +533,22 @@ Return JSON with this exact schema:
     preliminaryGuidance,
     possibleConditions,
     recommendedDepartment,
+    confidence: 78,
     urgencyLevel,
+    redFlagDetected: false,
+    isEmergency: false,
+    contributingFactors,
+    explanation,
+    emergencyContacts: { national: '112', ambulance: '108', medical: '102' },
     matchedDoctorIds,
     disclaimer:
       'Important Notice: MediGuide AI provides preliminary guidance and informational assessment only. It does not constitute a formal medical diagnosis or prescription. If you are experiencing acute emergencies, please contact emergency medical services immediately.',
     createdAt: new Date().toISOString(),
   };
   dbStore.addSymptomCheck(fallbackResult);
+  if (isDbConnected()) {
+    SymptomCheck.create(fallbackResult).catch(e => console.warn(e.message));
+  }
   return fallbackResult;
 }
 function dynamicHealthcareChat(message) {

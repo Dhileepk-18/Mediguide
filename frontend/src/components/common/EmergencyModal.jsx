@@ -1,5 +1,5 @@
 import React from 'react';
-import { PhoneCall, AlertTriangle, X, ShieldAlert, HeartPulse, Activity } from 'lucide-react';
+import { PhoneCall, AlertTriangle, X, ShieldAlert, Activity } from 'lucide-react';
 
 export const EmergencyModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;

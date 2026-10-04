@@ -2,17 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { api } from '../../services/api.js';
 import { useAppStore } from '../../store/appStore.js';
 import {
-  Building2,
   Plus,
   CheckCircle2,
   XCircle,
   ShieldCheck,
-  Stethoscope,
-  GraduationCap,
-  MapPin,
   Search,
   X,
-  AlertTriangle,
 } from 'lucide-react';
 
 const INDIAN_STATES = [

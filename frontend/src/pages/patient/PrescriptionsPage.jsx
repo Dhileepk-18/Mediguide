@@ -8,11 +8,7 @@ import {
   UserCheck,
   Calendar,
   QrCode,
-  ShieldCheck,
-  Download,
-  CheckCircle2,
   Building2,
-  Stethoscope,
 } from 'lucide-react';
 
 export const PrescriptionsPage = () => {
@@ -40,27 +36,50 @@ export const PrescriptionsPage = () => {
 
   const handleSyncToMedicines = async rx => {
     try {
+      const existingMedsRes = await api.getMedicines();
+      const existingNames = new Set(
+        (existingMedsRes.medicines || []).map(m => m.name.toLowerCase().trim())
+      );
+
+      let addedCount = 0;
       for (const med of rx.medicines) {
-        await api.addMedicine({
-          name: med.name,
-          strength: med.strength || '',
-          dosage: med.dosage,
-          frequency: med.frequency,
-          mealTiming: med.instructions?.toLowerCase().includes('before')
-            ? 'Before Food'
-            : 'After Food',
-          slotTiming: 'Daily',
-          timings: med.frequency.toLowerCase().includes('twice')
-            ? ['09:00 AM', '09:00 PM']
-            : ['09:00 AM'],
-          instructions: med.instructions,
+        const medFullName = med.strength ? `${med.name} (${med.strength})` : med.name;
+        if (
+          !existingNames.has(med.name.toLowerCase().trim()) &&
+          !existingNames.has(medFullName.toLowerCase().trim())
+        ) {
+          await api.addMedicine({
+            name: med.name,
+            strength: med.strength || '',
+            dosage: med.dosage,
+            frequency: med.frequency,
+            mealTiming: med.instructions?.toLowerCase().includes('before')
+              ? 'Before Food'
+              : 'After Food',
+            slotTiming: 'Daily',
+            timings: med.frequency.toLowerCase().includes('twice')
+              ? ['09:00 AM', '09:00 PM']
+              : med.frequency.toLowerCase().includes('thrice')
+                ? ['08:00 AM', '02:00 PM', '09:00 PM']
+                : ['09:00 AM'],
+            instructions: med.instructions,
+          });
+          addedCount++;
+        }
+      }
+      if (addedCount > 0) {
+        addToast({
+          type: 'success',
+          title: 'Synced to Reminders! 💊',
+          message: `${addedCount} new medications added to your daily tracker.`,
+        });
+      } else {
+        addToast({
+          type: 'info',
+          title: 'Already Synchronized',
+          message: 'All medications from this prescription are already in your active tracker.',
         });
       }
-      addToast({
-        type: 'success',
-        title: 'Synced to Reminders! 💊',
-        message: `${rx.medicines.length} medications added to your daily tracker.`,
-      });
     } catch {
       addToast({
         type: 'error',
@@ -69,6 +88,7 @@ export const PrescriptionsPage = () => {
       });
     }
   };
+
 
   const handlePrint = () => {
     window.print();

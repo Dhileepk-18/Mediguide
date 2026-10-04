@@ -1,8 +1,53 @@
 import { dbStore } from '../store/inMemoryStore.js';
+import { isDbConnected } from '../config/db.js';
+import { Doctor, Appointment, Prescription, User, AuditLog } from '../models/schemas.js';
 
 export const getDoctors = async (req, res) => {
   try {
     const { department, search, city, state, mode, language, maxFee } = req.query;
+
+    if (isDbConnected()) {
+      const filter = {};
+      if (department && department !== 'All') {
+        filter.department = new RegExp(department, 'i');
+      }
+      if (city && city !== 'All') {
+        filter.city = new RegExp(`^${city}$`, 'i');
+      }
+      if (state && state !== 'All') {
+        filter.state = new RegExp(`^${state}$`, 'i');
+      }
+      if (mode && mode !== 'All') {
+        filter.consultationModes = new RegExp(mode, 'i');
+      }
+      if (language && language !== 'All') {
+        filter.languages = new RegExp(language, 'i');
+      }
+      if (maxFee) {
+        const feeLimit = Number(maxFee);
+        if (!isNaN(feeLimit)) {
+          filter.consultationFee = { $lte: feeLimit };
+        }
+      }
+      if (search) {
+        const regex = new RegExp(search, 'i');
+        filter.$or = [
+          { name: regex },
+          { specialization: regex },
+          { department: regex },
+          { hospital: regex },
+          { city: regex },
+          { qualification: regex },
+        ];
+      }
+
+      const doctors = await Doctor.find(filter).lean();
+      return res.json({
+        success: true,
+        totalDoctors: doctors.length,
+        doctors,
+      });
+    }
 
     let doctors = dbStore.getAllDoctors();
 
@@ -69,6 +114,15 @@ export const getDoctors = async (req, res) => {
 export const getDoctorById = async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (isDbConnected()) {
+      const doctor = await Doctor.findOne({ id }).lean();
+      if (!doctor) {
+        return res.status(404).json({ success: false, message: 'Doctor not found' });
+      }
+      return res.json({ success: true, doctor });
+    }
+
     const doctor = dbStore.findDoctorById(id);
     if (!doctor) {
       res.status(404).json({ success: false, message: 'Doctor not found' });
@@ -88,6 +142,47 @@ export const getMyPatients = async (req, res) => {
         .json({ success: false, message: 'Only authorized doctors can view patients' });
       return;
     }
+
+    if (isDbConnected()) {
+      const doctorProfile = await Doctor.findOne({
+        $or: [{ id: req.user.id }, { userId: req.user.id }, { email: req.user.email }],
+      }).lean();
+
+      const docId = doctorProfile ? doctorProfile.id : req.user.id;
+      const appointments = await Appointment.find({ doctorId: docId }).lean();
+      const patientIds = [...new Set(appointments.map(a => a.patientId))];
+
+      const patients = await Promise.all(
+        patientIds.map(async pid => {
+          const user = await User.findOne({ id: pid }).lean();
+          const patientApts = appointments.filter(a => a.patientId === pid);
+          const patientPrescriptions = await Prescription.find({
+            patientId: pid,
+            doctorId: docId,
+          }).lean();
+
+          return {
+            id: pid,
+            name: user ? user.name : 'Unknown Patient',
+            email: user ? user.email : '',
+            phone: user ? user.phone : '',
+            age: user ? user.age : 28,
+            gender: user ? user.gender : 'Other',
+            bloodGroup: user ? user.bloodGroup : 'O+',
+            city: user ? user.city : 'Bengaluru',
+            allergies: user ? user.allergies : [],
+            chronicConditions: user ? user.chronicConditions : [],
+            totalAppointments: patientApts.length,
+            lastAppointmentDate: patientApts[0]?.date || 'N/A',
+            lastAppointmentStatus: patientApts[0]?.status || 'N/A',
+            prescriptionsCount: patientPrescriptions.length,
+          };
+        })
+      );
+
+      return res.json({ success: true, patients });
+    }
+
     const doctorProfile =
       dbStore.findDoctorById(req.user.id) ||
       dbStore.getAllDoctors().find(d => d.userId === req.user.id || d.email === req.user.email);
@@ -135,9 +230,17 @@ export const getDoctorSchedule = async (req, res) => {
         .json({ success: false, message: 'Only doctors can access schedule settings' });
       return;
     }
-    const doctor =
-      dbStore.findDoctorById(req.user.id) ||
-      dbStore.getAllDoctors().find(d => d.userId === req.user.id || d.email === req.user.email);
+
+    let doctor;
+    if (isDbConnected()) {
+      doctor = await Doctor.findOne({
+        $or: [{ id: req.user.id }, { userId: req.user.id }, { email: req.user.email }],
+      }).lean();
+    } else {
+      doctor =
+        dbStore.findDoctorById(req.user.id) ||
+        dbStore.getAllDoctors().find(d => d.userId === req.user.id || d.email === req.user.email);
+    }
 
     if (!doctor) {
       res.status(404).json({ success: false, message: 'Doctor profile not found' });
@@ -178,9 +281,17 @@ export const updateDoctorSchedule = async (req, res) => {
       res.status(403).json({ success: false, message: 'Only doctors can modify schedule' });
       return;
     }
-    const doctor =
-      dbStore.findDoctorById(req.user.id) ||
-      dbStore.getAllDoctors().find(d => d.userId === req.user.id || d.email === req.user.email);
+
+    let doctor;
+    if (isDbConnected()) {
+      doctor = await Doctor.findOne({
+        $or: [{ id: req.user.id }, { userId: req.user.id }, { email: req.user.email }],
+      }).lean();
+    } else {
+      doctor =
+        dbStore.findDoctorById(req.user.id) ||
+        dbStore.getAllDoctors().find(d => d.userId === req.user.id || d.email === req.user.email);
+    }
 
     if (!doctor) {
       res.status(404).json({ success: false, message: 'Doctor profile not found' });
@@ -203,8 +314,20 @@ export const updateDoctorSchedule = async (req, res) => {
       }
     }
 
-    const updated = dbStore.updateDoctor(doctor.id, updates);
+    if (isDbConnected()) {
+      const updated = await Doctor.findOneAndUpdate({ id: doctor.id }, { $set: updates }, { new: true }).lean();
+      await AuditLog.create({
+        id: `aud-${Date.now()}`,
+        eventType: 'DOCTOR_SCHEDULE_UPDATED',
+        actorId: req.user.id,
+        actorEmail: req.user.email,
+        actorRole: 'doctor',
+        details: `Doctor ${doctor.name} updated consultation availability & fee (₹${updates.consultationFee || doctor.consultationFee}).`,
+      });
+      return res.json({ success: true, message: 'Schedule updated successfully', doctor: updated });
+    }
 
+    const updated = dbStore.updateDoctor(doctor.id, updates);
     dbStore.addAuditLog({
       eventType: 'DOCTOR_SCHEDULE_UPDATED',
       actorId: req.user.id,
@@ -225,9 +348,17 @@ export const updateDoctorProfile = async (req, res) => {
       res.status(403).json({ success: false, message: 'Only doctors can modify doctor profile' });
       return;
     }
-    const doctor =
-      dbStore.findDoctorById(req.user.id) ||
-      dbStore.getAllDoctors().find(d => d.userId === req.user.id || d.email === req.user.email);
+
+    let doctor;
+    if (isDbConnected()) {
+      doctor = await Doctor.findOne({
+        $or: [{ id: req.user.id }, { userId: req.user.id }, { email: req.user.email }],
+      }).lean();
+    } else {
+      doctor =
+        dbStore.findDoctorById(req.user.id) ||
+        dbStore.getAllDoctors().find(d => d.userId === req.user.id || d.email === req.user.email);
+    }
 
     if (!doctor) {
       res.status(404).json({ success: false, message: 'Doctor profile not found' });
@@ -252,8 +383,20 @@ export const updateDoctorProfile = async (req, res) => {
       }
     }
 
-    const updated = dbStore.updateDoctor(doctor.id, updates);
+    if (isDbConnected()) {
+      const updated = await Doctor.findOneAndUpdate({ id: doctor.id }, { $set: updates }, { new: true }).lean();
+      await AuditLog.create({
+        id: `aud-${Date.now()}`,
+        eventType: 'DOCTOR_PROFILE_UPDATED',
+        actorId: req.user.id,
+        actorEmail: req.user.email,
+        actorRole: 'doctor',
+        details: `Doctor ${doctor.name} updated clinical profile and registration credentials.`,
+      });
+      return res.json({ success: true, message: 'Doctor profile updated', doctor: updated });
+    }
 
+    const updated = dbStore.updateDoctor(doctor.id, updates);
     dbStore.addAuditLog({
       eventType: 'DOCTOR_PROFILE_UPDATED',
       actorId: req.user.id,

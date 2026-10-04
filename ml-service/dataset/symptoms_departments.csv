@@ -1,100 +1,577 @@
 symptoms,department
-"fever,chills,fatigue,generalized body ache,mild headache",General Medicine
-"mild fever,fatigue,loss of appetite,malaise,weakness",General Medicine
-"high fever,body ache,weakness,dehydration,chills",General Medicine
-"unexplained weight loss,night sweats,fatigue,lethargy",General Medicine
-"chronic fatigue,dizziness,pale skin,weakness,lethargy",General Medicine
-"viral fever,body pain,headache,weakness,shivering",General Medicine
-"dengue symptoms,platelet drop,high fever,severe body ache",General Medicine
-"malaria chills,sweating,fever every alternate day,fatigue",General Medicine
-"typhoid fever,headache,abdominal discomfort,loss of appetite",General Medicine
-"post viral weakness,fatigue,malaise,joint stiffness",General Medicine
-"seasonal flu,fever,body aches,fatigue,chills",General Medicine
-"chest discomfort,breathlessness on exertion,palpitations,fatigue",Cardiology
-"chest tightness,racing heartbeat,shortness of breath,dizziness",Cardiology
-"swollen ankles,irregular pulse,breathlessness lying flat,fatigue",Cardiology
-"high blood pressure readings,palpitations,headache,blurred vision",Cardiology
-"exertional chest pressure,jaw pain,sweating,shortness of breath",Cardiology
-"angina,substernal chest pain,left arm radiation,sweating",Cardiology
-"tachycardia,rapid pulse,palpitations,lightheadedness",Cardiology
-"hypertension,elevated bp,neck tension,morning headache",Cardiology
-"shortness of breath when climbing stairs,chest heaviness,edema",Cardiology
-"irregular heartbeats,fluttering in chest,fatigue,dizziness",Cardiology
-"heart murmur,breathlessness,fatigue,exercise intolerance",Cardiology
-"erythematous rash,pruritus,itching,skin peeling",Dermatology
-"acne vulgaris,facial pustules,oily skin,scars",Dermatology
-"dry scaly patches,intense itching,flaking,red skin",Dermatology
-"hair loss,scalp redness,dandruff,itching",Dermatology
-"urticaria,hives,swelling,skin redness,itching",Dermatology
-"eczema flare,atopic dermatitis,itchy lesions on elbows and knees",Dermatology
-"psoriasis plaques,silvery scales,red inflamed patches",Dermatology
-"fungal ringworm,tinea corporis,circular itchy lesion,red border",Dermatology
-"contact dermatitis,itching after detergent,red blisters",Dermatology
-"boils,furuncles,painful pus filled skin bumps,swelling",Dermatology
-"pigmentation,dark spots on face,melasma,sun damage",Dermatology
-"sore throat,hoarseness of voice,difficulty swallowing,fever",ENT
-"nasal congestion,rhinorrhea,sneezing,sinus pressure",ENT
-"ear pain,ear discharge,reduced hearing,tinnitus",ENT
-"vertigo,spinning sensation,ear fullness,loss of balance",ENT
-"chronic dry cough,throat irritation,nasal blockage",ENT
-"sinusitis,facial pressure,headache behind eyes,nasal drip",ENT
-"tonsillitis,enlarged red tonsils,white spots in throat,fever",ENT
-"deviated septum,nasal obstruction,snoring,mouth breathing",ENT
-"allergic rhinitis,constant morning sneezing,itchy palate",ENT
-"otitis media,middle ear fluid,earache,muffled sound",ENT
-"vocal cord fatigue,strained voice,hoarseness,laryngitis",ENT
-"knee joint pain,swelling,morning stiffness,reduced mobility",Orthopedics
-"lower back pain,sciatica,radiating leg pain,muscle spasm",Orthopedics
-"shoulder pain,rotator stiffness,inability to lift arm",Orthopedics
-"ankle twist,swelling,inability to bear weight,bruising",Orthopedics
-"neck pain,cervical stiffness,radiating tingling into fingers",Orthopedics
-"osteoarthritis,crepitus in knees,difficulty climbing stairs",Orthopedics
-"lumbar slip disc,pinched nerve,numbness down the leg",Orthopedics
-"frozen shoulder,severe restriction of shoulder rotation,pain",Orthopedics
-"rheumatoid arthritis,morning stiffness over 1 hour,swollen finger joints",Orthopedics
-"ligament sprain,knee instability,popping sensation,swelling",Orthopedics
-"tennis elbow,outer elbow pain,weak grip,forearm soreness",Orthopedics
-"migraine,throbbing unilateral headache,nausea,photophobia",Neurology
-"sudden dizziness,vertigo,tingling sensation in fingers,unsteady gait",Neurology
-"facial numbness,mild twitching,persistent tension headache",Neurology
-"tremor in hands,muscle stiffness,slowness of movement",Neurology
-"memory lapses,confusion,difficulty concentrating,sleep disturbance",Neurology
-"cluster headache,piercing pain behind one eye,tearing,nasal drip",Neurology
-"peripheral neuropathy,burning feet sensation,pins and needles",Neurology
-"seizure episode,unconscious jerk,blank stare,confusion",Neurology
-"cervical radiculopathy,shooting nerve pain down the arm,weakness",Neurology
-"carpal tunnel,numb thumb and fingers,night wrist pain",Neurology
-"chronic insomnia,restless legs syndrome,sleep fragmentation",Neurology
-"epigastric burning,acid reflux,heartburn,bloating",Gastroenterology
-"abdominal cramps,watery diarrhea,nausea,vomiting",Gastroenterology
-"chronic constipation,bloating,rectal bleeding,hard stools",Gastroenterology
-"jaundice,yellowish eyes,dark urine,right upper abdominal tenderness",Gastroenterology
-"indigestion,nausea after meals,fullness,loss of appetite",Gastroenterology
-"gastritis,burning stomach ache on empty stomach,nausea",Gastroenterology
-"irritable bowel syndrome,alternating diarrhea and constipation,gas",Gastroenterology
-"fatty liver discomfort,right flank fullness,elevated enzymes,fatigue",Gastroenterology
-"peptic ulcer,stomach pain relieved by antacids,black stool",Gastroenterology
-"gallstones,sharp right upper quadrant pain after fatty meal",Gastroenterology
-"food poisoning,acute vomiting,cramps,fever,dehydration",Gastroenterology
-"persistent wheezing,dry cough,chest congestion,shortness of breath",Pulmonology
-"productive cough,yellow sputum,fever,breathing difficulty",Pulmonology
-"chronic breathlessness,smoker cough,chest tightness",Pulmonology
-"asthma flare,nocturnal breathlessness,whistling sound in chest",Pulmonology
-"pleuritic chest pain,fever,cough with phlegm",Pulmonology
-"bronchitis,hacking deep cough,mucus,low grade fever",Pulmonology
-"post covid cough,lung heaviness,breathlessness on exertion",Pulmonology
-"copd flare,oxygen drop,chronic productive cough,wheezing",Pulmonology
-"allergic asthma,dust allergy,breathing difficulty,coughing at night",Pulmonology
-"pneumonia,high fever,chest pain on deep breath,purulent sputum",Pulmonology
-"sleep apnea,heavy snoring,gasping for air during sleep,daytime sleepiness",Pulmonology
-"pediatric fever,cough,runny nose,irritability",Pediatrics
-"child vomiting,loose stools,dehydration,fussiness",Pediatrics
-"childhood skin rash,mild fever,loss of appetite",Pediatrics
-"ear pulling in infant,crying,fever,restlessness",Pediatrics
-"growth delay,frequent colds,low weight,fatigue in child",Pediatrics
-"infantile colic,inconsolable crying after feeding,distended belly",Pediatrics
-"mumps,swollen salivary glands under jaw,fever in child",Pediatrics
-"measles rash,koplik spots,high fever,watery eyes in toddler",Pediatrics
-"chickenpox,itchy fluid blisters across body,fever in child",Pediatrics
-"hand foot and mouth disease,mouth sores,red spots on palms and soles",Pediatrics
-"newborn feeding difficulty,failure to latch,lethargy,jaundice",Pediatrics
+chest pain,Cardiology
+chest tightness,Cardiology
+heart palpitations,Cardiology
+rapid pulse,Cardiology
+irregular heartbeat,Cardiology
+breathlessness on exertion,Cardiology
+shortness of breath lying flat,Cardiology
+high blood pressure,Cardiology
+swollen ankles,Cardiology
+left arm radiation,Cardiology
+angina pectoris,Cardiology
+substernal pressure,Cardiology
+fluttering in chest,Cardiology
+cardiac fatigue,Cardiology
+dizziness with palpitations,Cardiology
+cyanosis,Cardiology
+bounding pulse,Cardiology
+carotid throbbing,Cardiology
+edema in legs,Cardiology
+"chest pain, chest tightness",Cardiology
+"chest pain, chest tightness, rapid pulse",Cardiology
+"chest pain, rapid pulse, breathlessness on exertion",Cardiology
+"chest tightness, heart palpitations",Cardiology
+"chest tightness, heart palpitations, irregular heartbeat",Cardiology
+"chest tightness, irregular heartbeat, shortness of breath lying flat",Cardiology
+"heart palpitations, rapid pulse",Cardiology
+"heart palpitations, rapid pulse, breathlessness on exertion",Cardiology
+"heart palpitations, breathlessness on exertion, high blood pressure",Cardiology
+"rapid pulse, irregular heartbeat",Cardiology
+"rapid pulse, irregular heartbeat, shortness of breath lying flat",Cardiology
+"rapid pulse, shortness of breath lying flat, swollen ankles",Cardiology
+"irregular heartbeat, breathlessness on exertion",Cardiology
+"irregular heartbeat, breathlessness on exertion, high blood pressure",Cardiology
+"irregular heartbeat, high blood pressure, left arm radiation",Cardiology
+"breathlessness on exertion, shortness of breath lying flat",Cardiology
+"breathlessness on exertion, shortness of breath lying flat, swollen ankles",Cardiology
+"breathlessness on exertion, swollen ankles, angina pectoris",Cardiology
+"shortness of breath lying flat, high blood pressure",Cardiology
+"shortness of breath lying flat, high blood pressure, left arm radiation",Cardiology
+"shortness of breath lying flat, left arm radiation, substernal pressure",Cardiology
+"high blood pressure, swollen ankles",Cardiology
+"high blood pressure, swollen ankles, angina pectoris",Cardiology
+"high blood pressure, angina pectoris, fluttering in chest",Cardiology
+"swollen ankles, left arm radiation",Cardiology
+"swollen ankles, left arm radiation, substernal pressure",Cardiology
+"swollen ankles, substernal pressure, cardiac fatigue",Cardiology
+"left arm radiation, angina pectoris",Cardiology
+"left arm radiation, angina pectoris, fluttering in chest",Cardiology
+"left arm radiation, fluttering in chest, dizziness with palpitations",Cardiology
+"angina pectoris, substernal pressure",Cardiology
+"angina pectoris, substernal pressure, cardiac fatigue",Cardiology
+"angina pectoris, cardiac fatigue, cyanosis",Cardiology
+"substernal pressure, fluttering in chest",Cardiology
+"substernal pressure, fluttering in chest, dizziness with palpitations",Cardiology
+"substernal pressure, dizziness with palpitations, bounding pulse",Cardiology
+"fluttering in chest, cardiac fatigue",Cardiology
+"fluttering in chest, cardiac fatigue, cyanosis",Cardiology
+"fluttering in chest, cyanosis, carotid throbbing",Cardiology
+"cardiac fatigue, dizziness with palpitations",Cardiology
+"cardiac fatigue, dizziness with palpitations, bounding pulse",Cardiology
+"cardiac fatigue, bounding pulse, edema in legs",Cardiology
+"dizziness with palpitations, cyanosis",Cardiology
+"dizziness with palpitations, cyanosis, carotid throbbing",Cardiology
+"dizziness with palpitations, carotid throbbing, chest pain",Cardiology
+"cyanosis, bounding pulse",Cardiology
+"cyanosis, bounding pulse, edema in legs",Cardiology
+"cyanosis, edema in legs, chest tightness",Cardiology
+"bounding pulse, carotid throbbing",Cardiology
+"bounding pulse, carotid throbbing, chest pain",Cardiology
+"bounding pulse, chest pain, heart palpitations",Cardiology
+"carotid throbbing, edema in legs",Cardiology
+"carotid throbbing, edema in legs, chest tightness",Cardiology
+"carotid throbbing, chest tightness, rapid pulse",Cardiology
+"edema in legs, chest pain",Cardiology
+"edema in legs, chest pain, heart palpitations",Cardiology
+"edema in legs, heart palpitations, irregular heartbeat",Cardiology
+skin rash,Dermatology
+itching,Dermatology
+pruritus,Dermatology
+erythematous patches,Dermatology
+acne vulgaris,Dermatology
+facial pustules,Dermatology
+dry scaly skin,Dermatology
+eczema flare,Dermatology
+atopic dermatitis,Dermatology
+psoriasis plaques,Dermatology
+silvery scales,Dermatology
+urticaria hives,Dermatology
+skin peeling,Dermatology
+ringworm tinea,Dermatology
+skin redness and burning,Dermatology
+itchy bumps,Dermatology
+dandruff scalp,Dermatology
+boils and blisters,Dermatology
+melasma dark spots,Dermatology
+vitiligo white patches,Dermatology
+"skin rash, itching",Dermatology
+"skin rash, itching, erythematous patches",Dermatology
+"skin rash, erythematous patches, facial pustules",Dermatology
+"itching, pruritus",Dermatology
+"itching, pruritus, acne vulgaris",Dermatology
+"itching, acne vulgaris, dry scaly skin",Dermatology
+"pruritus, erythematous patches",Dermatology
+"pruritus, erythematous patches, facial pustules",Dermatology
+"pruritus, facial pustules, eczema flare",Dermatology
+"erythematous patches, acne vulgaris",Dermatology
+"erythematous patches, acne vulgaris, dry scaly skin",Dermatology
+"erythematous patches, dry scaly skin, atopic dermatitis",Dermatology
+"acne vulgaris, facial pustules",Dermatology
+"acne vulgaris, facial pustules, eczema flare",Dermatology
+"acne vulgaris, eczema flare, psoriasis plaques",Dermatology
+"facial pustules, dry scaly skin",Dermatology
+"facial pustules, dry scaly skin, atopic dermatitis",Dermatology
+"facial pustules, atopic dermatitis, silvery scales",Dermatology
+"dry scaly skin, eczema flare",Dermatology
+"dry scaly skin, eczema flare, psoriasis plaques",Dermatology
+"dry scaly skin, psoriasis plaques, urticaria hives",Dermatology
+"eczema flare, atopic dermatitis",Dermatology
+"eczema flare, atopic dermatitis, silvery scales",Dermatology
+"eczema flare, silvery scales, skin peeling",Dermatology
+"atopic dermatitis, psoriasis plaques",Dermatology
+"atopic dermatitis, psoriasis plaques, urticaria hives",Dermatology
+"atopic dermatitis, urticaria hives, ringworm tinea",Dermatology
+"psoriasis plaques, silvery scales",Dermatology
+"psoriasis plaques, silvery scales, skin peeling",Dermatology
+"psoriasis plaques, skin peeling, skin redness and burning",Dermatology
+"silvery scales, urticaria hives",Dermatology
+"silvery scales, urticaria hives, ringworm tinea",Dermatology
+"silvery scales, ringworm tinea, itchy bumps",Dermatology
+"urticaria hives, skin peeling",Dermatology
+"urticaria hives, skin peeling, skin redness and burning",Dermatology
+"urticaria hives, skin redness and burning, dandruff scalp",Dermatology
+"skin peeling, ringworm tinea",Dermatology
+"skin peeling, ringworm tinea, itchy bumps",Dermatology
+"skin peeling, itchy bumps, boils and blisters",Dermatology
+"ringworm tinea, skin redness and burning",Dermatology
+"ringworm tinea, skin redness and burning, dandruff scalp",Dermatology
+"ringworm tinea, dandruff scalp, melasma dark spots",Dermatology
+"skin redness and burning, itchy bumps",Dermatology
+"skin redness and burning, itchy bumps, boils and blisters",Dermatology
+"skin redness and burning, boils and blisters, vitiligo white patches",Dermatology
+"itchy bumps, dandruff scalp",Dermatology
+"itchy bumps, dandruff scalp, melasma dark spots",Dermatology
+"itchy bumps, melasma dark spots, skin rash",Dermatology
+"dandruff scalp, boils and blisters",Dermatology
+"dandruff scalp, boils and blisters, vitiligo white patches",Dermatology
+"dandruff scalp, vitiligo white patches, itching",Dermatology
+"boils and blisters, melasma dark spots",Dermatology
+"boils and blisters, melasma dark spots, skin rash",Dermatology
+"boils and blisters, skin rash, pruritus",Dermatology
+"melasma dark spots, vitiligo white patches",Dermatology
+"melasma dark spots, vitiligo white patches, itching",Dermatology
+"melasma dark spots, itching, erythematous patches",Dermatology
+"vitiligo white patches, skin rash",Dermatology
+"vitiligo white patches, skin rash, pruritus",Dermatology
+"vitiligo white patches, pruritus, acne vulgaris",Dermatology
+sore throat,ENT
+ear pain,ENT
+earache,ENT
+reduced hearing,ENT
+tinnitus ringing in ears,ENT
+nasal congestion,ENT
+blocked nose,ENT
+runny nose,ENT
+sinus pressure,ENT
+facial headache,ENT
+hoarseness of voice,ENT
+loss of voice,ENT
+difficulty swallowing,ENT
+vertigo spinning sensation,ENT
+nasal discharge,ENT
+sneezing bouts,ENT
+tonsil swelling,ENT
+ear fullness,ENT
+post nasal drip,ENT
+"sore throat, ear pain",ENT
+"sore throat, ear pain, reduced hearing",ENT
+"sore throat, reduced hearing, nasal congestion",ENT
+"ear pain, earache",ENT
+"ear pain, earache, tinnitus ringing in ears",ENT
+"ear pain, tinnitus ringing in ears, blocked nose",ENT
+"earache, reduced hearing",ENT
+"earache, reduced hearing, nasal congestion",ENT
+"earache, nasal congestion, runny nose",ENT
+"reduced hearing, tinnitus ringing in ears",ENT
+"reduced hearing, tinnitus ringing in ears, blocked nose",ENT
+"reduced hearing, blocked nose, sinus pressure",ENT
+"tinnitus ringing in ears, nasal congestion",ENT
+"tinnitus ringing in ears, nasal congestion, runny nose",ENT
+"tinnitus ringing in ears, runny nose, facial headache",ENT
+"nasal congestion, blocked nose",ENT
+"nasal congestion, blocked nose, sinus pressure",ENT
+"nasal congestion, sinus pressure, hoarseness of voice",ENT
+"blocked nose, runny nose",ENT
+"blocked nose, runny nose, facial headache",ENT
+"blocked nose, facial headache, loss of voice",ENT
+"runny nose, sinus pressure",ENT
+"runny nose, sinus pressure, hoarseness of voice",ENT
+"runny nose, hoarseness of voice, difficulty swallowing",ENT
+"sinus pressure, facial headache",ENT
+"sinus pressure, facial headache, loss of voice",ENT
+"sinus pressure, loss of voice, vertigo spinning sensation",ENT
+"facial headache, hoarseness of voice",ENT
+"facial headache, hoarseness of voice, difficulty swallowing",ENT
+"facial headache, difficulty swallowing, nasal discharge",ENT
+"hoarseness of voice, loss of voice",ENT
+"hoarseness of voice, loss of voice, vertigo spinning sensation",ENT
+"hoarseness of voice, vertigo spinning sensation, sneezing bouts",ENT
+"loss of voice, difficulty swallowing",ENT
+"loss of voice, difficulty swallowing, nasal discharge",ENT
+"loss of voice, nasal discharge, tonsil swelling",ENT
+"difficulty swallowing, vertigo spinning sensation",ENT
+"difficulty swallowing, vertigo spinning sensation, sneezing bouts",ENT
+"difficulty swallowing, sneezing bouts, ear fullness",ENT
+"vertigo spinning sensation, nasal discharge",ENT
+"vertigo spinning sensation, nasal discharge, tonsil swelling",ENT
+"vertigo spinning sensation, tonsil swelling, post nasal drip",ENT
+"nasal discharge, sneezing bouts",ENT
+"nasal discharge, sneezing bouts, ear fullness",ENT
+"nasal discharge, ear fullness, sore throat",ENT
+"sneezing bouts, tonsil swelling",ENT
+"sneezing bouts, tonsil swelling, post nasal drip",ENT
+"sneezing bouts, post nasal drip, ear pain",ENT
+"tonsil swelling, ear fullness",ENT
+"tonsil swelling, ear fullness, sore throat",ENT
+"tonsil swelling, sore throat, earache",ENT
+"ear fullness, post nasal drip",ENT
+"ear fullness, post nasal drip, ear pain",ENT
+"ear fullness, ear pain, reduced hearing",ENT
+"post nasal drip, sore throat",ENT
+"post nasal drip, sore throat, earache",ENT
+"post nasal drip, earache, tinnitus ringing in ears",ENT
+stomach pain,Gastroenterology
+abdominal cramping,Gastroenterology
+acid reflux,Gastroenterology
+heartburn,Gastroenterology
+sour belching,Gastroenterology
+nausea and vomiting,Gastroenterology
+watery diarrhea,Gastroenterology
+severe constipation,Gastroenterology
+abdominal bloating,Gastroenterology
+indigestion dyspepsia,Gastroenterology
+peptic burning,Gastroenterology
+jaundice yellow eyes,Gastroenterology
+rectal bleeding,Gastroenterology
+mucus in stool,Gastroenterology
+loss of appetite with stomach ache,Gastroenterology
+gastric pain after meals,Gastroenterology
+"stomach pain, abdominal cramping",Gastroenterology
+"stomach pain, abdominal cramping, heartburn",Gastroenterology
+"stomach pain, heartburn, nausea and vomiting",Gastroenterology
+"abdominal cramping, acid reflux",Gastroenterology
+"abdominal cramping, acid reflux, sour belching",Gastroenterology
+"abdominal cramping, sour belching, watery diarrhea",Gastroenterology
+"acid reflux, heartburn",Gastroenterology
+"acid reflux, heartburn, nausea and vomiting",Gastroenterology
+"acid reflux, nausea and vomiting, severe constipation",Gastroenterology
+"heartburn, sour belching",Gastroenterology
+"heartburn, sour belching, watery diarrhea",Gastroenterology
+"heartburn, watery diarrhea, abdominal bloating",Gastroenterology
+"sour belching, nausea and vomiting",Gastroenterology
+"sour belching, nausea and vomiting, severe constipation",Gastroenterology
+"sour belching, severe constipation, indigestion dyspepsia",Gastroenterology
+"nausea and vomiting, watery diarrhea",Gastroenterology
+"nausea and vomiting, watery diarrhea, abdominal bloating",Gastroenterology
+"nausea and vomiting, abdominal bloating, peptic burning",Gastroenterology
+"watery diarrhea, severe constipation",Gastroenterology
+"watery diarrhea, severe constipation, indigestion dyspepsia",Gastroenterology
+"watery diarrhea, indigestion dyspepsia, jaundice yellow eyes",Gastroenterology
+"severe constipation, abdominal bloating",Gastroenterology
+"severe constipation, abdominal bloating, peptic burning",Gastroenterology
+"severe constipation, peptic burning, rectal bleeding",Gastroenterology
+"abdominal bloating, indigestion dyspepsia",Gastroenterology
+"abdominal bloating, indigestion dyspepsia, jaundice yellow eyes",Gastroenterology
+"abdominal bloating, jaundice yellow eyes, mucus in stool",Gastroenterology
+"indigestion dyspepsia, peptic burning",Gastroenterology
+"indigestion dyspepsia, peptic burning, rectal bleeding",Gastroenterology
+"indigestion dyspepsia, rectal bleeding, loss of appetite with stomach ache",Gastroenterology
+"peptic burning, jaundice yellow eyes",Gastroenterology
+"peptic burning, jaundice yellow eyes, mucus in stool",Gastroenterology
+"peptic burning, mucus in stool, gastric pain after meals",Gastroenterology
+"jaundice yellow eyes, rectal bleeding",Gastroenterology
+"jaundice yellow eyes, rectal bleeding, loss of appetite with stomach ache",Gastroenterology
+"jaundice yellow eyes, loss of appetite with stomach ache, stomach pain",Gastroenterology
+"rectal bleeding, mucus in stool",Gastroenterology
+"rectal bleeding, mucus in stool, gastric pain after meals",Gastroenterology
+"rectal bleeding, gastric pain after meals, abdominal cramping",Gastroenterology
+"mucus in stool, loss of appetite with stomach ache",Gastroenterology
+"mucus in stool, loss of appetite with stomach ache, stomach pain",Gastroenterology
+"mucus in stool, stomach pain, acid reflux",Gastroenterology
+"loss of appetite with stomach ache, gastric pain after meals",Gastroenterology
+"loss of appetite with stomach ache, gastric pain after meals, abdominal cramping",Gastroenterology
+"loss of appetite with stomach ache, abdominal cramping, heartburn",Gastroenterology
+"gastric pain after meals, stomach pain",Gastroenterology
+"gastric pain after meals, stomach pain, acid reflux",Gastroenterology
+"gastric pain after meals, acid reflux, sour belching",Gastroenterology
+high fever,General Medicine
+chills and shivering,General Medicine
+generalized body ache,General Medicine
+severe fatigue,General Medicine
+malaise and weakness,General Medicine
+viral fever,General Medicine
+dengue fever,General Medicine
+malaria chills,General Medicine
+typhoid fever,General Medicine
+dehydration and thirst,General Medicine
+unexplained weight loss,General Medicine
+vitamin deficiency fatigue,General Medicine
+routine wellness screening,General Medicine
+post viral exhaustion,General Medicine
+fever with body pain,General Medicine
+lethargy and low stamina,General Medicine
+loss of appetite with fever,General Medicine
+"high fever, chills and shivering",General Medicine
+"high fever, chills and shivering, severe fatigue",General Medicine
+"high fever, severe fatigue, viral fever",General Medicine
+"chills and shivering, generalized body ache",General Medicine
+"chills and shivering, generalized body ache, malaise and weakness",General Medicine
+"chills and shivering, malaise and weakness, dengue fever",General Medicine
+"generalized body ache, severe fatigue",General Medicine
+"generalized body ache, severe fatigue, viral fever",General Medicine
+"generalized body ache, viral fever, malaria chills",General Medicine
+"severe fatigue, malaise and weakness",General Medicine
+"severe fatigue, malaise and weakness, dengue fever",General Medicine
+"severe fatigue, dengue fever, typhoid fever",General Medicine
+"malaise and weakness, viral fever",General Medicine
+"malaise and weakness, viral fever, malaria chills",General Medicine
+"malaise and weakness, malaria chills, dehydration and thirst",General Medicine
+"viral fever, dengue fever",General Medicine
+"viral fever, dengue fever, typhoid fever",General Medicine
+"viral fever, typhoid fever, unexplained weight loss",General Medicine
+"dengue fever, malaria chills",General Medicine
+"dengue fever, malaria chills, dehydration and thirst",General Medicine
+"dengue fever, dehydration and thirst, vitamin deficiency fatigue",General Medicine
+"malaria chills, typhoid fever",General Medicine
+"malaria chills, typhoid fever, unexplained weight loss",General Medicine
+"malaria chills, unexplained weight loss, routine wellness screening",General Medicine
+"typhoid fever, dehydration and thirst",General Medicine
+"typhoid fever, dehydration and thirst, vitamin deficiency fatigue",General Medicine
+"typhoid fever, vitamin deficiency fatigue, post viral exhaustion",General Medicine
+"dehydration and thirst, unexplained weight loss",General Medicine
+"dehydration and thirst, unexplained weight loss, routine wellness screening",General Medicine
+"dehydration and thirst, routine wellness screening, fever with body pain",General Medicine
+"unexplained weight loss, vitamin deficiency fatigue",General Medicine
+"unexplained weight loss, vitamin deficiency fatigue, post viral exhaustion",General Medicine
+"unexplained weight loss, post viral exhaustion, lethargy and low stamina",General Medicine
+"vitamin deficiency fatigue, routine wellness screening",General Medicine
+"vitamin deficiency fatigue, routine wellness screening, fever with body pain",General Medicine
+"vitamin deficiency fatigue, fever with body pain, loss of appetite with fever",General Medicine
+"routine wellness screening, post viral exhaustion",General Medicine
+"routine wellness screening, post viral exhaustion, lethargy and low stamina",General Medicine
+"routine wellness screening, lethargy and low stamina, high fever",General Medicine
+"post viral exhaustion, fever with body pain",General Medicine
+"post viral exhaustion, fever with body pain, loss of appetite with fever",General Medicine
+"post viral exhaustion, loss of appetite with fever, chills and shivering",General Medicine
+"fever with body pain, lethargy and low stamina",General Medicine
+"fever with body pain, lethargy and low stamina, high fever",General Medicine
+"fever with body pain, high fever, generalized body ache",General Medicine
+"lethargy and low stamina, loss of appetite with fever",General Medicine
+"lethargy and low stamina, loss of appetite with fever, chills and shivering",General Medicine
+"lethargy and low stamina, chills and shivering, severe fatigue",General Medicine
+"loss of appetite with fever, high fever",General Medicine
+"loss of appetite with fever, high fever, generalized body ache",General Medicine
+"loss of appetite with fever, generalized body ache, malaise and weakness",General Medicine
+throbbing migraine,Neurology
+severe tension headache,Neurology
+cluster headache,Neurology
+dizziness and vertigo,Neurology
+numbness in fingers,Neurology
+tingling pins and needles,Neurology
+muscle tremor in hands,Neurology
+slurred speech,Neurology
+facial weakness,Neurology
+epileptic seizure episode,Neurology
+loss of balance and ataxia,Neurology
+sciatica nerve pain,Neurology
+shooting electric nerve pain,Neurology
+cranial nerve pain,Neurology
+memory confusion,Neurology
+"throbbing migraine, severe tension headache",Neurology
+"throbbing migraine, severe tension headache, dizziness and vertigo",Neurology
+"throbbing migraine, dizziness and vertigo, tingling pins and needles",Neurology
+"severe tension headache, cluster headache",Neurology
+"severe tension headache, cluster headache, numbness in fingers",Neurology
+"severe tension headache, numbness in fingers, muscle tremor in hands",Neurology
+"cluster headache, dizziness and vertigo",Neurology
+"cluster headache, dizziness and vertigo, tingling pins and needles",Neurology
+"cluster headache, tingling pins and needles, slurred speech",Neurology
+"dizziness and vertigo, numbness in fingers",Neurology
+"dizziness and vertigo, numbness in fingers, muscle tremor in hands",Neurology
+"dizziness and vertigo, muscle tremor in hands, facial weakness",Neurology
+"numbness in fingers, tingling pins and needles",Neurology
+"numbness in fingers, tingling pins and needles, slurred speech",Neurology
+"numbness in fingers, slurred speech, epileptic seizure episode",Neurology
+"tingling pins and needles, muscle tremor in hands",Neurology
+"tingling pins and needles, muscle tremor in hands, facial weakness",Neurology
+"tingling pins and needles, facial weakness, loss of balance and ataxia",Neurology
+"muscle tremor in hands, slurred speech",Neurology
+"muscle tremor in hands, slurred speech, epileptic seizure episode",Neurology
+"muscle tremor in hands, epileptic seizure episode, sciatica nerve pain",Neurology
+"slurred speech, facial weakness",Neurology
+"slurred speech, facial weakness, loss of balance and ataxia",Neurology
+"slurred speech, loss of balance and ataxia, shooting electric nerve pain",Neurology
+"facial weakness, epileptic seizure episode",Neurology
+"facial weakness, epileptic seizure episode, sciatica nerve pain",Neurology
+"facial weakness, sciatica nerve pain, cranial nerve pain",Neurology
+"epileptic seizure episode, loss of balance and ataxia",Neurology
+"epileptic seizure episode, loss of balance and ataxia, shooting electric nerve pain",Neurology
+"epileptic seizure episode, shooting electric nerve pain, memory confusion",Neurology
+"loss of balance and ataxia, sciatica nerve pain",Neurology
+"loss of balance and ataxia, sciatica nerve pain, cranial nerve pain",Neurology
+"loss of balance and ataxia, cranial nerve pain, throbbing migraine",Neurology
+"sciatica nerve pain, shooting electric nerve pain",Neurology
+"sciatica nerve pain, shooting electric nerve pain, memory confusion",Neurology
+"sciatica nerve pain, memory confusion, severe tension headache",Neurology
+"shooting electric nerve pain, cranial nerve pain",Neurology
+"shooting electric nerve pain, cranial nerve pain, throbbing migraine",Neurology
+"shooting electric nerve pain, throbbing migraine, cluster headache",Neurology
+"cranial nerve pain, memory confusion",Neurology
+"cranial nerve pain, memory confusion, severe tension headache",Neurology
+"cranial nerve pain, severe tension headache, dizziness and vertigo",Neurology
+"memory confusion, throbbing migraine",Neurology
+"memory confusion, throbbing migraine, cluster headache",Neurology
+"memory confusion, cluster headache, numbness in fingers",Neurology
+knee joint pain,Orthopedics
+knee swelling and crepitus,Orthopedics
+lower back pain lumbago,Orthopedics
+lumbar disc slip,Orthopedics
+stiff shoulder frozen shoulder,Orthopedics
+ankle sprain twist,Orthopedics
+cervical spondylosis neck stiffness,Orthopedics
+joint inflammation arthritis,Orthopedics
+tendonitis heel pain,Orthopedics
+bone fracture tenderness,Orthopedics
+ligament tear knee,Orthopedics
+hip joint discomfort,Orthopedics
+difficulty bending knee,Orthopedics
+wrist pain carpal tunnel,Orthopedics
+"knee joint pain, knee swelling and crepitus",Orthopedics
+"knee joint pain, knee swelling and crepitus, lumbar disc slip",Orthopedics
+"knee joint pain, lumbar disc slip, ankle sprain twist",Orthopedics
+"knee swelling and crepitus, lower back pain lumbago",Orthopedics
+"knee swelling and crepitus, lower back pain lumbago, stiff shoulder frozen shoulder",Orthopedics
+"knee swelling and crepitus, stiff shoulder frozen shoulder, cervical spondylosis neck stiffness",Orthopedics
+"lower back pain lumbago, lumbar disc slip",Orthopedics
+"lower back pain lumbago, lumbar disc slip, ankle sprain twist",Orthopedics
+"lower back pain lumbago, ankle sprain twist, joint inflammation arthritis",Orthopedics
+"lumbar disc slip, stiff shoulder frozen shoulder",Orthopedics
+"lumbar disc slip, stiff shoulder frozen shoulder, cervical spondylosis neck stiffness",Orthopedics
+"lumbar disc slip, cervical spondylosis neck stiffness, tendonitis heel pain",Orthopedics
+"stiff shoulder frozen shoulder, ankle sprain twist",Orthopedics
+"stiff shoulder frozen shoulder, ankle sprain twist, joint inflammation arthritis",Orthopedics
+"stiff shoulder frozen shoulder, joint inflammation arthritis, bone fracture tenderness",Orthopedics
+"ankle sprain twist, cervical spondylosis neck stiffness",Orthopedics
+"ankle sprain twist, cervical spondylosis neck stiffness, tendonitis heel pain",Orthopedics
+"ankle sprain twist, tendonitis heel pain, ligament tear knee",Orthopedics
+"cervical spondylosis neck stiffness, joint inflammation arthritis",Orthopedics
+"cervical spondylosis neck stiffness, joint inflammation arthritis, bone fracture tenderness",Orthopedics
+"cervical spondylosis neck stiffness, bone fracture tenderness, hip joint discomfort",Orthopedics
+"joint inflammation arthritis, tendonitis heel pain",Orthopedics
+"joint inflammation arthritis, tendonitis heel pain, ligament tear knee",Orthopedics
+"joint inflammation arthritis, ligament tear knee, difficulty bending knee",Orthopedics
+"tendonitis heel pain, bone fracture tenderness",Orthopedics
+"tendonitis heel pain, bone fracture tenderness, hip joint discomfort",Orthopedics
+"tendonitis heel pain, hip joint discomfort, wrist pain carpal tunnel",Orthopedics
+"bone fracture tenderness, ligament tear knee",Orthopedics
+"bone fracture tenderness, ligament tear knee, difficulty bending knee",Orthopedics
+"bone fracture tenderness, difficulty bending knee, knee joint pain",Orthopedics
+"ligament tear knee, hip joint discomfort",Orthopedics
+"ligament tear knee, hip joint discomfort, wrist pain carpal tunnel",Orthopedics
+"ligament tear knee, wrist pain carpal tunnel, knee swelling and crepitus",Orthopedics
+"hip joint discomfort, difficulty bending knee",Orthopedics
+"hip joint discomfort, difficulty bending knee, knee joint pain",Orthopedics
+"hip joint discomfort, knee joint pain, lower back pain lumbago",Orthopedics
+"difficulty bending knee, wrist pain carpal tunnel",Orthopedics
+"difficulty bending knee, wrist pain carpal tunnel, knee swelling and crepitus",Orthopedics
+"difficulty bending knee, knee swelling and crepitus, lumbar disc slip",Orthopedics
+"wrist pain carpal tunnel, knee joint pain",Orthopedics
+"wrist pain carpal tunnel, knee joint pain, lower back pain lumbago",Orthopedics
+"wrist pain carpal tunnel, lower back pain lumbago, stiff shoulder frozen shoulder",Orthopedics
+infant fever and crying,Pediatrics
+child coughing and wheezing,Pediatrics
+toddler vomiting and loose stools,Pediatrics
+childhood viral skin rash,Pediatrics
+baby pulling at ears earache,Pediatrics
+infantile colic belly pain,Pediatrics
+teething pain and drooling,Pediatrics
+pediatric barking croup cough,Pediatrics
+chickenpox itchy vesicles in child,Pediatrics
+measles rash in child,Pediatrics
+hand foot mouth disease sores,Pediatrics
+childhood high fever and fussiness,Pediatrics
+"infant fever and crying, child coughing and wheezing",Pediatrics
+"infant fever and crying, child coughing and wheezing, childhood viral skin rash",Pediatrics
+"infant fever and crying, childhood viral skin rash, infantile colic belly pain",Pediatrics
+"child coughing and wheezing, toddler vomiting and loose stools",Pediatrics
+"child coughing and wheezing, toddler vomiting and loose stools, baby pulling at ears earache",Pediatrics
+"child coughing and wheezing, baby pulling at ears earache, teething pain and drooling",Pediatrics
+"toddler vomiting and loose stools, childhood viral skin rash",Pediatrics
+"toddler vomiting and loose stools, childhood viral skin rash, infantile colic belly pain",Pediatrics
+"toddler vomiting and loose stools, infantile colic belly pain, pediatric barking croup cough",Pediatrics
+"childhood viral skin rash, baby pulling at ears earache",Pediatrics
+"childhood viral skin rash, baby pulling at ears earache, teething pain and drooling",Pediatrics
+"childhood viral skin rash, teething pain and drooling, chickenpox itchy vesicles in child",Pediatrics
+"baby pulling at ears earache, infantile colic belly pain",Pediatrics
+"baby pulling at ears earache, infantile colic belly pain, pediatric barking croup cough",Pediatrics
+"baby pulling at ears earache, pediatric barking croup cough, measles rash in child",Pediatrics
+"infantile colic belly pain, teething pain and drooling",Pediatrics
+"infantile colic belly pain, teething pain and drooling, chickenpox itchy vesicles in child",Pediatrics
+"infantile colic belly pain, chickenpox itchy vesicles in child, hand foot mouth disease sores",Pediatrics
+"teething pain and drooling, pediatric barking croup cough",Pediatrics
+"teething pain and drooling, pediatric barking croup cough, measles rash in child",Pediatrics
+"teething pain and drooling, measles rash in child, childhood high fever and fussiness",Pediatrics
+"pediatric barking croup cough, chickenpox itchy vesicles in child",Pediatrics
+"pediatric barking croup cough, chickenpox itchy vesicles in child, hand foot mouth disease sores",Pediatrics
+"pediatric barking croup cough, hand foot mouth disease sores, infant fever and crying",Pediatrics
+"chickenpox itchy vesicles in child, measles rash in child",Pediatrics
+"chickenpox itchy vesicles in child, measles rash in child, childhood high fever and fussiness",Pediatrics
+"chickenpox itchy vesicles in child, childhood high fever and fussiness, child coughing and wheezing",Pediatrics
+"measles rash in child, hand foot mouth disease sores",Pediatrics
+"measles rash in child, hand foot mouth disease sores, infant fever and crying",Pediatrics
+"measles rash in child, infant fever and crying, toddler vomiting and loose stools",Pediatrics
+"hand foot mouth disease sores, childhood high fever and fussiness",Pediatrics
+"hand foot mouth disease sores, childhood high fever and fussiness, child coughing and wheezing",Pediatrics
+"hand foot mouth disease sores, child coughing and wheezing, childhood viral skin rash",Pediatrics
+"childhood high fever and fussiness, infant fever and crying",Pediatrics
+"childhood high fever and fussiness, infant fever and crying, toddler vomiting and loose stools",Pediatrics
+"childhood high fever and fussiness, toddler vomiting and loose stools, baby pulling at ears earache",Pediatrics
+chronic deep cough,Pulmonology
+productive cough with yellow phlegm,Pulmonology
+bronchial wheezing sound,Pulmonology
+asthma breathlessness flare,Pulmonology
+pleuritic chest pain on deep breath,Pulmonology
+shortness of breath dyspnea,Pulmonology
+copd breathing difficulty,Pulmonology
+pneumonia with purulent sputum,Pulmonology
+nighttime coughing fits,Pulmonology
+heavy chest congestion and mucus,Pulmonology
+bronchitis coughing spasms,Pulmonology
+sleep apnea heavy snoring gasping,Pulmonology
+"chronic deep cough, productive cough with yellow phlegm",Pulmonology
+"chronic deep cough, productive cough with yellow phlegm, asthma breathlessness flare",Pulmonology
+"chronic deep cough, asthma breathlessness flare, shortness of breath dyspnea",Pulmonology
+"productive cough with yellow phlegm, bronchial wheezing sound",Pulmonology
+"productive cough with yellow phlegm, bronchial wheezing sound, pleuritic chest pain on deep breath",Pulmonology
+"productive cough with yellow phlegm, pleuritic chest pain on deep breath, copd breathing difficulty",Pulmonology
+"bronchial wheezing sound, asthma breathlessness flare",Pulmonology
+"bronchial wheezing sound, asthma breathlessness flare, shortness of breath dyspnea",Pulmonology
+"bronchial wheezing sound, shortness of breath dyspnea, pneumonia with purulent sputum",Pulmonology
+"asthma breathlessness flare, pleuritic chest pain on deep breath",Pulmonology
+"asthma breathlessness flare, pleuritic chest pain on deep breath, copd breathing difficulty",Pulmonology
+"asthma breathlessness flare, copd breathing difficulty, nighttime coughing fits",Pulmonology
+"pleuritic chest pain on deep breath, shortness of breath dyspnea",Pulmonology
+"pleuritic chest pain on deep breath, shortness of breath dyspnea, pneumonia with purulent sputum",Pulmonology
+"pleuritic chest pain on deep breath, pneumonia with purulent sputum, heavy chest congestion and mucus",Pulmonology
+"shortness of breath dyspnea, copd breathing difficulty",Pulmonology
+"shortness of breath dyspnea, copd breathing difficulty, nighttime coughing fits",Pulmonology
+"shortness of breath dyspnea, nighttime coughing fits, bronchitis coughing spasms",Pulmonology
+"copd breathing difficulty, pneumonia with purulent sputum",Pulmonology
+"copd breathing difficulty, pneumonia with purulent sputum, heavy chest congestion and mucus",Pulmonology
+"copd breathing difficulty, heavy chest congestion and mucus, sleep apnea heavy snoring gasping",Pulmonology
+"pneumonia with purulent sputum, nighttime coughing fits",Pulmonology
+"pneumonia with purulent sputum, nighttime coughing fits, bronchitis coughing spasms",Pulmonology
+"pneumonia with purulent sputum, bronchitis coughing spasms, chronic deep cough",Pulmonology
+"nighttime coughing fits, heavy chest congestion and mucus",Pulmonology
+"nighttime coughing fits, heavy chest congestion and mucus, sleep apnea heavy snoring gasping",Pulmonology
+"nighttime coughing fits, sleep apnea heavy snoring gasping, productive cough with yellow phlegm",Pulmonology
+"heavy chest congestion and mucus, bronchitis coughing spasms",Pulmonology
+"heavy chest congestion and mucus, bronchitis coughing spasms, chronic deep cough",Pulmonology
+"heavy chest congestion and mucus, chronic deep cough, bronchial wheezing sound",Pulmonology
+"bronchitis coughing spasms, sleep apnea heavy snoring gasping",Pulmonology
+"bronchitis coughing spasms, sleep apnea heavy snoring gasping, productive cough with yellow phlegm",Pulmonology
+"bronchitis coughing spasms, productive cough with yellow phlegm, asthma breathlessness flare",Pulmonology
+"sleep apnea heavy snoring gasping, chronic deep cough",Pulmonology
+"sleep apnea heavy snoring gasping, chronic deep cough, bronchial wheezing sound",Pulmonology
+"sleep apnea heavy snoring gasping, bronchial wheezing sound, pleuritic chest pain on deep breath",Pulmonology

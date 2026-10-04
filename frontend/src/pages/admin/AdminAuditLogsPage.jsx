@@ -2,16 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { api } from '../../services/api.js';
 import { useAppStore } from '../../store/appStore.js';
 import {
-  FileSearch,
   ShieldCheck,
   RefreshCw,
-  Lock,
   Search,
-  Filter,
-  Clock,
-  UserCheck,
-  Globe,
-  AlertTriangle,
 } from 'lucide-react';
 
 export const AdminAuditLogsPage = () => {

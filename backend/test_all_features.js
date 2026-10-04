@@ -90,7 +90,9 @@ async function runTests() {
     console.log(
       '\n[FR-09 & FR-10] Testing Digital Prescriptions with NMC Reg & Diagnostic Tests...'
     );
-    const rx = inMemoryStore.prescriptions[0];
+    const rx =
+      inMemoryStore.prescriptions.find(p => p.id === 'rx-seed-1') ||
+      inMemoryStore.prescriptions[0];
     assert(
       rx && rx.registrationNumber && rx.qrVerificationCode,
       'Prescription has NMC reg number and QR code'
@@ -169,6 +171,136 @@ async function runTests() {
         Array.isArray(exportData.prescriptions),
       'DPDP full data export validated'
     );
+
+    // Phase 1: MongoDB & Mongoose Schemas Verification
+    console.log('\n[Phase 1] Testing MongoDB & Mongoose Schema Architecture...');
+    const {
+      User,
+      Doctor,
+      DoctorProfile,
+      Department,
+      Appointment,
+      Prescription,
+      HealthRecord,
+      Medicine,
+      MedicineSchedule,
+      DoseLog,
+      AuditLog,
+      ChatHistory,
+      SymptomCheck,
+      Notification,
+      SystemSettings,
+    } = await import('./src/models/schemas.js');
+
+    assert(
+      User && Doctor && DoctorProfile && Department && Appointment && Prescription,
+      'Core clinical Mongoose models exported (User, Doctor, DoctorProfile, Department, Appointment, Prescription)'
+    );
+    assert(
+      HealthRecord && Medicine && MedicineSchedule && DoseLog && AuditLog,
+      'Vault, Medication, DoseLog, and AuditLog Mongoose models exported'
+    );
+    assert(
+      ChatHistory && SymptomCheck && Notification && SystemSettings,
+      'AI conversation, SymptomCheck, Notification, and SystemSettings models exported'
+    );
+
+    // Validate Schema compilation with sample documents
+    const testUser = new User({
+      id: 'test-usr-1',
+      name: 'Test Aarav',
+      email: 'aarav.test@mediguide.com',
+      password: 'sample_hash_pwd',
+      role: 'patient',
+    });
+    const testUserValidation = testUser.validateSync();
+    assert(!testUserValidation, 'User Mongoose model validates correctly');
+
+    const testDoctor = new Doctor({
+      id: 'test-doc-1',
+      name: 'Dr. Test',
+      email: 'dr.test@mediguide.com',
+      specialization: 'Cardiology',
+      department: 'Cardiology',
+      registrationNumber: 'NMC-2026-999999',
+    });
+    const testDocValidation = testDoctor.validateSync();
+    assert(!testDocValidation, 'DoctorProfile Mongoose model validates correctly');
+
+    const testAppointment = new Appointment({
+      id: 'test-apt-1',
+      patientId: 'test-usr-1',
+      patientName: 'Test Aarav',
+      doctorId: 'test-doc-1',
+      doctorName: 'Dr. Test',
+      department: 'Cardiology',
+      date: '2026-10-10',
+      timeSlot: '10:00 AM',
+    });
+    const testAptValidation = testAppointment.validateSync();
+    assert(!testAptValidation, 'Appointment Mongoose model validates correctly');
+
+    const { connectDB, isDbConnected } = await import('./src/config/db.js');
+    assert(typeof connectDB === 'function' && typeof isDbConnected === 'function', 'Database connection module exports connectDB & isDbConnected');
+
+    // Phase 3: ML Triage Evaluation & Safety Guardrails
+    console.log('\n[Phase 3] Testing ML Triage Safety Guardrails & Explainability...');
+    const { detectEmergencyRedFlags, analyzeSymptoms } = await import('./src/services/aiService.js');
+
+    // 1. Red-flag pattern matcher
+    const chestPainCheck = detectEmergencyRedFlags(['severe crushing chest pain', 'sweating'], 'Severe');
+    assert(chestPainCheck.isTriggered, 'Emergency red-flag detected for acute chest pain');
+    assert(chestPainCheck.matchedKeywords.includes('chest pain'), 'Matched keywords include chest pain');
+    assert(chestPainCheck.emergencyContacts.national === '112', 'Emergency contacts include 112');
+
+    const strokeCheck = detectEmergencyRedFlags(['sudden slurred speech', 'facial droop'], 'Moderate');
+    assert(strokeCheck.isTriggered, 'Emergency red-flag detected for stroke symptoms');
+
+    const routineCheck = detectEmergencyRedFlags(['mild dry skin and itching'], 'Mild');
+    assert(!routineCheck.isTriggered, 'Non-emergency presentation correctly identified as routine');
+
+    // 2. analyzeSymptoms with Emergency Presentation
+    const emergencyTriageResult = await analyzeSymptoms(
+      'test-usr-1',
+      ['severe chest pain radiating to left arm', 'profuse sweating'],
+      'Severe',
+      '1 hour',
+      'Chest',
+      'Sudden onset while resting'
+    );
+    assert(emergencyTriageResult.redFlagDetected === true, 'Emergency triage sets redFlagDetected to true');
+    assert(emergencyTriageResult.isEmergency === true, 'Emergency triage sets isEmergency to true');
+    assert(emergencyTriageResult.urgencyLevel === 'High / Seek Immediate Care', 'Emergency urgencyLevel elevated to High');
+    assert(emergencyTriageResult.emergencyContacts && emergencyTriageResult.emergencyContacts.national === '112', 'Emergency contacts returned in triage payload');
+    assert(emergencyTriageResult.contributingFactors.length > 0, 'Contributing factors returned for explainability');
+
+    // 3. analyzeSymptoms with Routine Presentation
+    const routineTriageResult = await analyzeSymptoms(
+      'test-usr-1',
+      ['dry itchy skin rash with scales'],
+      'Mild',
+      '5 days',
+      'Arms',
+      'None'
+    );
+    assert(routineTriageResult.redFlagDetected === false, 'Routine triage sets redFlagDetected to false');
+    assert(routineTriageResult.recommendedDepartment === 'Dermatology', 'Routine skin symptoms route to Dermatology');
+    assert(routineTriageResult.contributingFactors.length > 0, 'Routine triage includes contributing factors for explainability');
+    assert(typeof routineTriageResult.explanation === 'string' && routineTriageResult.explanation.length > 10, 'Routine triage includes explanatory text');
+
+    // 4. Verify evaluation metrics and confusion matrix exist
+    const fs = await import('fs');
+    const path = await import('path');
+    const { fileURLToPath } = await import('url');
+    const __dirname = path.dirname(fileURLToPath(import.meta.url));
+    const rootDir = path.resolve(__dirname, '..');
+    const metricsPath = path.join(rootDir, 'ml-service', 'model', 'evaluation_metrics.json');
+    const cmPath = path.join(rootDir, 'ml-service', 'model', 'confusion_matrix.png');
+    assert(fs.existsSync(metricsPath), 'ML evaluation metrics report exists');
+    assert(fs.existsSync(cmPath), 'ML confusion matrix visualization exists');
+    const metricsContent = JSON.parse(fs.readFileSync(metricsPath, 'utf8'));
+    assert(metricsContent.overall_metrics && metricsContent.overall_metrics.accuracy >= 0.90, `ML model accuracy >= 90% (achieved: ${(metricsContent.overall_metrics.accuracy * 100).toFixed(1)}%)`);
+    assert(metricsContent.red_flag_safety_benchmark && metricsContent.red_flag_safety_benchmark.emergency_recall_percentage === 100, `Red-flag emergency recall is 100% (achieved: ${metricsContent.red_flag_safety_benchmark.emergency_recall_percentage}%)`);
 
     console.log('\n===============================================================');
     console.log(`📊 TEST RESULTS: ${passed} PASSED, ${failed} FAILED`);

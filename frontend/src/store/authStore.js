@@ -19,10 +19,12 @@ export const useAuthStore = create(set => ({
         set({ user: res.user, isAuthenticated: true, isLoading: false });
       } else {
         localStorage.removeItem('mediguide_token');
+        localStorage.removeItem('mediguide_refresh_token');
         set({ user: null, token: null, isAuthenticated: false, isLoading: false });
       }
     } catch {
       localStorage.removeItem('mediguide_token');
+      localStorage.removeItem('mediguide_refresh_token');
       set({ user: null, token: null, isAuthenticated: false, isLoading: false });
     }
   },
@@ -32,6 +34,9 @@ export const useAuthStore = create(set => ({
       const res = await api.login(email, password);
       if (res.success && res.token) {
         localStorage.setItem('mediguide_token', res.token);
+        if (res.refreshToken) {
+          localStorage.setItem('mediguide_refresh_token', res.refreshToken);
+        }
         set({ user: res.user, token: res.token, isAuthenticated: true, isLoading: false });
         return true;
       }
@@ -47,6 +52,9 @@ export const useAuthStore = create(set => ({
       const res = await api.demoLogin(role);
       if (res.success && res.token) {
         localStorage.setItem('mediguide_token', res.token);
+        if (res.refreshToken) {
+          localStorage.setItem('mediguide_refresh_token', res.refreshToken);
+        }
         set({ user: res.user, token: res.token, isAuthenticated: true, isLoading: false });
         return true;
       }
@@ -62,6 +70,9 @@ export const useAuthStore = create(set => ({
       const res = await api.register(userData);
       if (res.success && res.token) {
         localStorage.setItem('mediguide_token', res.token);
+        if (res.refreshToken) {
+          localStorage.setItem('mediguide_refresh_token', res.refreshToken);
+        }
         set({ user: res.user, token: res.token, isAuthenticated: true, isLoading: false });
         return true;
       }
@@ -72,7 +83,9 @@ export const useAuthStore = create(set => ({
     }
   },
   logout: () => {
+    api.logout().catch(() => {});
     localStorage.removeItem('mediguide_token');
+    localStorage.removeItem('mediguide_refresh_token');
     set({ user: null, token: null, isAuthenticated: false, error: null });
   },
   updateUser: async updates => {

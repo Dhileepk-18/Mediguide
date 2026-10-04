@@ -7,8 +7,6 @@ import {
   Edit2,
   Trash2,
   Stethoscope,
-  Building2,
-  CheckCircle2,
   X,
   Search,
 } from 'lucide-react';

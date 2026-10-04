@@ -2,17 +2,12 @@ import React, { useState } from 'react';
 import { useAuthStore } from '../../store/authStore.js';
 import { useAppStore } from '../../store/appStore.js';
 import {
-  User,
   ShieldCheck,
   Bell,
   Link2,
   Sliders,
-  Check,
   Save,
-  Phone,
-  Lock,
   Download,
-  AlertCircle,
 } from 'lucide-react';
 
 export const PatientProfilePage = () => {

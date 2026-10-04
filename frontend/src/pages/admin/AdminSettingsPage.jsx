@@ -9,10 +9,6 @@ import {
   ShieldCheck,
   Save,
   CheckCircle2,
-  Sparkles,
-  AlertTriangle,
-  Layers,
-  Server,
 } from 'lucide-react';
 
 export const AdminSettingsPage = () => {

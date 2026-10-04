@@ -5,18 +5,13 @@ import { Modal } from '../../components/common/Modal.jsx';
 import {
   Pill,
   Plus,
-  Clock,
   Check,
   Sun,
   Sunset,
   Moon,
   Trash2,
   Edit2,
-  CheckCircle2,
-  Calendar,
-  AlertCircle,
   Bell,
-  Settings,
 } from 'lucide-react';
 
 export const MedicinesPage = () => {
@@ -164,16 +159,53 @@ export const MedicinesPage = () => {
     }
   };
 
-  // Inline morphing "Mark Taken" (Section 7.4)
+  // Resilient dose check supporting both adherenceLogs map and adherenceHistory array
+  const isDoseTaken = (med, date, timeSlot) => {
+    if (!med) return false;
+    if (med.adherenceLogs?.[date]?.[timeSlot] !== undefined) {
+      return Boolean(med.adherenceLogs[date][timeSlot]);
+    }
+    if (Array.isArray(med.adherenceHistory)) {
+      const entry = med.adherenceHistory.find(a => a.date === date && a.timeSlot === timeSlot);
+      if (entry) return Boolean(entry.taken);
+    }
+    return false;
+  };
+
+  // Inline morphing "Mark Taken" (Section 7.4) with optimistic update
   const handleToggleDose = async (medId, timeSlot) => {
     const med = medicines.find(m => m.id === medId);
     if (!med) return;
-    const currentStatus = !!(med.adherenceLogs?.[today]?.[timeSlot]);
+    const currentStatus = isDoseTaken(med, today, timeSlot);
     const newStatus = !currentStatus;
+
+    // Optimistic UI state update
+    setMedicines(prev =>
+      prev.map(m => {
+        if (m.id !== medId) return m;
+        const updatedLogs = { ...(m.adherenceLogs || {}) };
+        if (!updatedLogs[today]) updatedLogs[today] = {};
+        updatedLogs[today][timeSlot] = newStatus;
+
+        const updatedHistory = [...(m.adherenceHistory || [])];
+        const existingIdx = updatedHistory.findIndex(a => a.date === today && a.timeSlot === timeSlot);
+        if (existingIdx >= 0) {
+          updatedHistory[existingIdx] = { ...updatedHistory[existingIdx], taken: newStatus };
+        } else {
+          updatedHistory.push({
+            date: today,
+            timeSlot,
+            taken: newStatus,
+            loggedAt: new Date().toISOString(),
+          });
+        }
+        return { ...m, adherenceLogs: updatedLogs, adherenceHistory: updatedHistory };
+      })
+    );
 
     try {
       const res = await api.logMedicineAdherence(medId, today, timeSlot, newStatus);
-      if (res.success) {
+      if (res.success && res.medicine) {
         setMedicines(prev => prev.map(m => (m.id === medId ? res.medicine : m)));
         addToast({
           type: newStatus ? 'success' : 'info',
@@ -182,6 +214,7 @@ export const MedicinesPage = () => {
         });
       }
     } catch {
+      loadMedicines();
       addToast({
         type: 'error',
         title: 'Update failed',
@@ -200,8 +233,11 @@ export const MedicinesPage = () => {
 
   // Adherence Calculations for SVG Ring
   const totalLoggedDoses = medicines.reduce((acc, med) => {
-    const logs = med.adherenceLogs?.[today] || {};
-    return acc + Object.values(logs).filter(Boolean).length;
+    let takenCount = 0;
+    ['Morning', 'Afternoon', 'Evening'].forEach(slot => {
+      if (isDoseTaken(med, today, slot)) takenCount++;
+    });
+    return acc + takenCount;
   }, 0);
   const totalExpectedDoses = Math.max(1, medicines.length);
   const adherencePercent = Math.min(100, Math.round((totalLoggedDoses / totalExpectedDoses) * 100)) || 85;
@@ -261,7 +297,7 @@ export const MedicinesPage = () => {
               <div className="divide-y divide-[rgba(6,16,23,0.06)]">
                 {morningMeds.length > 0 ? (
                   morningMeds.map(med => {
-                    const isTaken = !!(med.adherenceLogs?.[today]?.['Morning']);
+                    const isTaken = isDoseTaken(med, today, 'Morning');
                     return (
                       <div key={med.id} className="py-3 flex items-center justify-between gap-4">
                         <div className="flex items-center gap-3 min-w-0">
@@ -322,7 +358,7 @@ export const MedicinesPage = () => {
               <div className="divide-y divide-[rgba(6,16,23,0.06)]">
                 {afternoonMeds.length > 0 ? (
                   afternoonMeds.map(med => {
-                    const isTaken = !!(med.adherenceLogs?.[today]?.['Afternoon']);
+                    const isTaken = isDoseTaken(med, today, 'Afternoon');
                     return (
                       <div key={med.id} className="py-3 flex items-center justify-between gap-4">
                         <div className="flex items-center gap-3 min-w-0">
@@ -382,7 +418,7 @@ export const MedicinesPage = () => {
               <div className="divide-y divide-[rgba(6,16,23,0.06)]">
                 {eveningMeds.length > 0 ? (
                   eveningMeds.map(med => {
-                    const isTaken = !!(med.adherenceLogs?.[today]?.['Evening']);
+                    const isTaken = isDoseTaken(med, today, 'Evening');
                     return (
                       <div key={med.id} className="py-3 flex items-center justify-between gap-4">
                         <div className="flex items-center gap-3 min-w-0">

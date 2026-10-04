@@ -8,11 +8,7 @@ import {
   Trash2,
   Printer,
   Pill,
-  Calendar,
-  Building2,
   UserCheck,
-  QrCode,
-  CheckCircle2,
   X,
 } from 'lucide-react';
 

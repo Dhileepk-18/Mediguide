@@ -1,6 +1,7 @@
 {
   "model": "Random Forest Classifier",
-  "n_estimators": 100,
+  "vectorizer": "TfidfVectorizer (sublinear_tf=True, ngram_range=(1,2))",
+  "n_estimators": 200,
   "classes": [
     "Cardiology",
     "Dermatology",
@@ -12,10 +13,270 @@
     "Pediatrics",
     "Pulmonology"
   ],
-  "accuracy": 0.35,
-  "precision": 0.3125,
-  "recall": 0.35,
-  "f1Score": 0.3119,
-  "totalSamples": 99,
-  "evaluatedAt": "2026-09-03T10:58:29.838681"
+  "overall_metrics": {
+    "accuracy": 0.9483,
+    "macro_precision": 0.9647,
+    "macro_recall": 0.9495,
+    "macro_f1": 0.9536,
+    "weighted_precision": 0.9572,
+    "weighted_recall": 0.9483,
+    "weighted_f1": 0.9487,
+    "total_samples": 576,
+    "test_samples": 116
+  },
+  "per_department_metrics": {
+    "Cardiology": {
+      "precision": 0.8824,
+      "recall": 1.0,
+      "f1_score": 0.9375,
+      "support": 15
+    },
+    "Dermatology": {
+      "precision": 0.8,
+      "recall": 1.0,
+      "f1_score": 0.8889,
+      "support": 16
+    },
+    "ENT": {
+      "precision": 1.0,
+      "recall": 0.8,
+      "f1_score": 0.8889,
+      "support": 15
+    },
+    "Gastroenterology": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 13
+    },
+    "General Medicine": {
+      "precision": 1.0,
+      "recall": 0.9286,
+      "f1_score": 0.963,
+      "support": 14
+    },
+    "Neurology": {
+      "precision": 1.0,
+      "recall": 0.9167,
+      "f1_score": 0.9565,
+      "support": 12
+    },
+    "Orthopedics": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 11
+    },
+    "Pediatrics": {
+      "precision": 1.0,
+      "recall": 0.9,
+      "f1_score": 0.9474,
+      "support": 10
+    },
+    "Pulmonology": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 10
+    }
+  },
+  "red_flag_safety_benchmark": {
+    "total_test_cases": 10,
+    "detected_as_emergency": 10,
+    "emergency_recall_percentage": 100.0,
+    "test_results": [
+      {
+        "test_case_id": 1,
+        "category": "Acute Myocardial Infarction / Cardiology",
+        "symptoms": "severe crushing chest pain radiating to left arm and jaw, profuse sweating",
+        "safety_rule_triggered": true,
+        "model_predicted_department": "Cardiology",
+        "model_confidence": 60,
+        "handled_as_emergency": true
+      },
+      {
+        "test_case_id": 2,
+        "category": "Acute Ischemic Stroke / Neurology",
+        "symptoms": "sudden slurred speech, acute facial droop on right side, right arm weakness",
+        "safety_rule_triggered": true,
+        "model_predicted_department": "Neurology",
+        "model_confidence": 69,
+        "handled_as_emergency": true
+      },
+      {
+        "test_case_id": 3,
+        "category": "Respiratory Failure / Acute Asthma",
+        "symptoms": "acute breathlessness gasping for air, severe chest tightness, lips turning blue cyanosis",
+        "safety_rule_triggered": true,
+        "model_predicted_department": "Cardiology",
+        "model_confidence": 70,
+        "handled_as_emergency": true
+      },
+      {
+        "test_case_id": 4,
+        "category": "Syncope / Cardiac Arrest",
+        "symptoms": "sudden loss of consciousness, unresponsive for 2 minutes, faint pulse",
+        "safety_rule_triggered": true,
+        "model_predicted_department": "Cardiology",
+        "model_confidence": 56,
+        "handled_as_emergency": true
+      },
+      {
+        "test_case_id": 5,
+        "category": "Severe Hemorrhage / Trauma",
+        "symptoms": "severe arterial uncontrolled bleeding from deep laceration, dizziness",
+        "safety_rule_triggered": true,
+        "model_predicted_department": "Pulmonology",
+        "model_confidence": 30,
+        "handled_as_emergency": true
+      },
+      {
+        "test_case_id": 6,
+        "category": "Anaphylaxis / Airway Compromise",
+        "symptoms": "acute anaphylaxis, severe tongue swelling, throat closing, difficulty swallowing",
+        "safety_rule_triggered": true,
+        "model_predicted_department": "ENT",
+        "model_confidence": 62,
+        "handled_as_emergency": true
+      },
+      {
+        "test_case_id": 7,
+        "category": "Acute Coronary Syndrome",
+        "symptoms": "crushing retrosternal chest pain with nausea, shortness of breath lying flat",
+        "safety_rule_triggered": true,
+        "model_predicted_department": "Cardiology",
+        "model_confidence": 74,
+        "handled_as_emergency": true
+      },
+      {
+        "test_case_id": 8,
+        "category": "Subarachnoid Hemorrhage / Meningitis",
+        "symptoms": "sudden onset thunderclap headache, stiff neck, altered mental status",
+        "safety_rule_triggered": true,
+        "model_predicted_department": "Neurology",
+        "model_confidence": 31,
+        "handled_as_emergency": true
+      },
+      {
+        "test_case_id": 9,
+        "category": "Pulmonary Hemorrhage",
+        "symptoms": "massive hemoptysis coughing up large volume of bright red blood",
+        "safety_rule_triggered": true,
+        "model_predicted_department": "Pulmonology",
+        "model_confidence": 26,
+        "handled_as_emergency": true
+      },
+      {
+        "test_case_id": 10,
+        "category": "Status Epilepticus",
+        "symptoms": "continuous tonic clonic epileptic seizure lasting over five minutes without recovery",
+        "safety_rule_triggered": true,
+        "model_predicted_department": "Neurology",
+        "model_confidence": 52,
+        "handled_as_emergency": true
+      }
+    ]
+  },
+  "confusion_matrix": [
+    [
+      15,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      16,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      2,
+      12,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      13,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      0,
+      0,
+      13,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      0,
+      0,
+      11,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      11,
+      0,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      9,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      10
+    ]
+  ],
+  "evaluated_at": "2026-10-03T19:19:55.533910"
 }

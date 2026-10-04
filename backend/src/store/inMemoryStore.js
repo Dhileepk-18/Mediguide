@@ -894,6 +894,45 @@ export class DataStore {
     this.persist();
     return doc;
   }
+  approveDoctor(id, actorUser) {
+    const doc = this.findDoctorById(id);
+    if (!doc) return null;
+    doc.verificationStatus = 'verified';
+    doc.isAvailable = true;
+    this.persist();
+
+    this.addAuditLog({
+      eventType: 'DOCTOR_VERIFIED',
+      actorId: actorUser?.id || 'admin',
+      actorEmail: actorUser?.email || 'admin@mediguide.com',
+      actorRole: 'admin',
+      details: `Administrator approved clinical credentials for ${doc.name} (Reg #${doc.registrationNumber || 'NMC-Verified'}).`,
+    });
+    return doc;
+  }
+  suspendDoctor(id, actorUser) {
+    const doc = this.findDoctorById(id);
+    if (!doc) return null;
+    doc.verificationStatus = doc.verificationStatus === 'suspended' ? 'verified' : 'suspended';
+    doc.isAvailable = doc.verificationStatus === 'verified';
+    this.persist();
+
+    this.addAuditLog({
+      eventType: 'DOCTOR_SUSPENDED_TOGGLE',
+      actorId: actorUser?.id || 'admin',
+      actorEmail: actorUser?.email || 'admin@mediguide.com',
+      actorRole: 'admin',
+      details: `Administrator toggled doctor ${doc.name} status to ${doc.verificationStatus}.`,
+    });
+    return doc;
+  }
+  toggleDoctorAvailability(id) {
+    const doc = this.findDoctorById(id);
+    if (!doc) return null;
+    doc.isAvailable = !doc.isAvailable;
+    this.persist();
+    return doc;
+  }
 
   // --- Department methods ---
   getDepartments() {
@@ -949,23 +988,66 @@ export class DataStore {
   }
 
   // --- Medicine methods ---
+  formatMedicine(med) {
+    if (!med) return null;
+    const history = Array.isArray(med.adherenceHistory) ? med.adherenceHistory : [];
+    const logs = {};
+    for (const item of history) {
+      if (!logs[item.date]) logs[item.date] = {};
+      logs[item.date][item.timeSlot] = Boolean(item.taken);
+    }
+    return {
+      ...med,
+      active: med.isActive !== false,
+      adherenceHistory: history,
+      adherenceLogs: logs,
+    };
+  }
   getMedicinesByPatientId(patientId) {
-    return this.medicines.filter(m => m.patientId === patientId);
+    return this.medicines
+      .filter(m => m.patientId === patientId)
+      .map(m => this.formatMedicine(m));
   }
   findMedicineById(id) {
-    return this.medicines.find(m => m.id === id);
+    const med = this.medicines.find(m => m.id === id);
+    return med ? this.formatMedicine(med) : undefined;
   }
   addMedicine(med) {
     this.medicines.unshift(med);
     this.persist();
-    return med;
+    return this.formatMedicine(med);
   }
   updateMedicine(id, updates) {
-    const med = this.findMedicineById(id);
+    const med = this.medicines.find(m => m.id === id);
     if (!med) return undefined;
     Object.assign(med, updates);
     this.persist();
-    return med;
+    return this.formatMedicine(med);
+  }
+  logMedicineAdherence(id, { date, timeSlot, taken }) {
+    const med = this.medicines.find(m => m.id === id);
+    if (!med) return null;
+    if (!Array.isArray(med.adherenceHistory)) {
+      med.adherenceHistory = [];
+    }
+    const targetDate = date || new Date().toISOString().split('T')[0];
+    const targetSlot = timeSlot || '08:00 AM';
+    const existingIndex = med.adherenceHistory.findIndex(
+      a => a.date === targetDate && a.timeSlot === targetSlot
+    );
+    if (existingIndex >= 0) {
+      med.adherenceHistory[existingIndex].taken = Boolean(taken);
+      med.adherenceHistory[existingIndex].loggedAt = new Date().toISOString();
+    } else {
+      med.adherenceHistory.push({
+        date: targetDate,
+        timeSlot: targetSlot,
+        taken: Boolean(taken),
+        loggedAt: new Date().toISOString(),
+      });
+    }
+    this.persist();
+    return this.formatMedicine(med);
   }
   deleteMedicine(id) {
     const index = this.medicines.findIndex(m => m.id === id);

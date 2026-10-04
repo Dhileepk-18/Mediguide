@@ -17,11 +17,9 @@ import {
   Bell,
   CheckCheck,
   PhoneCall,
-  ShieldAlert,
   FileText,
   Pill,
   Stethoscope,
-  ExternalLink,
   Lock,
 } from 'lucide-react';
 

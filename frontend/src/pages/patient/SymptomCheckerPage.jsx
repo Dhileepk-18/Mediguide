@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { api } from '../../services/api.js';
 import { useAppStore } from '../../store/appStore.js';
 import { AiDisclaimerBanner } from '../../components/common/AiDisclaimerBanner.jsx';
@@ -8,15 +8,12 @@ import {
   ShieldAlert,
   ArrowRight,
   ArrowLeft,
-  Calendar,
-  Plus,
-  X,
   Check,
   Stethoscope,
   Bot,
-  AlertTriangle,
   RotateCcw,
-  CheckCircle2,
+  Phone,
+  Info,
 } from 'lucide-react';
 
 const COMMON_SYMPTOMS = [
@@ -44,7 +41,6 @@ const RED_FLAG_SYMPTOMS = [
 
 export const SymptomCheckerPage = () => {
   const { addToast } = useAppStore();
-  const navigate = useNavigate();
 
   // 4 Steps: 1. Symptoms, 2. Details, 3. Severity, 4. Guidance
   const [currentStep, setCurrentStep] = useState(1);
@@ -102,12 +98,13 @@ export const SymptomCheckerPage = () => {
 
     setIsAnalyzing(true);
     try {
-      const response = await api.analyzeSymptoms(
-        selectedSymptoms,
-        duration,
+      const response = await api.analyzeSymptoms({
+        symptoms: selectedSymptoms,
         severity,
-        `${ageGroup}; Known conditions: ${existingConditions}`
-      );
+        duration,
+        bodyArea: ageGroup,
+        additionalNotes: `Known conditions: ${existingConditions}`,
+      });
 
       if (response && response.success) {
         setGuidanceResult(response.result || response.data);
@@ -452,9 +449,22 @@ export const SymptomCheckerPage = () => {
         <div className="p-6 sm:p-8 rounded-[20px] bg-white border border-[rgba(6,16,23,0.10)] space-y-6">
           {/* Header Badge */}
           <div className="flex items-center justify-between">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0B3441]/10 text-[#0B3441] text-xs font-semibold">
-              <Stethoscope className="w-3.5 h-3.5" />
-              <span>Suggested Department — Not a Medical Diagnosis</span>
+            <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold ${
+              guidanceResult.redFlagDetected || guidanceResult.isEmergency
+                ? 'bg-[#B83A3A]/10 text-[#B83A3A]'
+                : 'bg-[#0B3441]/10 text-[#0B3441]'
+            }`}>
+              {guidanceResult.redFlagDetected || guidanceResult.isEmergency ? (
+                <>
+                  <ShieldAlert className="w-3.5 h-3.5 text-[#B83A3A]" />
+                  <span>URGENT SAFETY PROTOCOL ACTIVATED</span>
+                </>
+              ) : (
+                <>
+                  <Stethoscope className="w-3.5 h-3.5" />
+                  <span>Suggested Department — Not a Medical Diagnosis</span>
+                </>
+              )}
             </div>
             <button
               onClick={resetChecker}
@@ -465,6 +475,44 @@ export const SymptomCheckerPage = () => {
             </button>
           </div>
 
+          {/* Emergency Alert Banner if red flag detected */}
+          {(guidanceResult.redFlagDetected || guidanceResult.isEmergency) && (
+            <div className="p-5 rounded-2xl bg-[#B83A3A]/10 border-2 border-[#B83A3A]/30 space-y-3">
+              <div className="flex items-center gap-2 text-[#B83A3A]">
+                <ShieldAlert className="w-5 h-5 shrink-0" />
+                <h3 className="text-sm font-bold tracking-tight uppercase">
+                  Acute Red-Flag Indicators Detected
+                </h3>
+              </div>
+              <p className="text-xs text-[#061017] leading-relaxed">
+                Your reported symptoms indicate potentially time-critical cardiovascular, respiratory, or neurological signs. Do not wait for standard outpatient clinic scheduling. Contact emergency responders immediately.
+              </p>
+              <div className="flex flex-wrap gap-2 pt-1">
+                <a
+                  href="tel:112"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#B83A3A] text-white text-xs font-semibold hover:bg-[#a63333] transition-colors"
+                >
+                  <Phone className="w-3.5 h-3.5" />
+                  <span>Call 112 (National Emergency)</span>
+                </a>
+                <a
+                  href="tel:108"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#0B3441] text-white text-xs font-semibold hover:bg-[#08252E] transition-colors"
+                >
+                  <Phone className="w-3.5 h-3.5" />
+                  <span>Call 108 (Ambulance)</span>
+                </a>
+                <Link
+                  to="/emergency"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-[#B83A3A]/40 text-[#B83A3A] bg-white text-xs font-semibold hover:bg-[#B83A3A]/5 transition-colors"
+                >
+                  <span>Open Emergency Mode</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+          )}
+
           {/* Primary Recommendation Panel */}
           <div className="p-6 rounded-[18px] bg-[#FAFBFB] border border-[rgba(6,16,23,0.10)] space-y-3">
             <span className="text-xs uppercase font-semibold tracking-wider text-[#5A6C77]">
@@ -474,7 +522,11 @@ export const SymptomCheckerPage = () => {
               <h2 className="text-3xl font-semibold font-serif text-[#0B3441] tracking-tight">
                 {guidanceResult.recommendedDepartment || 'General Medicine'}
               </h2>
-              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-[#2A7A5B]/10 text-[#2A7A5B]">
+              <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
+                guidanceResult.redFlagDetected || guidanceResult.isEmergency
+                  ? 'bg-[#B83A3A]/10 text-[#B83A3A]'
+                  : 'bg-[#2A7A5B]/10 text-[#2A7A5B]'
+              }`}>
                 {guidanceResult.confidence || 82}% Confidence
               </span>
             </div>
@@ -483,6 +535,31 @@ export const SymptomCheckerPage = () => {
               {guidanceResult.preliminaryGuidance ||
                 'Based on your reported symptoms, clinical consultation with a physician in this department is recommended for examination.'}
             </p>
+
+            {/* Explainable AI / Contributing Symptoms */}
+            {guidanceResult.contributingFactors && guidanceResult.contributingFactors.length > 0 && (
+              <div className="pt-3 border-t border-[rgba(6,16,23,0.08)] space-y-2">
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-[#0B3441]">
+                  <Info className="w-3.5 h-3.5 text-[#39679B]" />
+                  <span>Key Symptoms Driving This Recommendation:</span>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {guidanceResult.contributingFactors.map((factor, i) => (
+                    <span
+                      key={i}
+                      className="px-2.5 py-1 rounded-lg bg-white border border-[rgba(6,16,23,0.12)] text-xs font-medium text-[#061017] shadow-xs"
+                    >
+                      {factor}
+                    </span>
+                  ))}
+                </div>
+                {guidanceResult.explanation && (
+                  <p className="text-[11px] text-[#5A6C77] leading-relaxed">
+                    {guidanceResult.explanation}
+                  </p>
+                )}
+              </div>
+            )}
 
             {/* Alternatives if available */}
             {guidanceResult.alternativeDepartments && guidanceResult.alternativeDepartments.length > 0 && (

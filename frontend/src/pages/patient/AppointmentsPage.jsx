@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { api } from '../../services/api.js';
 import { useAuthStore } from '../../store/authStore.js';
 import { useAppStore } from '../../store/appStore.js';
@@ -10,15 +10,9 @@ import {
   Clock,
   Star,
   CheckCircle2,
-  Building2,
-  UserCheck,
-  Check,
   X,
   Video,
   RefreshCw,
-  AlertCircle,
-  Stethoscope,
-  Plus,
 } from 'lucide-react';
 
 export const AppointmentsPage = () => {

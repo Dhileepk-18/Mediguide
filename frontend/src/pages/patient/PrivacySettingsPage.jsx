@@ -9,12 +9,9 @@ import {
   Trash2,
   Lock,
   Eye,
-  FileText,
   CheckCircle2,
   AlertTriangle,
   ShieldAlert,
-  ExternalLink,
-  RefreshCw,
 } from 'lucide-react';
 
 export const PrivacySettingsPage = () => {

@@ -3,16 +3,9 @@ import { api } from '../../services/api.js';
 import { useAuthStore } from '../../store/authStore.js';
 import { useAppStore } from '../../store/appStore.js';
 import {
-  User,
   GraduationCap,
-  Building2,
   ShieldCheck,
-  Languages,
-  MapPin,
   Save,
-  CheckCircle2,
-  Stethoscope,
-  FileText,
 } from 'lucide-react';
 
 const INDIAN_STATES = [

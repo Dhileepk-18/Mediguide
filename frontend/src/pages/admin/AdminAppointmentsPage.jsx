@@ -4,14 +4,6 @@ import { useAppStore } from '../../store/appStore.js';
 import {
   Calendar,
   Search,
-  Clock,
-  User,
-  CheckCircle2,
-  X,
-  Filter,
-  Stethoscope,
-  Building2,
-  RefreshCw,
 } from 'lucide-react';
 
 export const AdminAppointmentsPage = () => {

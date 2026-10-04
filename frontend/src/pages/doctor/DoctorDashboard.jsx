@@ -5,14 +5,8 @@ import { useAuthStore } from '../../store/authStore.js';
 import { useAppStore } from '../../store/appStore.js';
 import {
   Plus,
-  ArrowRight,
   Stethoscope,
-  Clock,
-  Calendar,
   FileCheck2,
-  CheckCircle2,
-  XCircle,
-  Download,
 } from 'lucide-react';
 
 export const DoctorDashboard = () => {

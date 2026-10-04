@@ -7,12 +7,7 @@ import {
   User,
   Shield,
   ArrowRight,
-  Lock,
-  Mail,
-  Phone,
   Key,
-  ShieldCheck,
-  MapPin,
 } from 'lucide-react';
 
 const INDIAN_STATES = [

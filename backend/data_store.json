@@ -24,7 +24,8 @@
         "Mild Allergic Rhinitis"
       ],
       "emergencyContact": "Priya Sharma (Spouse) - +91 98765 12345",
-      "createdAt": "2026-08-23T13:26:35.228Z"
+      "createdAt": "2026-08-23T13:26:35.228Z",
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzci1wYXRpZW50LTEiLCJyb2xlIjoicGF0aWVudCIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzkxMTAxNTMzLCJleHAiOjE3OTE3MDYzMzN9.XtMyQE57sd6AVni51FmK-Y11WcOlVEIRzbi0X_FnLnA"
     },
     {
       "id": "usr-patient-2",
@@ -49,7 +50,8 @@
         "Hypothyroidism"
       ],
       "emergencyContact": "K. Nair (Father) - +91 98450 99887",
-      "createdAt": "2026-08-23T13:26:35.228Z"
+      "createdAt": "2026-08-23T13:26:35.228Z",
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzci1wYXRpZW50LTIiLCJyb2xlIjoicGF0aWVudCIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzkxMTAxNTMzLCJleHAiOjE3OTE3MDYzMzN9.OIAZ-VJFjfol_Y6nTMBsPISu4Bv0SZlsLEGAOfhNEVg"
     },
     {
       "id": "usr-doctor-1",
@@ -61,7 +63,8 @@
       "avatar": "https://images.unsplash.com/photo-1594824813590-7987e9140889?w=150&auto=format&fit=crop&q=80",
       "status": "active",
       "doctorId": "doc-1",
-      "createdAt": "2026-08-23T13:26:35.228Z"
+      "createdAt": "2026-08-23T13:26:35.228Z",
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzci1kb2N0b3ItMSIsInJvbGUiOiJkb2N0b3IiLCJ0b2tlblZlcnNpb24iOjAsImlhdCI6MTc5MTEwMTUzMywiZXhwIjoxNzkxNzA2MzMzfQ.a-WK8I6FlM0ECbavCYsDxkmSwjXafJPYC10aKv07sCc"
     },
     {
       "id": "usr-doctor-2",
@@ -96,7 +99,8 @@
       "phone": "+91 99000 88776",
       "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
       "status": "active",
-      "createdAt": "2026-08-23T13:26:35.228Z"
+      "createdAt": "2026-08-23T13:26:35.228Z",
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzci1hZG1pbi0xIiwicm9sZSI6ImFkbWluIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3OTExMDE1MzMsImV4cCI6MTc5MTcwNjMzM30.JL9CSE_to0y9pdKulQQomHVeQopD4f2m63g-AFp-ylI"
     },
     {
       "id": "usr-1787499684924",
@@ -118,6 +122,69 @@
       "allergies": [],
       "chronicConditions": [],
       "createdAt": "2026-08-23T15:41:24.924Z"
+    },
+    {
+      "id": "usr-unlinked-1791034941218",
+      "name": "Unlinked Patient",
+      "email": "unlinked.1791034941218@example.com",
+      "password": "$2b$10$mXIf6Gu.Xx/5UidR2rFj1eFtT.8Nbj2HQpsce8ikBot/zJueeiwZ.",
+      "role": "patient"
+    },
+    {
+      "id": "usr-unlinked-1791035046357",
+      "name": "Unlinked Patient",
+      "email": "unlinked.1791035046357@example.com",
+      "password": "$2b$10$mXIf6Gu.Xx/5UidR2rFj1eFtT.8Nbj2HQpsce8ikBot/zJueeiwZ.",
+      "role": "patient"
+    },
+    {
+      "id": "usr-unlinked-1791035059879",
+      "name": "Unlinked Patient",
+      "email": "unlinked.1791035059879@example.com",
+      "password": "$2b$10$mXIf6Gu.Xx/5UidR2rFj1eFtT.8Nbj2HQpsce8ikBot/zJueeiwZ.",
+      "role": "patient"
+    },
+    {
+      "id": "usr-unlinked-1791035094034",
+      "name": "Unlinked Patient",
+      "email": "unlinked.1791035094034@example.com",
+      "password": "$2b$10$mXIf6Gu.Xx/5UidR2rFj1eFtT.8Nbj2HQpsce8ikBot/zJueeiwZ.",
+      "role": "patient"
+    },
+    {
+      "id": "usr-unlinked-1791035574080",
+      "name": "Unlinked Patient",
+      "email": "unlinked.1791035574080@example.com",
+      "password": "$2b$10$mXIf6Gu.Xx/5UidR2rFj1eFtT.8Nbj2HQpsce8ikBot/zJueeiwZ.",
+      "role": "patient"
+    },
+    {
+      "id": "usr-unlinked-1791035705826",
+      "name": "Unlinked Patient",
+      "email": "unlinked.1791035705826@example.com",
+      "password": "$2b$10$mXIf6Gu.Xx/5UidR2rFj1eFtT.8Nbj2HQpsce8ikBot/zJueeiwZ.",
+      "role": "patient"
+    },
+    {
+      "id": "usr-unlinked-1791035744745",
+      "name": "Unlinked Patient",
+      "email": "unlinked.1791035744745@example.com",
+      "password": "$2b$10$mXIf6Gu.Xx/5UidR2rFj1eFtT.8Nbj2HQpsce8ikBot/zJueeiwZ.",
+      "role": "patient"
+    },
+    {
+      "id": "usr-unlinked-1791101321387",
+      "name": "Unlinked Patient",
+      "email": "unlinked.1791101321387@example.com",
+      "password": "$2b$10$mXIf6Gu.Xx/5UidR2rFj1eFtT.8Nbj2HQpsce8ikBot/zJueeiwZ.",
+      "role": "patient"
+    },
+    {
+      "id": "usr-unlinked-1791101533820",
+      "name": "Unlinked Patient",
+      "email": "unlinked.1791101533820@example.com",
+      "password": "$2b$10$mXIf6Gu.Xx/5UidR2rFj1eFtT.8Nbj2HQpsce8ikBot/zJueeiwZ.",
+      "role": "patient"
     }
   ],
   "doctors": [
@@ -536,6 +603,193 @@
   ],
   "appointments": [
     {
+      "id": "apt-test-1791101533829",
+      "patientId": "usr-patient-1",
+      "patientName": "Rahul Sharma",
+      "doctorId": "doc-cardio-1",
+      "doctorName": "Dr. Rajesh Venkat",
+      "date": "2026-10-15",
+      "timeSlot": "10:00 AM",
+      "status": "confirmed",
+      "reason": "Routine Cardiology Follow-up"
+    },
+    {
+      "id": "apt-patient-b-1791101533709",
+      "patientId": "usr-patient-2",
+      "patientName": "Priya Nair",
+      "doctorId": "doc-derma-1",
+      "doctorName": "Dr. Ananya Deshmukh",
+      "date": "2026-10-22",
+      "timeSlot": "11:30 AM",
+      "status": "confirmed",
+      "reason": "Skin allergy consultation"
+    },
+    {
+      "id": "apt-test-1791101321396",
+      "patientId": "usr-patient-1",
+      "patientName": "Rahul Sharma",
+      "doctorId": "doc-cardio-1",
+      "doctorName": "Dr. Rajesh Venkat",
+      "date": "2026-10-15",
+      "timeSlot": "10:00 AM",
+      "status": "confirmed",
+      "reason": "Routine Cardiology Follow-up"
+    },
+    {
+      "id": "apt-patient-b-1791101321275",
+      "patientId": "usr-patient-2",
+      "patientName": "Priya Nair",
+      "doctorId": "doc-derma-1",
+      "doctorName": "Dr. Ananya Deshmukh",
+      "date": "2026-10-22",
+      "timeSlot": "11:30 AM",
+      "status": "confirmed",
+      "reason": "Skin allergy consultation"
+    },
+    {
+      "id": "apt-test-1791035744758",
+      "patientId": "usr-patient-1",
+      "patientName": "Rahul Sharma",
+      "doctorId": "doc-cardio-1",
+      "doctorName": "Dr. Rajesh Venkat",
+      "date": "2026-10-15",
+      "timeSlot": "10:00 AM",
+      "status": "confirmed",
+      "reason": "Routine Cardiology Follow-up"
+    },
+    {
+      "id": "apt-patient-b-1791035744596",
+      "patientId": "usr-patient-2",
+      "patientName": "Priya Nair",
+      "doctorId": "doc-derma-1",
+      "doctorName": "Dr. Ananya Deshmukh",
+      "date": "2026-10-22",
+      "timeSlot": "11:30 AM",
+      "status": "confirmed",
+      "reason": "Skin allergy consultation"
+    },
+    {
+      "id": "apt-test-1791035705836",
+      "patientId": "usr-patient-1",
+      "patientName": "Rahul Sharma",
+      "doctorId": "doc-cardio-1",
+      "doctorName": "Dr. Rajesh Venkat",
+      "date": "2026-10-15",
+      "timeSlot": "10:00 AM",
+      "status": "confirmed",
+      "reason": "Routine Cardiology Follow-up"
+    },
+    {
+      "id": "apt-patient-b-1791035705684",
+      "patientId": "usr-patient-2",
+      "patientName": "Priya Nair",
+      "doctorId": "doc-derma-1",
+      "doctorName": "Dr. Ananya Deshmukh",
+      "date": "2026-10-22",
+      "timeSlot": "11:30 AM",
+      "status": "confirmed",
+      "reason": "Skin allergy consultation"
+    },
+    {
+      "id": "apt-test-1791035574100",
+      "patientId": "usr-patient-1",
+      "patientName": "Rahul Sharma",
+      "doctorId": "doc-cardio-1",
+      "doctorName": "Dr. Rajesh Venkat",
+      "date": "2026-10-15",
+      "timeSlot": "10:00 AM",
+      "status": "confirmed",
+      "reason": "Routine Cardiology Follow-up"
+    },
+    {
+      "id": "apt-patient-b-1791035573829",
+      "patientId": "usr-patient-2",
+      "patientName": "Priya Nair",
+      "doctorId": "doc-derma-1",
+      "doctorName": "Dr. Ananya Deshmukh",
+      "date": "2026-10-22",
+      "timeSlot": "11:30 AM",
+      "status": "confirmed",
+      "reason": "Skin allergy consultation"
+    },
+    {
+      "id": "apt-test-1791035094048",
+      "patientId": "usr-patient-1",
+      "patientName": "Rahul Sharma",
+      "doctorId": "doc-cardio-1",
+      "doctorName": "Dr. Rajesh Venkat",
+      "date": "2026-10-15",
+      "timeSlot": "10:00 AM",
+      "status": "confirmed",
+      "reason": "Routine Cardiology Follow-up"
+    },
+    {
+      "id": "apt-patient-b-1791035093884",
+      "patientId": "usr-patient-2",
+      "patientName": "Priya Nair",
+      "doctorId": "doc-derma-1",
+      "doctorName": "Dr. Ananya Deshmukh",
+      "date": "2026-10-22",
+      "timeSlot": "11:30 AM",
+      "status": "confirmed",
+      "reason": "Skin allergy consultation"
+    },
+    {
+      "id": "apt-test-1791035059891",
+      "patientId": "usr-patient-1",
+      "patientName": "Rahul Sharma",
+      "doctorId": "doc-cardio-1",
+      "doctorName": "Dr. Rajesh Venkat",
+      "date": "2026-10-15",
+      "timeSlot": "10:00 AM",
+      "status": "confirmed",
+      "reason": "Routine Cardiology Follow-up"
+    },
+    {
+      "id": "apt-patient-b-1791035059733",
+      "patientId": "usr-patient-2",
+      "patientName": "Priya Nair",
+      "doctorId": "doc-derma-1",
+      "doctorName": "Dr. Ananya Deshmukh",
+      "date": "2026-10-22",
+      "timeSlot": "11:30 AM",
+      "status": "confirmed",
+      "reason": "Skin allergy consultation"
+    },
+    {
+      "id": "apt-test-1791035046370",
+      "patientId": "usr-patient-1",
+      "patientName": "Rahul Sharma",
+      "doctorId": "doc-cardio-1",
+      "doctorName": "Dr. Rajesh Venkat",
+      "date": "2026-10-15",
+      "timeSlot": "10:00 AM",
+      "status": "confirmed",
+      "reason": "Routine Cardiology Follow-up"
+    },
+    {
+      "id": "apt-patient-b-1791035046210",
+      "patientId": "usr-patient-2",
+      "patientName": "Priya Nair",
+      "doctorId": "doc-derma-1",
+      "doctorName": "Dr. Ananya Deshmukh",
+      "date": "2026-10-22",
+      "timeSlot": "11:30 AM",
+      "status": "confirmed",
+      "reason": "Skin allergy consultation"
+    },
+    {
+      "id": "apt-test-1791034941240",
+      "patientId": "usr-patient-1",
+      "patientName": "Rahul Sharma",
+      "doctorId": "doc-cardio-1",
+      "doctorName": "Dr. Rajesh Venkat",
+      "date": "2026-10-15",
+      "timeSlot": "10:00 AM",
+      "status": "confirmed",
+      "reason": "Routine Cardiology Follow-up"
+    },
+    {
       "id": "apt-seed-1",
       "patientId": "usr-patient-1",
       "patientName": "Rahul Sharma",
@@ -758,6 +1012,186 @@
     }
   ],
   "prescriptions": [
+    {
+      "id": "rx-patient-b-1791101533712",
+      "patientId": "usr-patient-2",
+      "patientName": "Priya Nair",
+      "doctorId": "doc-derma-1",
+      "doctorName": "Dr. Ananya Deshmukh",
+      "registrationNumber": "NMC-2026-4482",
+      "qrVerificationCode": "MG-RX-IN-TEST-999",
+      "date": "2026-10-22",
+      "diagnosis": "Contact Dermatitis",
+      "medicines": [
+        {
+          "name": "Cetirizine",
+          "dosage": "10mg",
+          "frequency": "Once Daily",
+          "duration": "7 days",
+          "instructions": "Take at night"
+        }
+      ],
+      "diagnosticTests": [
+        "Serum IgE",
+        "Patch Allergy Test"
+      ]
+    },
+    {
+      "id": "rx-patient-b-1791101321278",
+      "patientId": "usr-patient-2",
+      "patientName": "Priya Nair",
+      "doctorId": "doc-derma-1",
+      "doctorName": "Dr. Ananya Deshmukh",
+      "registrationNumber": "NMC-2026-4482",
+      "qrVerificationCode": "MG-RX-IN-TEST-999",
+      "date": "2026-10-22",
+      "diagnosis": "Contact Dermatitis",
+      "medicines": [
+        {
+          "name": "Cetirizine",
+          "dosage": "10mg",
+          "frequency": "Once Daily",
+          "duration": "7 days",
+          "instructions": "Take at night"
+        }
+      ],
+      "diagnosticTests": [
+        "Serum IgE",
+        "Patch Allergy Test"
+      ]
+    },
+    {
+      "id": "rx-patient-b-1791035744599",
+      "patientId": "usr-patient-2",
+      "patientName": "Priya Nair",
+      "doctorId": "doc-derma-1",
+      "doctorName": "Dr. Ananya Deshmukh",
+      "registrationNumber": "NMC-2026-4482",
+      "qrVerificationCode": "MG-RX-IN-TEST-999",
+      "date": "2026-10-22",
+      "diagnosis": "Contact Dermatitis",
+      "medicines": [
+        {
+          "name": "Cetirizine",
+          "dosage": "10mg",
+          "frequency": "Once Daily",
+          "duration": "7 days",
+          "instructions": "Take at night"
+        }
+      ],
+      "diagnosticTests": [
+        "Serum IgE",
+        "Patch Allergy Test"
+      ]
+    },
+    {
+      "id": "rx-patient-b-1791035705687",
+      "patientId": "usr-patient-2",
+      "patientName": "Priya Nair",
+      "doctorId": "doc-derma-1",
+      "doctorName": "Dr. Ananya Deshmukh",
+      "registrationNumber": "NMC-2026-4482",
+      "qrVerificationCode": "MG-RX-IN-TEST-999",
+      "date": "2026-10-22",
+      "diagnosis": "Contact Dermatitis",
+      "medicines": [
+        {
+          "name": "Cetirizine",
+          "dosage": "10mg",
+          "frequency": "Once Daily",
+          "duration": "7 days",
+          "instructions": "Take at night"
+        }
+      ],
+      "diagnosticTests": [
+        "Serum IgE",
+        "Patch Allergy Test"
+      ]
+    },
+    {
+      "id": "rx-patient-b-1791035573834",
+      "patientId": "usr-patient-2",
+      "patientName": "Priya Nair",
+      "doctorId": "doc-derma-1",
+      "doctorName": "Dr. Ananya Deshmukh",
+      "registrationNumber": "NMC-2026-4482",
+      "qrVerificationCode": "MG-RX-IN-TEST-999",
+      "date": "2026-10-22",
+      "diagnosis": "Contact Dermatitis",
+      "medicines": [
+        {
+          "name": "Cetirizine",
+          "dosage": "10mg",
+          "frequency": "Once Daily",
+          "duration": "7 days",
+          "instructions": "Take at night"
+        }
+      ],
+      "diagnosticTests": [
+        "Serum IgE",
+        "Patch Allergy Test"
+      ]
+    },
+    {
+      "id": "rx-patient-b-1791035093887",
+      "patientId": "usr-patient-2",
+      "patientName": "Priya Nair",
+      "doctorId": "doc-derma-1",
+      "doctorName": "Dr. Ananya Deshmukh",
+      "registrationNumber": "NMC-2026-4482",
+      "qrVerificationCode": "MG-RX-IN-TEST-999",
+      "date": "2026-10-22",
+      "diagnosis": "Contact Dermatitis",
+      "medicines": [
+        {
+          "name": "Cetirizine",
+          "dosage": "10mg",
+          "frequency": "Once Daily",
+          "duration": "7 days",
+          "instructions": "Take at night"
+        }
+      ],
+      "diagnosticTests": [
+        "Serum IgE",
+        "Patch Allergy Test"
+      ]
+    },
+    {
+      "id": "rx-patient-b-1791035059736",
+      "patientId": "usr-patient-2",
+      "patientName": "Priya Nair",
+      "doctorId": "doc-derma-1",
+      "doctorName": "Dr. Ananya Deshmukh",
+      "date": "2026-10-22",
+      "diagnosis": "Contact Dermatitis",
+      "medicines": [
+        {
+          "name": "Cetirizine",
+          "dosage": "10mg",
+          "frequency": "Once Daily",
+          "duration": "7 days",
+          "instructions": "Take at night"
+        }
+      ]
+    },
+    {
+      "id": "rx-patient-b-1791035046214",
+      "patientId": "usr-patient-2",
+      "patientName": "Priya Nair",
+      "doctorId": "doc-derma-1",
+      "doctorName": "Dr. Ananya Deshmukh",
+      "date": "2026-10-22",
+      "diagnosis": "Contact Dermatitis",
+      "medicines": [
+        {
+          "name": "Cetirizine",
+          "dosage": "10mg",
+          "frequency": "Once Daily",
+          "duration": "7 days",
+          "instructions": "Take at night"
+        }
+      ]
+    },
     {
       "id": "rx-seed-1",
       "appointmentId": "apt-seed-2",
@@ -1226,6 +1660,508 @@
   ],
   "symptomChecks": [
     {
+      "id": "sym-1791101532143",
+      "userId": "test-usr-1",
+      "symptoms": [
+        "dry itchy skin rash with scales"
+      ],
+      "severity": "Mild",
+      "duration": "5 days",
+      "bodyArea": "Arms",
+      "additionalNotes": "None",
+      "preliminaryGuidance": "Your dermatological symptoms (dry itchy skin rash with scales) suggest localized skin inflammation or an allergic contact response. Keep the affected area clean, moisturized, and avoid harsh scented soaps. A clinical skin examination will confirm appropriate topical therapy.",
+      "possibleConditions": [
+        "Contact Dermatitis",
+        "Eczema / Atopic Flare",
+        "Urticaria / Allergy",
+        "Superficial Dermatosis"
+      ],
+      "recommendedDepartment": "Dermatology",
+      "confidence": 78,
+      "urgencyLevel": "Low / Routine",
+      "redFlagDetected": false,
+      "isEmergency": false,
+      "contributingFactors": [
+        "dry itchy skin rash with scales"
+      ],
+      "explanation": "Recommendation for Dermatology was determined based on reported symptoms (dry itchy skin rash with scales) aligning with standard primary care guidelines.",
+      "emergencyContacts": {
+        "national": "112",
+        "ambulance": "108",
+        "medical": "102"
+      },
+      "matchedDoctorIds": [
+        "doc-3"
+      ],
+      "disclaimer": "Important Notice: MediGuide AI provides preliminary guidance and informational assessment only. It does not constitute a formal medical diagnosis or prescription. If you are experiencing acute emergencies, please contact emergency medical services immediately.",
+      "createdAt": "2026-10-04T08:12:12.143Z"
+    },
+    {
+      "id": "sym-1791101532138",
+      "userId": "test-usr-1",
+      "symptoms": [
+        "severe chest pain radiating to left arm",
+        "profuse sweating"
+      ],
+      "severity": "Severe",
+      "duration": "1 hour",
+      "bodyArea": "Chest",
+      "additionalNotes": "Sudden onset while resting",
+      "modelUsed": "MediGuide Emergency Safety Protocol (Deterministic Guardrail)",
+      "confidence": 96,
+      "recommendedDepartment": "Emergency Medicine / Cardiology",
+      "alternativeDepartments": [
+        {
+          "department": "Cardiology",
+          "confidence": 90
+        },
+        {
+          "department": "Pulmonology",
+          "confidence": 75
+        }
+      ],
+      "preliminaryGuidance": "CRITICAL EMERGENCY: Severe acute cardiovascular, neurological, or respiratory indicators detected. Prioritize immediate emergency care. Call 112 or 108 or proceed to the nearest emergency department immediately.",
+      "possibleConditions": [
+        "Acute Cardiovascular / Respiratory Compromise",
+        "Medical Emergency Assessment"
+      ],
+      "urgencyLevel": "High / Seek Immediate Care",
+      "redFlagDetected": true,
+      "isEmergency": true,
+      "contributingFactors": [
+        "chest pain"
+      ],
+      "explanation": "Emergency override activated due to critical indicators: chest pain.",
+      "emergencyContacts": {
+        "national": "112",
+        "ambulance": "108",
+        "medical": "102"
+      },
+      "matchedDoctorIds": [
+        "doc-2"
+      ],
+      "disclaimer": "CRITICAL SAFETY ALERT: This protocol overrides standard scheduling. Seek immediate emergency care.",
+      "createdAt": "2026-10-04T08:12:12.138Z"
+    },
+    {
+      "id": "sym-1791101403910",
+      "userId": "test-usr-1",
+      "symptoms": [
+        "dry itchy skin rash with scales"
+      ],
+      "severity": "Mild",
+      "duration": "5 days",
+      "bodyArea": "Arms",
+      "additionalNotes": "None",
+      "preliminaryGuidance": "Your dermatological symptoms (dry itchy skin rash with scales) suggest localized skin inflammation or an allergic contact response. Keep the affected area clean, moisturized, and avoid harsh scented soaps. A clinical skin examination will confirm appropriate topical therapy.",
+      "possibleConditions": [
+        "Contact Dermatitis",
+        "Eczema / Atopic Flare",
+        "Urticaria / Allergy",
+        "Superficial Dermatosis"
+      ],
+      "recommendedDepartment": "Dermatology",
+      "confidence": 78,
+      "urgencyLevel": "Low / Routine",
+      "redFlagDetected": false,
+      "isEmergency": false,
+      "contributingFactors": [
+        "dry itchy skin rash with scales"
+      ],
+      "explanation": "Recommendation for Dermatology was determined based on reported symptoms (dry itchy skin rash with scales) aligning with standard primary care guidelines.",
+      "emergencyContacts": {
+        "national": "112",
+        "ambulance": "108",
+        "medical": "102"
+      },
+      "matchedDoctorIds": [
+        "doc-3"
+      ],
+      "disclaimer": "Important Notice: MediGuide AI provides preliminary guidance and informational assessment only. It does not constitute a formal medical diagnosis or prescription. If you are experiencing acute emergencies, please contact emergency medical services immediately.",
+      "createdAt": "2026-10-04T08:10:03.910Z"
+    },
+    {
+      "id": "sym-1791101403903",
+      "userId": "test-usr-1",
+      "symptoms": [
+        "severe chest pain radiating to left arm",
+        "profuse sweating"
+      ],
+      "severity": "Severe",
+      "duration": "1 hour",
+      "bodyArea": "Chest",
+      "additionalNotes": "Sudden onset while resting",
+      "modelUsed": "MediGuide Emergency Safety Protocol (Deterministic Guardrail)",
+      "confidence": 96,
+      "recommendedDepartment": "Emergency Medicine / Cardiology",
+      "alternativeDepartments": [
+        {
+          "department": "Cardiology",
+          "confidence": 90
+        },
+        {
+          "department": "Pulmonology",
+          "confidence": 75
+        }
+      ],
+      "preliminaryGuidance": "CRITICAL EMERGENCY: Severe acute cardiovascular, neurological, or respiratory indicators detected. Prioritize immediate emergency care. Call 112 or 108 or proceed to the nearest emergency department immediately.",
+      "possibleConditions": [
+        "Acute Cardiovascular / Respiratory Compromise",
+        "Medical Emergency Assessment"
+      ],
+      "urgencyLevel": "High / Seek Immediate Care",
+      "redFlagDetected": true,
+      "isEmergency": true,
+      "contributingFactors": [
+        "chest pain"
+      ],
+      "explanation": "Emergency override activated due to critical indicators: chest pain.",
+      "emergencyContacts": {
+        "national": "112",
+        "ambulance": "108",
+        "medical": "102"
+      },
+      "matchedDoctorIds": [
+        "doc-2"
+      ],
+      "disclaimer": "CRITICAL SAFETY ALERT: This protocol overrides standard scheduling. Seek immediate emergency care.",
+      "createdAt": "2026-10-04T08:10:03.903Z"
+    },
+    {
+      "id": "sym-1791101344434",
+      "userId": "test-usr-1",
+      "symptoms": [
+        "dry itchy skin rash with scales"
+      ],
+      "severity": "Mild",
+      "duration": "5 days",
+      "bodyArea": "Arms",
+      "additionalNotes": "None",
+      "preliminaryGuidance": "A mild, scaly, itchy rash on the arms persisting for five days commonly suggests eczema, contact dermatitis, or dry skin. For home care, apply a thick fragrance-free moisturizer, use gentle cleansers, and avoid hot showers or scratching. Over-the-counter hydrocortisone cream may help soothe itching. If the rash spreads, develops oozing or signs of infection, or fails to improve within a week, consult a dermatologist for definitive evaluation.",
+      "possibleConditions": [
+        "Eczema (Atopic Dermatitis)",
+        "Contact Dermatitis",
+        "Psoriasis"
+      ],
+      "recommendedDepartment": "Dermatology",
+      "urgencyLevel": "Low / Routine",
+      "redFlagDetected": false,
+      "isEmergency": false,
+      "contributingFactors": [
+        "dry itchy skin rash with scales"
+      ],
+      "explanation": "Recommendation for Dermatology was generated from clinical triage analysis of: dry itchy skin rash with scales.",
+      "emergencyContacts": {
+        "national": "112",
+        "ambulance": "108",
+        "medical": "102"
+      },
+      "matchedDoctorIds": [
+        "doc-3"
+      ],
+      "disclaimer": "Important Notice: MediGuide AI provides preliminary guidance and informational assessment only. It does not constitute a formal medical diagnosis or prescription. If you are experiencing acute emergencies, please contact emergency medical services immediately.",
+      "createdAt": "2026-10-04T08:09:04.434Z"
+    },
+    {
+      "id": "sym-1791101339569",
+      "userId": "test-usr-1",
+      "symptoms": [
+        "severe chest pain radiating to left arm",
+        "profuse sweating"
+      ],
+      "severity": "Severe",
+      "duration": "1 hour",
+      "bodyArea": "Chest",
+      "additionalNotes": "Sudden onset while resting",
+      "modelUsed": "MediGuide Emergency Safety Protocol (Deterministic Guardrail)",
+      "confidence": 96,
+      "recommendedDepartment": "Emergency Medicine / Cardiology",
+      "alternativeDepartments": [
+        {
+          "department": "Cardiology",
+          "confidence": 90
+        },
+        {
+          "department": "Pulmonology",
+          "confidence": 75
+        }
+      ],
+      "preliminaryGuidance": "CRITICAL EMERGENCY: Severe acute cardiovascular, neurological, or respiratory indicators detected. Prioritize immediate emergency care. Call 112 or 108 or proceed to the nearest emergency department immediately.",
+      "possibleConditions": [
+        "Acute Cardiovascular / Respiratory Compromise",
+        "Medical Emergency Assessment"
+      ],
+      "urgencyLevel": "High / Seek Immediate Care",
+      "redFlagDetected": true,
+      "isEmergency": true,
+      "contributingFactors": [
+        "chest pain"
+      ],
+      "explanation": "Emergency override activated due to critical indicators: chest pain.",
+      "emergencyContacts": {
+        "national": "112",
+        "ambulance": "108",
+        "medical": "102"
+      },
+      "matchedDoctorIds": [
+        "doc-2"
+      ],
+      "disclaimer": "CRITICAL SAFETY ALERT: This protocol overrides standard scheduling. Seek immediate emergency care.",
+      "createdAt": "2026-10-04T08:08:59.569Z"
+    },
+    {
+      "id": "sym-1791101327669",
+      "userId": "test-usr-1",
+      "symptoms": [
+        "dry itchy skin rash with scales"
+      ],
+      "severity": "Mild",
+      "duration": "5 days",
+      "bodyArea": "Arms",
+      "additionalNotes": "None",
+      "preliminaryGuidance": "Your dermatological symptoms (dry itchy skin rash with scales) suggest localized skin inflammation or an allergic contact response. Keep the affected area clean, moisturized, and avoid harsh scented soaps. A clinical skin examination will confirm appropriate topical therapy.",
+      "possibleConditions": [
+        "Contact Dermatitis",
+        "Eczema / Atopic Flare",
+        "Urticaria / Allergy",
+        "Superficial Dermatosis"
+      ],
+      "recommendedDepartment": "Dermatology",
+      "confidence": 78,
+      "urgencyLevel": "Low / Routine",
+      "redFlagDetected": false,
+      "isEmergency": false,
+      "contributingFactors": [
+        "dry itchy skin rash with scales"
+      ],
+      "explanation": "Recommendation for Dermatology was determined based on reported symptoms (dry itchy skin rash with scales) aligning with standard primary care guidelines.",
+      "emergencyContacts": {
+        "national": "112",
+        "ambulance": "108",
+        "medical": "102"
+      },
+      "matchedDoctorIds": [
+        "doc-3"
+      ],
+      "disclaimer": "Important Notice: MediGuide AI provides preliminary guidance and informational assessment only. It does not constitute a formal medical diagnosis or prescription. If you are experiencing acute emergencies, please contact emergency medical services immediately.",
+      "createdAt": "2026-10-04T08:08:47.669Z"
+    },
+    {
+      "id": "sym-1791101327664",
+      "userId": "test-usr-1",
+      "symptoms": [
+        "severe chest pain radiating to left arm",
+        "profuse sweating"
+      ],
+      "severity": "Severe",
+      "duration": "1 hour",
+      "bodyArea": "Chest",
+      "additionalNotes": "Sudden onset while resting",
+      "modelUsed": "MediGuide Emergency Safety Protocol (Deterministic Guardrail)",
+      "confidence": 96,
+      "recommendedDepartment": "Emergency Medicine / Cardiology",
+      "alternativeDepartments": [
+        {
+          "department": "Cardiology",
+          "confidence": 90
+        },
+        {
+          "department": "Pulmonology",
+          "confidence": 75
+        }
+      ],
+      "preliminaryGuidance": "CRITICAL EMERGENCY: Severe acute cardiovascular, neurological, or respiratory indicators detected. Prioritize immediate emergency care. Call 112 or 108 or proceed to the nearest emergency department immediately.",
+      "possibleConditions": [
+        "Acute Cardiovascular / Respiratory Compromise",
+        "Medical Emergency Assessment"
+      ],
+      "urgencyLevel": "High / Seek Immediate Care",
+      "redFlagDetected": true,
+      "isEmergency": true,
+      "contributingFactors": [
+        "chest pain"
+      ],
+      "explanation": "Emergency override activated due to critical indicators: chest pain.",
+      "emergencyContacts": {
+        "national": "112",
+        "ambulance": "108",
+        "medical": "102"
+      },
+      "matchedDoctorIds": [
+        "doc-2"
+      ],
+      "disclaimer": "CRITICAL SAFETY ALERT: This protocol overrides standard scheduling. Seek immediate emergency care.",
+      "createdAt": "2026-10-04T08:08:47.664Z"
+    },
+    {
+      "id": "sym-1791035750207",
+      "userId": "test-usr-1",
+      "symptoms": [
+        "dry itchy skin rash with scales"
+      ],
+      "severity": "Mild",
+      "duration": "5 days",
+      "bodyArea": "Arms",
+      "additionalNotes": "None",
+      "preliminaryGuidance": "Your dermatological symptoms (dry itchy skin rash with scales) suggest localized skin inflammation or an allergic contact response. Keep the affected area clean, moisturized, and avoid harsh scented soaps. A clinical skin examination will confirm appropriate topical therapy.",
+      "possibleConditions": [
+        "Contact Dermatitis",
+        "Eczema / Atopic Flare",
+        "Urticaria / Allergy",
+        "Superficial Dermatosis"
+      ],
+      "recommendedDepartment": "Dermatology",
+      "confidence": 78,
+      "urgencyLevel": "Low / Routine",
+      "redFlagDetected": false,
+      "isEmergency": false,
+      "contributingFactors": [
+        "dry itchy skin rash with scales"
+      ],
+      "explanation": "Recommendation for Dermatology was determined based on reported symptoms (dry itchy skin rash with scales) aligning with standard primary care guidelines.",
+      "emergencyContacts": {
+        "national": "112",
+        "ambulance": "108",
+        "medical": "102"
+      },
+      "matchedDoctorIds": [
+        "doc-3"
+      ],
+      "disclaimer": "Important Notice: MediGuide AI provides preliminary guidance and informational assessment only. It does not constitute a formal medical diagnosis or prescription. If you are experiencing acute emergencies, please contact emergency medical services immediately.",
+      "createdAt": "2026-10-03T13:55:50.207Z"
+    },
+    {
+      "id": "sym-1791035745812",
+      "userId": "test-usr-1",
+      "symptoms": [
+        "severe chest pain radiating to left arm",
+        "profuse sweating"
+      ],
+      "severity": "Severe",
+      "duration": "1 hour",
+      "bodyArea": "Chest",
+      "additionalNotes": "Sudden onset while resting",
+      "modelUsed": "MediGuide Emergency Safety Protocol (Deterministic Guardrail)",
+      "confidence": 96,
+      "recommendedDepartment": "Emergency Medicine / Cardiology",
+      "alternativeDepartments": [
+        {
+          "department": "Cardiology",
+          "confidence": 90
+        },
+        {
+          "department": "Pulmonology",
+          "confidence": 75
+        }
+      ],
+      "preliminaryGuidance": "CRITICAL EMERGENCY: Severe acute cardiovascular, neurological, or respiratory indicators detected. Prioritize immediate emergency care. Call 112 or 108 or proceed to the nearest emergency department immediately.",
+      "possibleConditions": [
+        "Acute Cardiovascular / Respiratory Compromise",
+        "Medical Emergency Assessment"
+      ],
+      "urgencyLevel": "High / Seek Immediate Care",
+      "redFlagDetected": true,
+      "isEmergency": true,
+      "contributingFactors": [
+        "chest pain"
+      ],
+      "explanation": "Emergency override activated due to critical indicators: chest pain.",
+      "emergencyContacts": {
+        "national": "112",
+        "ambulance": "108",
+        "medical": "102"
+      },
+      "matchedDoctorIds": [
+        "doc-2"
+      ],
+      "disclaimer": "CRITICAL SAFETY ALERT: This protocol overrides standard scheduling. Seek immediate emergency care.",
+      "createdAt": "2026-10-03T13:55:45.813Z"
+    },
+    {
+      "id": "sym-1791035713513",
+      "userId": "test-usr-1",
+      "symptoms": [
+        "dry itchy skin rash with scales"
+      ],
+      "severity": "Mild",
+      "duration": "5 days",
+      "bodyArea": "Arms",
+      "additionalNotes": "None",
+      "preliminaryGuidance": "Your dermatological symptoms (dry itchy skin rash with scales) suggest localized skin inflammation or an allergic contact response. Keep the affected area clean, moisturized, and avoid harsh scented soaps. A clinical skin examination will confirm appropriate topical therapy.",
+      "possibleConditions": [
+        "Contact Dermatitis",
+        "Eczema / Atopic Flare",
+        "Urticaria / Allergy",
+        "Superficial Dermatosis"
+      ],
+      "recommendedDepartment": "Dermatology",
+      "confidence": 78,
+      "urgencyLevel": "Low / Routine",
+      "redFlagDetected": false,
+      "isEmergency": false,
+      "contributingFactors": [
+        "dry itchy skin rash with scales"
+      ],
+      "explanation": "Recommendation for Dermatology was determined based on reported symptoms (dry itchy skin rash with scales) aligning with standard primary care guidelines.",
+      "emergencyContacts": {
+        "national": "112",
+        "ambulance": "108",
+        "medical": "102"
+      },
+      "matchedDoctorIds": [
+        "doc-3"
+      ],
+      "disclaimer": "Important Notice: MediGuide AI provides preliminary guidance and informational assessment only. It does not constitute a formal medical diagnosis or prescription. If you are experiencing acute emergencies, please contact emergency medical services immediately.",
+      "createdAt": "2026-10-03T13:55:13.513Z"
+    },
+    {
+      "id": "sym-1791035706862",
+      "userId": "test-usr-1",
+      "symptoms": [
+        "severe chest pain radiating to left arm",
+        "profuse sweating"
+      ],
+      "severity": "Severe",
+      "duration": "1 hour",
+      "bodyArea": "Chest",
+      "additionalNotes": "Sudden onset while resting",
+      "modelUsed": "MediGuide Emergency Safety Protocol (Deterministic Guardrail)",
+      "confidence": 96,
+      "recommendedDepartment": "Emergency Medicine / Cardiology",
+      "alternativeDepartments": [
+        {
+          "department": "Cardiology",
+          "confidence": 90
+        },
+        {
+          "department": "Pulmonology",
+          "confidence": 75
+        }
+      ],
+      "preliminaryGuidance": "CRITICAL EMERGENCY: Severe acute cardiovascular, neurological, or respiratory indicators detected. Prioritize immediate emergency care. Call 112 or 108 or proceed to the nearest emergency department immediately.",
+      "possibleConditions": [
+        "Acute Cardiovascular / Respiratory Compromise",
+        "Medical Emergency Assessment"
+      ],
+      "urgencyLevel": "High / Seek Immediate Care",
+      "redFlagDetected": true,
+      "isEmergency": true,
+      "contributingFactors": [
+        "chest pain"
+      ],
+      "explanation": "Emergency override activated due to critical indicators: chest pain.",
+      "emergencyContacts": {
+        "national": "112",
+        "ambulance": "108",
+        "medical": "102"
+      },
+      "matchedDoctorIds": [
+        "doc-2"
+      ],
+      "disclaimer": "CRITICAL SAFETY ALERT: This protocol overrides standard scheduling. Seek immediate emergency care.",
+      "createdAt": "2026-10-03T13:55:06.862Z"
+    },
+    {
       "id": "sym-1787500217252",
       "userId": "usr-patient-1",
       "symptoms": [
@@ -1405,6 +2341,646 @@
     }
   ],
   "auditLogs": [
+    {
+      "id": "log-1791101533916-bf76hk",
+      "timestamp": "2026-10-04T08:12:13.916Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-admin-1",
+      "actorEmail": "admin@mediguide.com",
+      "actorRole": "admin",
+      "details": "ADMIN Vikramaditya Roy logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791101533833-k9sfn",
+      "timestamp": "2026-10-04T08:12:13.833Z",
+      "status": "SUCCESS",
+      "eventType": "RECORD_ACCESS",
+      "actorId": "usr-doctor-1",
+      "actorEmail": "doctor.smith@mediguide.com",
+      "actorRole": "doctor",
+      "details": "DOCTOR Dr. Priya Sharma accessed health records vault of patient usr-patient-1."
+    },
+    {
+      "id": "log-1791101533814-sj6jv",
+      "timestamp": "2026-10-04T08:12:13.814Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-doctor-1",
+      "actorEmail": "doctor.smith@mediguide.com",
+      "actorRole": "doctor",
+      "details": "DOCTOR Dr. Priya Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791101533704-wzd415",
+      "timestamp": "2026-10-04T08:12:13.704Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-2",
+      "actorEmail": "priya.nair@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Priya Nair logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791101533615-y3x1vi",
+      "timestamp": "2026-10-04T08:12:13.615Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Rahul Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791101533506-auh0fs",
+      "timestamp": "2026-10-04T08:12:13.506Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Rahul Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791101533415-kl4o7i",
+      "timestamp": "2026-10-04T08:12:13.415Z",
+      "status": "SUCCESS",
+      "eventType": "FAILED_LOGIN_ATTEMPT",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "Failed password authentication attempt for user patient@mediguide.com"
+    },
+    {
+      "id": "log-1791101321484-yfijm4",
+      "timestamp": "2026-10-04T08:08:41.484Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-admin-1",
+      "actorEmail": "admin@mediguide.com",
+      "actorRole": "admin",
+      "details": "ADMIN Vikramaditya Roy logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791101321400-nnnyxr",
+      "timestamp": "2026-10-04T08:08:41.400Z",
+      "status": "SUCCESS",
+      "eventType": "RECORD_ACCESS",
+      "actorId": "usr-doctor-1",
+      "actorEmail": "doctor.smith@mediguide.com",
+      "actorRole": "doctor",
+      "details": "DOCTOR Dr. Priya Sharma accessed health records vault of patient usr-patient-1."
+    },
+    {
+      "id": "log-1791101321381-yditkb",
+      "timestamp": "2026-10-04T08:08:41.381Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-doctor-1",
+      "actorEmail": "doctor.smith@mediguide.com",
+      "actorRole": "doctor",
+      "details": "DOCTOR Dr. Priya Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791101321268-844amfh",
+      "timestamp": "2026-10-04T08:08:41.268Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-2",
+      "actorEmail": "priya.nair@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Priya Nair logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791101321179-zorugr",
+      "timestamp": "2026-10-04T08:08:41.179Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Rahul Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791101321070-yywz5e",
+      "timestamp": "2026-10-04T08:08:41.070Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Rahul Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791101320978-g8a359",
+      "timestamp": "2026-10-04T08:08:40.978Z",
+      "status": "SUCCESS",
+      "eventType": "FAILED_LOGIN_ATTEMPT",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "Failed password authentication attempt for user patient@mediguide.com"
+    },
+    {
+      "id": "log-1791035744873-bq8n8",
+      "timestamp": "2026-10-03T13:55:44.873Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-admin-1",
+      "actorEmail": "admin@mediguide.com",
+      "actorRole": "admin",
+      "details": "ADMIN Vikramaditya Roy logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035744765-4kaq3",
+      "timestamp": "2026-10-03T13:55:44.765Z",
+      "status": "SUCCESS",
+      "eventType": "RECORD_ACCESS",
+      "actorId": "usr-doctor-1",
+      "actorEmail": "doctor.smith@mediguide.com",
+      "actorRole": "doctor",
+      "details": "DOCTOR Dr. Priya Sharma accessed health records vault of patient usr-patient-1."
+    },
+    {
+      "id": "log-1791035744738-dqagzc",
+      "timestamp": "2026-10-03T13:55:44.738Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-doctor-1",
+      "actorEmail": "doctor.smith@mediguide.com",
+      "actorRole": "doctor",
+      "details": "DOCTOR Dr. Priya Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035744589-hss2jg",
+      "timestamp": "2026-10-03T13:55:44.589Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-2",
+      "actorEmail": "priya.nair@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Priya Nair logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035744483-nkozg",
+      "timestamp": "2026-10-03T13:55:44.483Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Rahul Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035744311-yhdmme",
+      "timestamp": "2026-10-03T13:55:44.311Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Rahul Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035744198-71povk",
+      "timestamp": "2026-10-03T13:55:44.198Z",
+      "status": "SUCCESS",
+      "eventType": "FAILED_LOGIN_ATTEMPT",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "Failed password authentication attempt for user patient@mediguide.com"
+    },
+    {
+      "id": "log-1791035705942-2jmwq",
+      "timestamp": "2026-10-03T13:55:05.942Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-admin-1",
+      "actorEmail": "admin@mediguide.com",
+      "actorRole": "admin",
+      "details": "ADMIN Vikramaditya Roy logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035705841-b19ef",
+      "timestamp": "2026-10-03T13:55:05.841Z",
+      "status": "SUCCESS",
+      "eventType": "RECORD_ACCESS",
+      "actorId": "usr-doctor-1",
+      "actorEmail": "doctor.smith@mediguide.com",
+      "actorRole": "doctor",
+      "details": "DOCTOR Dr. Priya Sharma accessed health records vault of patient usr-patient-1."
+    },
+    {
+      "id": "log-1791035705819-p829fa",
+      "timestamp": "2026-10-03T13:55:05.819Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-doctor-1",
+      "actorEmail": "doctor.smith@mediguide.com",
+      "actorRole": "doctor",
+      "details": "DOCTOR Dr. Priya Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035705678-2kcfhy",
+      "timestamp": "2026-10-03T13:55:05.678Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-2",
+      "actorEmail": "priya.nair@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Priya Nair logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035705574-yby84c",
+      "timestamp": "2026-10-03T13:55:05.574Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Rahul Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035705440-jobw1",
+      "timestamp": "2026-10-03T13:55:05.440Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Rahul Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035705331-p0iwmn",
+      "timestamp": "2026-10-03T13:55:05.331Z",
+      "status": "SUCCESS",
+      "eventType": "FAILED_LOGIN_ATTEMPT",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "Failed password authentication attempt for user patient@mediguide.com"
+    },
+    {
+      "id": "log-1791035574299-4s7v6f",
+      "timestamp": "2026-10-03T13:52:54.299Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-admin-1",
+      "actorEmail": "admin@mediguide.com",
+      "actorRole": "admin",
+      "details": "ADMIN Vikramaditya Roy logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035574109-3r1hhp",
+      "timestamp": "2026-10-03T13:52:54.109Z",
+      "status": "SUCCESS",
+      "eventType": "RECORD_ACCESS",
+      "actorId": "usr-doctor-1",
+      "actorEmail": "doctor.smith@mediguide.com",
+      "actorRole": "doctor",
+      "details": "DOCTOR Dr. Priya Sharma accessed health records vault of patient usr-patient-1."
+    },
+    {
+      "id": "log-1791035574068-owe4jt",
+      "timestamp": "2026-10-03T13:52:54.068Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-doctor-1",
+      "actorEmail": "doctor.smith@mediguide.com",
+      "actorRole": "doctor",
+      "details": "DOCTOR Dr. Priya Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035573818-fi4gls",
+      "timestamp": "2026-10-03T13:52:53.818Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-2",
+      "actorEmail": "priya.nair@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Priya Nair logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035573623-9fyuj",
+      "timestamp": "2026-10-03T13:52:53.623Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Rahul Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035573379-vyqexo",
+      "timestamp": "2026-10-03T13:52:53.379Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Rahul Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035573173-l5xkml",
+      "timestamp": "2026-10-03T13:52:53.173Z",
+      "status": "SUCCESS",
+      "eventType": "FAILED_LOGIN_ATTEMPT",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "Failed password authentication attempt for user patient@mediguide.com"
+    },
+    {
+      "id": "log-1791035094155-n54z7",
+      "timestamp": "2026-10-03T13:44:54.155Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-admin-1",
+      "actorEmail": "admin@mediguide.com",
+      "actorRole": "admin",
+      "details": "ADMIN Vikramaditya Roy logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035094053-d948p",
+      "timestamp": "2026-10-03T13:44:54.053Z",
+      "status": "SUCCESS",
+      "eventType": "RECORD_ACCESS",
+      "actorId": "usr-doctor-1",
+      "actorEmail": "doctor.smith@mediguide.com",
+      "actorRole": "doctor",
+      "details": "DOCTOR Dr. Priya Sharma accessed health records vault of patient usr-patient-1."
+    },
+    {
+      "id": "log-1791035094026-szzg7d",
+      "timestamp": "2026-10-03T13:44:54.026Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-doctor-1",
+      "actorEmail": "doctor.smith@mediguide.com",
+      "actorRole": "doctor",
+      "details": "DOCTOR Dr. Priya Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035093874-ugyl9n",
+      "timestamp": "2026-10-03T13:44:53.874Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-2",
+      "actorEmail": "priya.nair@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Priya Nair logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035093768-rq9qr",
+      "timestamp": "2026-10-03T13:44:53.768Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Rahul Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035093633-vo6lld",
+      "timestamp": "2026-10-03T13:44:53.633Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Rahul Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035093512-gxjt3",
+      "timestamp": "2026-10-03T13:44:53.512Z",
+      "status": "SUCCESS",
+      "eventType": "FAILED_LOGIN_ATTEMPT",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "Failed password authentication attempt for user patient@mediguide.com"
+    },
+    {
+      "id": "log-1791035059997-q6ueel",
+      "timestamp": "2026-10-03T13:44:19.997Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-admin-1",
+      "actorEmail": "admin@mediguide.com",
+      "actorRole": "admin",
+      "details": "ADMIN Vikramaditya Roy logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035059896-4emplk",
+      "timestamp": "2026-10-03T13:44:19.896Z",
+      "status": "SUCCESS",
+      "eventType": "RECORD_ACCESS",
+      "actorId": "usr-doctor-1",
+      "actorEmail": "doctor.smith@mediguide.com",
+      "actorRole": "doctor",
+      "details": "DOCTOR Dr. Priya Sharma accessed health records vault of patient usr-patient-1."
+    },
+    {
+      "id": "log-1791035059872-ewv5so",
+      "timestamp": "2026-10-03T13:44:19.872Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-doctor-1",
+      "actorEmail": "doctor.smith@mediguide.com",
+      "actorRole": "doctor",
+      "details": "DOCTOR Dr. Priya Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035059725-ik0wup",
+      "timestamp": "2026-10-03T13:44:19.725Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-2",
+      "actorEmail": "priya.nair@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Priya Nair logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035059609-px879",
+      "timestamp": "2026-10-03T13:44:19.609Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Rahul Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035059476-yb37jci",
+      "timestamp": "2026-10-03T13:44:19.476Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Rahul Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035059356-rvs6d",
+      "timestamp": "2026-10-03T13:44:19.356Z",
+      "status": "SUCCESS",
+      "eventType": "FAILED_LOGIN_ATTEMPT",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "Failed password authentication attempt for user patient@mediguide.com"
+    },
+    {
+      "id": "log-1791035046486-xgh7fb",
+      "timestamp": "2026-10-03T13:44:06.486Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-admin-1",
+      "actorEmail": "admin@mediguide.com",
+      "actorRole": "admin",
+      "details": "ADMIN Vikramaditya Roy logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035046377-r14rb",
+      "timestamp": "2026-10-03T13:44:06.377Z",
+      "status": "SUCCESS",
+      "eventType": "RECORD_ACCESS",
+      "actorId": "usr-doctor-1",
+      "actorEmail": "doctor.smith@mediguide.com",
+      "actorRole": "doctor",
+      "details": "DOCTOR Dr. Priya Sharma accessed health records vault of patient usr-patient-1."
+    },
+    {
+      "id": "log-1791035046350-k6jhjw",
+      "timestamp": "2026-10-03T13:44:06.350Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-doctor-1",
+      "actorEmail": "doctor.smith@mediguide.com",
+      "actorRole": "doctor",
+      "details": "DOCTOR Dr. Priya Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035046202-n1w8uj",
+      "timestamp": "2026-10-03T13:44:06.202Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-2",
+      "actorEmail": "priya.nair@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Priya Nair logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035046093-2yvnp",
+      "timestamp": "2026-10-03T13:44:06.093Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Rahul Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035045947-h61k4",
+      "timestamp": "2026-10-03T13:44:05.947Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Rahul Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791035045827-p2g8rl",
+      "timestamp": "2026-10-03T13:44:05.827Z",
+      "status": "SUCCESS",
+      "eventType": "FAILED_LOGIN_ATTEMPT",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "Failed password authentication attempt for user patient@mediguide.com"
+    },
+    {
+      "id": "log-1791034941250-ts081h",
+      "timestamp": "2026-10-03T13:42:21.250Z",
+      "status": "SUCCESS",
+      "eventType": "RECORD_ACCESS",
+      "actorId": "usr-doctor-1",
+      "actorEmail": "doctor.smith@mediguide.com",
+      "actorRole": "doctor",
+      "details": "DOCTOR Dr. Priya Sharma accessed health records vault of patient usr-patient-1."
+    },
+    {
+      "id": "log-1791034941205-hv988a",
+      "timestamp": "2026-10-03T13:42:21.205Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-doctor-1",
+      "actorEmail": "doctor.smith@mediguide.com",
+      "actorRole": "doctor",
+      "details": "DOCTOR Dr. Priya Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791034940990-yh2g4",
+      "timestamp": "2026-10-03T13:42:20.990Z",
+      "status": "SUCCESS",
+      "eventType": "PRESCRIPTION_ACCESS",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Rahul Sharma accessed digital prescription #rx-seed-1."
+    },
+    {
+      "id": "log-1791034940945-5atafv",
+      "timestamp": "2026-10-03T13:42:20.945Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-2",
+      "actorEmail": "priya.nair@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Priya Nair logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791034940742-lvhif9",
+      "timestamp": "2026-10-03T13:42:20.742Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Rahul Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791034940490-z9cjjk",
+      "timestamp": "2026-10-03T13:42:20.490Z",
+      "status": "SUCCESS",
+      "eventType": "USER_LOGIN",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "PATIENT Rahul Sharma logged into MediGuide portal."
+    },
+    {
+      "id": "log-1791034940259-yki3uj",
+      "timestamp": "2026-10-03T13:42:20.259Z",
+      "status": "SUCCESS",
+      "eventType": "FAILED_LOGIN_ATTEMPT",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "Failed password authentication attempt for user patient@mediguide.com"
+    },
+    {
+      "id": "log-1791025826088-uokpe",
+      "timestamp": "2026-10-03T11:10:26.088Z",
+      "status": "SUCCESS",
+      "eventType": "DEMO_LOGIN",
+      "actorId": "usr-patient-1",
+      "actorEmail": "patient@mediguide.com",
+      "actorRole": "patient",
+      "details": "Demo session initiated as patient (Rahul Sharma)."
+    },
     {
       "id": "log-1787501924709-rf3q7a",
       "timestamp": "2026-08-23T16:18:44.709Z",

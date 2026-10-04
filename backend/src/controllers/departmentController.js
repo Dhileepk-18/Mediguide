@@ -1,5 +1,7 @@
 import { z } from 'zod';
 import { dbStore } from '../store/inMemoryStore.js';
+import { isDbConnected } from '../config/db.js';
+import { Department, Doctor, AuditLog } from '../models/schemas.js';
 
 const departmentSchema = z.object({
   name: z.string().min(2, 'Department name is required'),
@@ -13,6 +15,23 @@ const departmentSchema = z.object({
 
 export const getAllDepartments = async (_req, res) => {
   try {
+    if (isDbConnected()) {
+      const departments = await Department.find().lean();
+      const doctors = await Doctor.find().lean();
+      const enriched = departments.map(dept => {
+        const count = doctors.filter(
+          d =>
+            d.department.toLowerCase() === dept.name.toLowerCase() ||
+            d.department.toLowerCase().includes(dept.name.toLowerCase())
+        ).length;
+        return {
+          ...dept,
+          doctorCount: count > 0 ? count : dept.doctorCount || 1,
+        };
+      });
+      return res.json({ success: true, departments: enriched });
+    }
+
     const departments = dbStore.getDepartments();
     // Enrich with real-time doctor count for each department
     const doctors = dbStore.getAllDoctors();
@@ -36,6 +55,21 @@ export const getAllDepartments = async (_req, res) => {
 export const getDepartmentById = async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (isDbConnected()) {
+      const dept = await Department.findOne({ id }).lean();
+      if (!dept) {
+        return res.status(404).json({ success: false, message: 'Department not found' });
+      }
+      const doctors = await Doctor.find({
+        $or: [
+          { department: new RegExp(`^${dept.name}$`, 'i') },
+          { department: new RegExp(dept.name, 'i') },
+        ],
+      }).lean();
+      return res.json({ success: true, department: dept, doctors });
+    }
+
     const dept = dbStore.findDepartmentById(id);
     if (!dept) {
       res.status(404).json({ success: false, message: 'Department not found' });
@@ -68,6 +102,23 @@ export const createDepartment = async (req, res) => {
       ...data,
       doctorCount: 0,
     };
+
+    if (isDbConnected()) {
+      const savedDoc = await Department.create(newDept);
+      const saved = savedDoc.toObject();
+      await AuditLog.create({
+        id: `aud-${Date.now()}`,
+        eventType: 'DEPARTMENT_CREATED',
+        actorId: req.user.id,
+        actorEmail: req.user.email,
+        actorRole: 'admin',
+        details: `Created new medical department: ${saved.name} (${saved.code})`,
+      });
+      return res
+        .status(201)
+        .json({ success: true, message: 'Medical department created', department: saved });
+    }
+
     const saved = dbStore.addDepartment(newDept);
     dbStore.addAuditLog({
       eventType: 'DEPARTMENT_CREATED',
@@ -97,6 +148,23 @@ export const updateDepartment = async (req, res) => {
       return;
     }
     const { id } = req.params;
+
+    if (isDbConnected()) {
+      const updated = await Department.findOneAndUpdate({ id }, { $set: req.body }, { new: true }).lean();
+      if (!updated) {
+        return res.status(404).json({ success: false, message: 'Department not found' });
+      }
+      await AuditLog.create({
+        id: `aud-${Date.now()}`,
+        eventType: 'DEPARTMENT_UPDATED',
+        actorId: req.user.id,
+        actorEmail: req.user.email,
+        actorRole: 'admin',
+        details: `Updated medical department: ${updated.name}`,
+      });
+      return res.json({ success: true, message: 'Department updated', department: updated });
+    }
+
     const updated = dbStore.updateDepartment(id, req.body);
     if (!updated) {
       res.status(404).json({ success: false, message: 'Department not found' });
@@ -124,6 +192,24 @@ export const deleteDepartment = async (req, res) => {
       return;
     }
     const { id } = req.params;
+
+    if (isDbConnected()) {
+      const dept = await Department.findOne({ id }).lean();
+      const deleted = await Department.findOneAndDelete({ id });
+      if (!deleted) {
+        return res.status(404).json({ success: false, message: 'Department not found' });
+      }
+      await AuditLog.create({
+        id: `aud-${Date.now()}`,
+        eventType: 'DEPARTMENT_DELETED',
+        actorId: req.user.id,
+        actorEmail: req.user.email,
+        actorRole: 'admin',
+        details: `Deleted medical department: ${dept?.name || id}`,
+      });
+      return res.json({ success: true, message: 'Department deleted successfully' });
+    }
+
     const dept = dbStore.findDepartmentById(id);
     const deleted = dbStore.deleteDepartment(id);
     if (!deleted) {

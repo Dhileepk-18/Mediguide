@@ -1,8 +1,10 @@
 import jwt from 'jsonwebtoken';
 import { config } from '../config/index.js';
 import { dbStore } from '../store/inMemoryStore.js';
+import { isDbConnected } from '../config/db.js';
+import { User } from '../models/schemas.js';
 
-export const authenticateToken = (req, res, next) => {
+export const authenticateToken = async (req, res, next) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
   if (!token) {
@@ -11,7 +13,13 @@ export const authenticateToken = (req, res, next) => {
   }
   try {
     const decoded = jwt.verify(token, config.jwtSecret);
-    const user = dbStore.findUserById(decoded.id);
+    let user;
+    if (isDbConnected()) {
+      user = await User.findOne({ id: decoded.id }).lean();
+    } else {
+      user = dbStore.findUserById(decoded.id);
+    }
+
     if (!user) {
       res.status(401).json({ success: false, message: 'User associated with token not found' });
       return;
@@ -31,13 +39,18 @@ export const authenticateToken = (req, res, next) => {
 
 export const requireAuth = authenticateToken;
 
-export const optionalAuthenticate = (req, _res, next) => {
+export const optionalAuthenticate = async (req, _res, next) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
   if (token) {
     try {
       const decoded = jwt.verify(token, config.jwtSecret);
-      const user = dbStore.findUserById(decoded.id);
+      let user;
+      if (isDbConnected()) {
+        user = await User.findOne({ id: decoded.id }).lean();
+      } else {
+        user = dbStore.findUserById(decoded.id);
+      }
       if (user && user.status !== 'suspended') {
         req.user = user;
       }

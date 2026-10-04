@@ -7,7 +7,6 @@ import { Modal } from '../../components/common/Modal.jsx';
 import { EmergencyModal } from '../../components/common/EmergencyModal.jsx';
 import {
   Bot,
-  User,
   Send,
   Sparkles,
   History,

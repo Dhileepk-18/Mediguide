@@ -1,19 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { api } from '../../services/api.js';
 import { useAppStore } from '../../store/appStore.js';
 import {
   Search,
-  Stethoscope,
-  MapPin,
   Star,
-  Calendar,
-  Clock,
-  Check,
   ChevronDown,
   ChevronUp,
   ArrowRight,
-  ArrowLeft,
   ShieldCheck,
   CheckCircle2,
 } from 'lucide-react';

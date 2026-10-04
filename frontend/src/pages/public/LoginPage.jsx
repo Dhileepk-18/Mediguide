@@ -14,7 +14,6 @@ import {
   Sparkles,
   Key,
   X,
-  CheckCircle2,
 } from 'lucide-react';
 
 export const LoginPage = () => {

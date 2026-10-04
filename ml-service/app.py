@@ -2,11 +2,12 @@
 MediGuide Machine Learning Triage Service
 FastAPI REST microservice serving Random Forest department predictions
 Meets PRD Section 9 & Techstack Section 8.5
+Includes Explainable AI (Feature Attribution) and Red-Flag Safety Protocol
 """
 
 import os
 import json
-from typing import List, Optional
+from typing import List, Optional, Dict
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -14,8 +15,8 @@ import joblib
 
 app = FastAPI(
     title="MediGuide ML Triage Service",
-    description="Random Forest Medical Department Recommendation API",
-    version="1.0.0"
+    description="Random Forest Medical Department Recommendation API with Safety Overrides",
+    version="1.1.0"
 )
 
 app.add_middleware(
@@ -33,10 +34,21 @@ VEC_PATH = os.path.join(BASE_DIR, 'model', 'vectorizer.joblib')
 clf = None
 vectorizer = None
 
-# Red flag keywords for urgent screening (PRD Section 9.6)
+# Red flag emergency keywords for urgent clinical safety (PRD Section 9.6)
 RED_FLAGS = [
     'chest pain', 'chest tightness', 'heart attack', 'breathlessness',
-    'slurred speech', 'uncontrolled bleeding', 'stroke', 'loss of consciousness'
+    'shortness of breath', 'slurred speech', 'facial droop', 'uncontrolled bleeding',
+    'loss of consciousness', 'unresponsive', 'anaphylaxis', 'tongue swelling',
+    'throat closing', 'cyanosis', 'thunderclap headache', 'coughing up blood',
+    'hemoptysis', 'status epilepticus', 'seizure lasting'
+]
+
+# High-acuity critical indicators that trigger emergency protocols unconditionally
+CRITICAL_RED_FLAGS = [
+    'heart attack', 'slurred speech', 'uncontrolled bleeding',
+    'loss of consciousness', 'unresponsive', 'anaphylaxis',
+    'throat closing', 'cyanosis', 'chest pain', 'thunderclap headache',
+    'coughing up blood', 'status epilepticus'
 ]
 
 DEPARTMENT_GUIDANCE = {
@@ -80,7 +92,34 @@ class PredictionResponse(BaseModel):
     topAlternatives: List[AlternativeDepartment]
     preliminaryGuidance: str
     redFlagDetected: bool
+    contributingFactors: List[str] = []
+    explanation: Optional[str] = None
+    emergencyContacts: Optional[Dict[str, str]] = None
     disclaimer: str
+
+def extract_contributing_factors(symptoms_text: str, vec_input) -> List[str]:
+    """Extract top contributing feature n-grams from TF-IDF input vector for explainability."""
+    if vectorizer is None or vec_input is None:
+        return []
+    try:
+        feature_names = vectorizer.get_feature_names_out()
+        nz_indices = vec_input.nonzero()[1]
+        stopwords = {'and', 'or', 'with', 'in', 'of', 'for', 'the', 'moderate', 'severe', 'mild', 'pain'}
+        
+        terms_with_weights = []
+        for idx in nz_indices:
+            term = feature_names[idx]
+            if term not in stopwords and len(term) > 2:
+                weight = float(vec_input[0, idx])
+                terms_with_weights.append((term, weight))
+        
+        # Sort terms by descending TF-IDF relevance
+        terms_with_weights.sort(key=lambda x: x[1], reverse=True)
+        top_terms = [t[0] for t in terms_with_weights[:4]]
+        return top_terms
+    except Exception as e:
+        print("Error extracting contributing factors:", e)
+        return []
 
 @app.get("/health")
 def health_check():
@@ -88,7 +127,9 @@ def health_check():
         "status": "healthy",
         "service": "MediGuide Python ML Triage (FastAPI)",
         "modelLoaded": clf is not None,
-        "algorithm": "Random Forest Classifier"
+        "algorithm": "Random Forest Classifier",
+        "redFlagGuardrails": True,
+        "explainability": True
     }
 
 @app.post("/predict", response_model=PredictionResponse)
@@ -97,11 +138,16 @@ def predict_department(req: SymptomRequest):
         raise HTTPException(status_code=400, detail="Symptoms list cannot be empty.")
 
     symptoms_text = ", ".join(req.symptoms).lower()
+    if req.context:
+        symptoms_text += f" {req.context.lower()}"
 
     # 1. Rule-Based Red-Flag Safety Layer (PRD Section 9.6)
-    has_red_flag = any(rf in symptoms_text for rf in RED_FLAGS) and req.severity in ["Moderate", "Severe"]
+    matched_red_flags = [rf for rf in RED_FLAGS if rf in symptoms_text]
+    is_critical = any(crf in symptoms_text for crf in CRITICAL_RED_FLAGS)
+    has_red_flag = is_critical or (len(matched_red_flags) > 0 and req.severity in ["Moderate", "Severe"])
 
     if has_red_flag:
+        factors = matched_red_flags if matched_red_flags else ["acute emergency indicators"]
         return PredictionResponse(
             success=True,
             recommendedDepartment="Emergency Medicine / Cardiology",
@@ -110,8 +156,11 @@ def predict_department(req: SymptomRequest):
                 AlternativeDepartment(department="Cardiology", confidence=90),
                 AlternativeDepartment(department="Pulmonology", confidence=70)
             ],
-            preliminaryGuidance="CRITICAL: Severe acute cardiovascular or respiratory indicators detected. Prioritize immediate emergency care or call 112 / 108.",
+            preliminaryGuidance="CRITICAL: Severe acute cardiovascular, neurological, or respiratory indicators detected. Prioritize immediate emergency care or call 112 / 108.",
             redFlagDetected=True,
+            contributingFactors=factors,
+            explanation=f"Emergency safety override activated due to high-risk red-flag indicators: {', '.join(factors)}.",
+            emergencyContacts={"national": "112", "ambulance": "108", "medical": "102"},
             disclaimer="Urgent Safety Protocol: Preliminary triage rules override normal scheduling."
         )
 
@@ -141,6 +190,14 @@ def predict_department(req: SymptomRequest):
                 f"Evaluation by a {top_dept} physician is recommended for physical clinical examination."
             )
 
+            contributing_factors = extract_contributing_factors(symptoms_text, vec_input)
+            if not contributing_factors:
+                contributing_factors = req.symptoms[:3]
+
+            explanation = (
+                f"Recommendation for {top_dept} was primarily guided by reported symptoms: {', '.join(contributing_factors)}."
+            )
+
             return PredictionResponse(
                 success=True,
                 recommendedDepartment=top_dept,
@@ -148,6 +205,9 @@ def predict_department(req: SymptomRequest):
                 topAlternatives=alternatives,
                 preliminaryGuidance=guidance,
                 redFlagDetected=False,
+                contributingFactors=contributing_factors,
+                explanation=explanation,
+                emergencyContacts={"national": "112", "ambulance": "108", "medical": "102"},
                 disclaimer="Suggested Department — Not a Medical Diagnosis. Based on Random Forest classification."
             )
         except Exception as e:
@@ -175,6 +235,9 @@ def predict_department(req: SymptomRequest):
         ],
         preliminaryGuidance=DEPARTMENT_GUIDANCE.get(default_dept, "Consultation with a clinical physician is indicated."),
         redFlagDetected=False,
+        contributingFactors=req.symptoms[:3],
+        explanation=f"Department routing selected based on symptom indicators: {', '.join(req.symptoms[:3])}.",
+        emergencyContacts={"national": "112", "ambulance": "108", "medical": "102"},
         disclaimer="Suggested Department — Not a Medical Diagnosis."
     )
 
