@@ -1,5 +1,4 @@
 import React, { memo } from 'react';
-import { Link } from 'react-router-dom';
 import { ShieldAlert, Phone } from 'lucide-react';
 
 export const RedFlagAlert = memo(() => {
@@ -22,17 +21,11 @@ export const RedFlagAlert = memo(() => {
       <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto">
         <a
           href="tel:112"
-          className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition-all shadow-xs"
+          className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition-all shadow-xs"
         >
           <Phone className="w-3.5 h-3.5" />
           <span>Call 112 SOS</span>
         </a>
-        <Link
-          to="/emergency"
-          className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-white border border-red-200 text-red-700 hover:bg-red-50 text-xs font-bold transition-all"
-        >
-          Emergency Hub
-        </Link>
       </div>
     </div>
   );

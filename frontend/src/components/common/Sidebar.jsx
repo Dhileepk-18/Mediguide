@@ -12,7 +12,6 @@ import {
   FileCheck2,
   History,
   User,
-  ShieldCheck,
   ShieldAlert,
   LogOut,
   Users,
@@ -24,7 +23,6 @@ import {
   Clock,
   ChevronLeft,
   ChevronRight,
-  PhoneCall,
   Activity,
 } from 'lucide-react';
 
@@ -57,7 +55,6 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
     { name: 'Prescriptions', path: '/prescriptions', icon: FileCheck2 },
     { name: 'Consult History', path: '/chat-history', icon: History },
     { name: 'My Profile', path: '/profile', icon: User },
-    { name: 'Privacy & Security', path: '/privacy-settings', icon: ShieldCheck },
   ];
 
   const doctorNavItems = [
@@ -164,26 +161,6 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
         })}
       </nav>
 
-      {/* Emergency Quick Action */}
-      <div className="p-2.5 border-t border-slate-100">
-        <NavLink
-          to="/emergency"
-          title={isCollapsed ? 'India Emergency SOS (112 / 108)' : undefined}
-          className={`flex items-center gap-2.5 px-3 py-2 rounded-xl bg-red-50 hover:bg-red-100/80 text-red-700 border border-red-200/80 text-xs font-semibold transition-all ${
-            isCollapsed ? 'justify-center px-0' : ''
-          }`}
-        >
-          <PhoneCall className="w-4 h-4 text-red-600 animate-pulse shrink-0" />
-          {!isCollapsed && (
-            <div className="flex-1 flex items-center justify-between">
-              <span>Emergency 112</span>
-              <span className="text-[10px] bg-red-600 text-white px-1.5 py-0.5 rounded font-black">
-                SOS
-              </span>
-            </div>
-          )}
-        </NavLink>
-      </div>
 
       {/* User Footer */}
       <div className="p-2.5 border-t border-slate-100 bg-slate-50/50">

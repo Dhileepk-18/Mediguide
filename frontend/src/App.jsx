@@ -11,7 +11,6 @@ import { BottomTabBar } from './components/common/BottomTabBar.jsx';
 const LandingPage = lazy(() => import('./pages/public/LandingPage.jsx').then(m => ({ default: m.LandingPage })));
 const LoginPage = lazy(() => import('./pages/public/LoginPage.jsx').then(m => ({ default: m.LoginPage })));
 const RegisterPage = lazy(() => import('./pages/public/RegisterPage.jsx').then(m => ({ default: m.RegisterPage })));
-const EmergencyPage = lazy(() => import('./pages/patient/EmergencyPage.jsx').then(m => ({ default: m.EmergencyPage })));
 
 // Patient Pages
 const PatientDashboard = lazy(() => import('./pages/patient/PatientDashboard.jsx').then(m => ({ default: m.PatientDashboard })));
@@ -24,7 +23,6 @@ const HealthRecordsPage = lazy(() => import('./pages/patient/HealthRecordsPage.j
 const PrescriptionsPage = lazy(() => import('./pages/patient/PrescriptionsPage.jsx').then(m => ({ default: m.PrescriptionsPage })));
 const ChatHistoryPage = lazy(() => import('./pages/patient/ChatHistoryPage.jsx').then(m => ({ default: m.ChatHistoryPage })));
 const PatientProfilePage = lazy(() => import('./pages/patient/PatientProfilePage.jsx').then(m => ({ default: m.PatientProfilePage })));
-const PrivacySettingsPage = lazy(() => import('./pages/patient/PrivacySettingsPage.jsx').then(m => ({ default: m.PrivacySettingsPage })));
 
 // Doctor Pages
 const DoctorDashboard = lazy(() => import('./pages/doctor/DoctorDashboard.jsx').then(m => ({ default: m.DoctorDashboard })));
@@ -70,16 +68,6 @@ const AppLayout = ({ children }) => {
   const { isAuthenticated, user } = useAuthStore();
   const location = useLocation();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const isEmergency = location.pathname === '/emergency';
-
-  if (isEmergency) {
-    return (
-      <>
-        {children}
-        <ToastContainer />
-      </>
-    );
-  }
 
   const isPublic = ['/', '/login', '/register'].includes(location.pathname);
   const isAiChat = location.pathname === '/ai-assistant';
@@ -132,7 +120,6 @@ export const App = () => {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/emergency" element={<EmergencyPage />} />
 
           {/* Patient Routes */}
           <Route
@@ -212,14 +199,6 @@ export const App = () => {
             element={
               <ProtectedRoute allowedRoles={['patient']}>
                 <PatientProfilePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/privacy-settings"
-            element={
-              <ProtectedRoute allowedRoles={['patient', 'doctor', 'admin']}>
-                <PrivacySettingsPage />
               </ProtectedRoute>
             }
           />

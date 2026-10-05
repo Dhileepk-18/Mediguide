@@ -126,16 +126,6 @@ export const api = {
     });
   },
 
-  async exportUserData() {
-    return request('/auth/export-data');
-  },
-
-  async deleteUserAccount() {
-    return request('/auth/delete-account', {
-      method: 'DELETE',
-    });
-  },
-
   async refreshToken(refreshToken) {
     return request('/auth/refresh-token', {
       method: 'POST',

@@ -3,7 +3,6 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore.js';
 import { useAppStore } from '../../store/appStore.js';
 import { api } from '../../services/api.js';
-import { EmergencyModal } from './EmergencyModal.jsx';
 import {
   Activity,
   User,
@@ -16,13 +15,11 @@ import {
   Calendar,
   Bell,
   CheckCheck,
-  PhoneCall,
   FileText,
   Pill,
   Stethoscope,
   Lock,
   ArrowRight,
-  Shield,
 } from 'lucide-react';
 
 export const Navbar = () => {
@@ -34,7 +31,6 @@ export const Navbar = () => {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false);
 
   // Notifications state
   const [notifications, setNotifications] = useState([]);
@@ -121,7 +117,6 @@ export const Navbar = () => {
     if (path.includes('prescriptions')) return 'Digital Prescriptions';
     if (path.includes('chat-history')) return 'Consultation History';
     if (path.includes('profile')) return 'Account Profile';
-    if (path.includes('privacy')) return 'Privacy & Consent (DPDP)';
     if (path.includes('dashboard')) return user?.role === 'doctor' ? 'Doctor Portal' : user?.role === 'admin' ? 'Admin Control' : 'Patient Dashboard';
     return '';
   };
@@ -182,10 +177,6 @@ export const Navbar = () => {
                 <a href="#features" className="hover:text-blue-600 transition-colors">
                   Clinical Capabilities
                 </a>
-                <a href="#preview" className="hover:text-blue-600 transition-colors flex items-center gap-1">
-                  <Sparkles className="w-3.5 h-3.5 text-blue-600" />
-                  Live Preview
-                </a>
                 <a href="#how-it-works" className="hover:text-blue-600 transition-colors">
                   How It Works
                 </a>
@@ -194,18 +185,6 @@ export const Navbar = () => {
 
             {/* Action Buttons & Helpers */}
             <div className="flex items-center gap-2.5 sm:gap-3">
-              {/* Emergency SOS Button (India 112/108) */}
-              <button
-                onClick={() => setIsEmergencyModalOpen(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-xl text-xs font-bold transition-all shadow-2xs active:scale-95 group"
-                title="India 24x7 Emergency Helplines (112, 108, 102)"
-              >
-                <PhoneCall className="w-3.5 h-3.5 text-red-600 animate-pulse group-hover:scale-110" />
-                <span className="hidden sm:inline">Emergency</span>
-                <span className="text-[10px] bg-red-600 text-white px-1.5 py-0.5 rounded font-black">
-                  112
-                </span>
-              </button>
 
               {/* Notifications Center Popover */}
               {isAuthenticated && (
@@ -330,14 +309,6 @@ export const Navbar = () => {
                         >
                           <User className="w-4 h-4 text-slate-400" />
                           View Profile
-                        </Link>
-                        <Link
-                          to="/privacy-settings"
-                          onClick={() => setIsProfileDropdownOpen(false)}
-                          className="flex items-center gap-2.5 px-3.5 py-2 text-xs text-slate-700 hover:bg-slate-50 transition-colors"
-                        >
-                          <Shield className="w-4 h-4 text-slate-400" />
-                          Privacy & Consent
                         </Link>
                       </div>
 
@@ -464,11 +435,6 @@ export const Navbar = () => {
         )}
       </nav>
 
-      {/* Emergency Modal */}
-      <EmergencyModal
-        isOpen={isEmergencyModalOpen}
-        onClose={() => setIsEmergencyModalOpen(false)}
-      />
     </>
   );
 };

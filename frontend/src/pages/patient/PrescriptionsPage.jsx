@@ -276,7 +276,7 @@ export const PrescriptionsPage = () => {
                       <span>{rx.digitalSignature || `Digitally Verified by ${rx.doctorName}`}</span>
                     </div>
                     <p className="text-[10px] text-slate-400">
-                      System Generated Representation &bull; MediGuide Digital Health India
+                      System-generated document. &bull; MediGuide Digital Health India
                     </p>
                   </div>
                 </div>

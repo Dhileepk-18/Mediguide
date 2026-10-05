@@ -41,7 +41,7 @@ export function getAiConfig() {
   return {
     hasKey: Boolean(activeApiKey && activeApiKey.length > 5),
     activeModel: activeApiKey
-      ? 'Google Gemini 2.0 Flash (Live AI)'
+      ? 'Google Gemini 3.8 Flash (Live AI)'
       : 'MediGuide Clinical Engine (Key Required for Live Gemini)',
     provider: activeApiKey ? 'Google AI Studio / Gemini API' : 'Built-in Clinical Knowledgebase',
   };
@@ -65,10 +65,11 @@ export async function generateChatResponse(userMessage, history = []) {
   if (genAI && activeApiKey) {
     const candidateModels = [
       'gemini-3.8-flash',
+      'gemini-flash-latest',
+      'gemini-flash-lite-latest',
       'gemini-2.5-flash',
       'gemini-2.0-flash',
       'gemini-1.5-flash',
-      'gemini-flash-latest',
     ];
     for (const modelName of candidateModels) {
       try {
@@ -124,10 +125,11 @@ export async function* generateChatResponseStream(userMessage, history = []) {
   if (genAI && activeApiKey) {
     const candidateModels = [
       'gemini-3.8-flash',
+      'gemini-flash-latest',
+      'gemini-flash-lite-latest',
       'gemini-2.5-flash',
       'gemini-2.0-flash',
       'gemini-1.5-flash',
-      'gemini-flash-latest',
     ];
     for (const modelName of candidateModels) {
       try {
@@ -355,10 +357,11 @@ export async function analyzeSymptoms(
   if (genAI && activeApiKey) {
     const candidateModels = [
       'gemini-3.8-flash',
+      'gemini-flash-latest',
+      'gemini-flash-lite-latest',
       'gemini-2.5-flash',
       'gemini-2.0-flash',
       'gemini-1.5-flash',
-      'gemini-flash-latest',
     ];
     for (const modelName of candidateModels) {
       try {
@@ -601,6 +604,25 @@ Return JSON with this exact schema:
 function dynamicHealthcareChat(message) {
   const lower = message.toLowerCase();
 
+  // 0. Non-Medical & Out-of-Scope Queries Guardrail
+  const nonMedicalKeywords = [
+    'newton', 'einstein', 'gravity', 'physics', 'quantum', 'equation', 'algebra', 'calculus',
+    'velocity', 'inertia', 'thermodynamics', 'python', 'javascript', 'coding', 'programming',
+    'algorithm', 'capital of', 'prime minister', 'president', 'cricket', 'football',
+    'who won', 'movie', 'weather in', 'weather today', 'stock market', 'crypto', 'bitcoin'
+  ];
+
+  if (nonMedicalKeywords.some(keyword => lower.includes(keyword))) {
+    return {
+      text: `### Clinical Scope Notice\n\nI am **MediGuide AI**, a specialized digital health and clinical triage assistant.\n\n- **Clinical Scope:** I assist with preliminary symptom guidance, finding appropriate medical departments, medicine schedules, and health records.\n- **Out-of-Scope Topics:** I cannot provide answers on general academic or trivia topics such as physics, mathematics, programming, or history.\n\n*If you have a physical symptom, question about a medical specialty, or need to book an appointment with a doctor, please let me know!*`,
+      suggestions: [
+        'How does MediGuide symptom triage work?',
+        'Analyze my symptoms in Symptom Checker',
+        'Browse medical departments',
+      ],
+    };
+  }
+
   // 1. Diagnostic Lab Reports, Blood Tests, CBC, Lipid, Metabolic, and Vault Documents
   if (
     lower.includes('lab report') ||
@@ -775,7 +797,27 @@ function dynamicHealthcareChat(message) {
     };
   }
 
-  // Concise generative healthcare fallback response
+  // Context-aware healthcare fallback
+  const healthIndicators = [
+    'health', 'symptom', 'pain', 'doctor', 'medicine', 'body', 'sick', 'clinic', 'disease',
+    'ache', 'feeling', 'test', 'hospital', 'fever', 'cold', 'heart', 'skin', 'cough',
+    'breath', 'stomach', 'head', 'eye', 'ear', 'throat', 'chest', 'back', 'leg', 'arm',
+    'blood', 'diet', 'sleep', 'fatigue', 'pressure', 'sugar', 'weight', 'care', 'treatment'
+  ];
+
+  const hasHealthContext = healthIndicators.some(w => lower.includes(w));
+
+  if (!hasHealthContext) {
+    return {
+      text: `### MediGuide Clinical Assistant\n\nI am designed specifically to assist you with **health, symptoms, and medical care**.\n\n- **Symptom Guidance:** Describe how you are feeling or what symptoms you are experiencing.\n- **Doctor Discovery:** Find verified specialist doctors across India and schedule appointments.\n- **Medication Management:** Organize daily medicine reminders and vaulted clinical reports.\n\n*Please ask a health-related question, or use our **Symptom Checker** for step-by-step clinical triage.*`,
+      suggestions: [
+        'Analyze symptoms in Symptom Checker',
+        'Browse available specialist doctors',
+        'How to maintain good health and immunity?',
+      ],
+    };
+  }
+
   return {
     text: `### MediGuide AI Health Guidance\n\nRegarding your query about: *"${message}"*:\n\n- **Clinical Perspective:** Physical health symptoms require evaluating duration, triggers, and severity.\n- **Recommended Step:** Use our **AI Symptom Checker** for tailored assessment and specialist routing.\n- **Supportive Care:** Maintain hydration, balanced nutrition, and monitor any symptom progression.\n\n*Recommended Specialist: **General Medicine**.*`,
     suggestions: [

@@ -106,7 +106,7 @@ export function generatePrescriptionPDF(prescription) {
       // 7. System Disclaimer Notice (PRD Section 14)
       doc.rect(40, 740, 515, 32).fill('#FAFBFB');
       doc.fillColor('#5A6C77').fontSize(7).font('Helvetica').text(
-        'LEGAL NOTICE: This is a system-generated prescription created through MediGuide India by an authorized registered medical practitioner. It is valid for dispensing under applicable Indian digital health guidelines.',
+        'System-generated document. Issued through MediGuide India by an authorized registered medical practitioner for patient care and pharmacy dispensing.',
         50,
         748,
         { width: 495, align: 'center', lineGap: 2 }

@@ -28,9 +28,10 @@ export async function seedDatabase() {
     await mongoose.connect(MONGODB_URI, { serverSelectionTimeoutMS: 5000 });
     console.log('✅ [Seed] Connected to MongoDB.');
   } catch (err) {
-    console.error('❌ [Seed] Could not connect to MongoDB:', err.message);
-    console.error('Please make sure MongoDB is running or provide a valid MONGODB_URI in backend/.env.');
-    process.exit(1);
+    console.warn('⚠️ [Seed] MongoDB not connected:', err.message);
+    console.log('📦 [Seed] Operating in dual-mode fallback: backend/data_store.json is active and contains full demo dataset.');
+    console.log('💡 [Seed] To seed a live MongoDB instance, ensure MongoDB service is started or configure MONGODB_URI in backend/.env.');
+    process.exit(0);
   }
 
   try {

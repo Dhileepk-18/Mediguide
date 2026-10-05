@@ -81,13 +81,6 @@ export const TriageResultsStep = memo(({
               <Phone className="w-3.5 h-3.5" />
               <span>Dial 108 (Ambulance)</span>
             </a>
-            <Link
-              to="/emergency"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-red-200 text-red-700 text-xs font-bold hover:bg-red-50 transition-colors"
-            >
-              <span>Open Emergency Mode</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
           </div>
         </div>
       )}
@@ -201,7 +194,7 @@ export const TriageResultsStep = memo(({
 
       {/* Clinical Disclaimer */}
       <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 text-[11px] text-slate-500 text-center font-medium">
-        This is not a medical diagnosis. Please consult a doctor.
+        Suggested department. Not a diagnosis.
       </div>
     </div>
   );

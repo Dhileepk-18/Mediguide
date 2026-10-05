@@ -1282,35 +1282,6 @@ export class DataStore {
     return this.systemSettings;
   }
 
-  // --- DPDP Data Export & Account Deletion (FR-01, FR-03, DPDP) ---
-  exportUserData(userId) {
-    const user = this.findUserById(userId);
-    if (!user) return null;
-    const { password: _, ...profile } = user;
-    return {
-      exportDate: new Date().toISOString(),
-      governingLaw: 'Digital Personal Data Protection (DPDP) Act, 2023 (India)',
-      profile,
-      appointments: this.getAppointmentsByPatientId(userId),
-      prescriptions: this.getPrescriptionsByPatientId(userId),
-      healthRecords: this.getHealthRecordsByPatientId(userId),
-      medicines: this.getMedicinesByPatientId(userId),
-      chatHistories: this.getChatHistoriesByUserId(userId),
-      symptomChecks: this.getSymptomChecksByUserId(userId),
-    };
-  }
-  purgeUserData(userId) {
-    this.deleteUser(userId);
-    this.appointments = this.appointments.filter(a => a.patientId !== userId);
-    this.prescriptions = this.prescriptions.filter(p => p.patientId !== userId);
-    this.healthRecords = this.healthRecords.filter(r => r.patientId !== userId);
-    this.medicines = this.medicines.filter(m => m.patientId !== userId);
-    this.chatHistories = this.chatHistories.filter(c => c.userId !== userId);
-    this.symptomChecks = this.symptomChecks.filter(s => s.userId !== userId);
-    this.notifications = this.notifications.filter(n => n.userId !== userId);
-    this.persist();
-    return true;
-  }
 
   getSystemSettings() {
     const helplines = this.systemSettings?.emergencyHelplines || {};

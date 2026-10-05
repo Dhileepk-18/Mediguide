@@ -7,8 +7,6 @@ import {
   updateProfile,
   forgotPassword,
   resetPassword,
-  exportUserData,
-  deleteAccount,
   getDemoAccounts,
   refreshToken,
   logout,
@@ -27,8 +25,6 @@ router.get('/me', requireAuth, getMe);
 router.put('/profile', requireAuth, updateProfile);
 router.post('/forgot-password', forgotPassword);
 router.post('/reset-password', resetPassword);
-router.get('/export-data', requireAuth, exportUserData);
-router.delete('/delete-account', requireAuth, deleteAccount);
 router.get('/demo-accounts', getDemoAccounts);
 
 export default router;

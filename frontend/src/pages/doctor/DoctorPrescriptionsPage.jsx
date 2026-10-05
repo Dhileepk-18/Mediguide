@@ -565,7 +565,7 @@ export const DoctorPrescriptionsPage = () => {
               <div className="text-xs">
                 <p className="font-bold text-slate-900">{selectedRxForPrint.digitalSignature}</p>
                 <p className="text-[10px] text-slate-400">
-                  Ref: {selectedRxForPrint.qrVerificationCode || 'MG-RX-IN-2026'}
+                  Ref: {selectedRxForPrint.qrVerificationCode || 'MG-RX-IN-2026'} • System-generated document.
                 </p>
               </div>
               <div className="flex items-center gap-2">

@@ -134,11 +134,6 @@ export const DoctorProfilePage = () => {
         <form onSubmit={handleSaveProfile} className="space-y-6">
           {/* Doctor Header Card */}
           <div className="bg-surface p-6 sm:p-8 rounded-3xl border border-surface-border shadow-soft flex items-center gap-4">
-            <img
-              src={user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name}`}
-              alt={user?.name}
-              className="w-16 h-16 rounded-2xl object-cover ring-4 ring-health-100 shrink-0"
-            />
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-lg font-bold text-ink-main">{user?.name}</h2>

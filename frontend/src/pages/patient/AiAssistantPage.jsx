@@ -4,7 +4,6 @@ import { api } from '../../services/api.js';
 import { useAppStore } from '../../store/appStore.js';
 import { AiDisclaimerBanner } from '../../components/common/AiDisclaimerBanner.jsx';
 import { Modal } from '../../components/common/Modal.jsx';
-import { EmergencyModal } from '../../components/common/EmergencyModal.jsx';
 import {
   Bot,
   Send,
@@ -51,7 +50,6 @@ export const AiAssistantPage = () => {
   const [chatHistories, setChatHistories] = useState([]);
   const [showHistoryDrawer, setShowHistoryDrawer] = useState(false);
   const [copiedId, setCopiedId] = useState(null);
-  const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false);
 
   // Guard refs against duplicate sends and React StrictMode double-mounting
   const handledQueryRef = useRef(null);
@@ -507,16 +505,6 @@ export const AiAssistantPage = () => {
         </div>
 
         <div className="flex items-center gap-2 self-end sm:self-auto shrink-0">
-          {/* Persistent Need Urgent Help Affordance (Alert Token per Section 7.3) */}
-          <Link
-            to="/emergency"
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl bg-[#B83A3A] text-white hover:bg-[#a63333] transition-colors"
-            title="Emergency Guidance Protocol"
-          >
-            <AlertTriangle className="w-3.5 h-3.5" />
-            <span>Need urgent help?</span>
-          </Link>
-
           {/* AI Key Config button */}
           <button
             onClick={() => setIsKeyModalOpen(true)}
@@ -774,7 +762,7 @@ export const AiAssistantPage = () => {
             </button>
           </form>
           <p className="text-[11px] text-center text-ink-muted mt-2">
-            This is not a medical diagnosis. Please consult a doctor.
+            AI-generated information. Not a diagnosis or medical advice.
           </p>
         </div>
       </div>
@@ -840,11 +828,6 @@ export const AiAssistantPage = () => {
         </form>
       </Modal>
 
-      {/* Emergency Helplines SOS Modal */}
-      <EmergencyModal
-        isOpen={isEmergencyModalOpen}
-        onClose={() => setIsEmergencyModalOpen(false)}
-      />
     </div>
   );
 };
